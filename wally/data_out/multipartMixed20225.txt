@@ -1,0 +1,8 @@
+{
+    "date": "Fri, 16 Dec 2005 16:04:15 +0900",
+    "from": "info-request@co-conv.jp",
+    "reply-to": "info@co-conv.jp",
+    "subject": "[INFO 2378] Re: 共用 PC  のユーザ認証",
+    "text": "広島市立大学 前田先生 中島様\n\nお世話になってます。有限会社CO-CONVの丸山です。\n\n> はい。評価版に含まれる auth_ldap.exe では上記のような機能しか\n> ありませんが、いずれにしましても、VBS等で書かれたスクリプトで\n> LDAPサーバに接続することは出来ますので、適切なスクリプトを\n> 作成することで上記の目的を達成することが出来ます。\n\n本メールに添付されている chkpwd_ldap_ssl.exe は、CO-GINA\n（評価版を含む）に含まれているものと比して、以下の２つの\nオプションが追加されています。\n\n-d 取得したい attribute の DNを指定する。\n    （例えば、cn=kozuka,cn=Users,ou=co-conv,ou=jp）\n-a 取得したい attributeを指定する。\n    （例えば、name ）\n\nResultコードとして、以下のものが追加されています。\n\n2  適切に attribute が取得できた。\n-1 LDAPのbindingが出来なかった\n-2 LDAP サーバに bindingが出来た後に、値が取れなかった\n\n実行例は以下のようになります。\n\nC:\\>chkpwd_ldap_ssl.exe -h 192.168.25.101 -u \"cn=KOZUKA Masahiro,cn=Users,dc=co-conv,dc=local\" -p Password -d \"cn=KOZUKA\nMasahiro,cn=Users,dc=co-conv,dc=local\" -a name\n2\nKOZUKA Masahiro\n\n＃ 上記の例は、Active Directory からユーザのフルネームを取得する例となっております。\n＃ このほかのディレクトリサーバや Attribute の場合には、適宜引数を変更して\n＃ 試していただきますようお願いいたします。\n\n＝＝＝\n有限会社 CO-CONV （シー・オー・コンヴ）  取締役   丸山 伸\n〒606-8225    京都市左京区田中門前町72いのはらビル2F\nTEL: 075-703-0740    Mail:   info@co-conv.jp\nFAX: 075-703-0738    URL:   http://www.co-conv.jp/\n",
+    "to": "kaori@ipc.hiroshima-cu.ac.jp, k_nakasi@ipc.hiroshima-cu.ac.jp"
+}
