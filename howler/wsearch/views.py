@@ -6,8 +6,15 @@ from wally.elastic.search import Search
 def index(request):
     res_strings = ["Hello, world. You're at the search index.<br><br>"]
 
-    res_strings.append("Search for Japanese text: 何か調整が必要でしょうか?<br><br>")
-    response = Search().search('何か調整が必要でしょうか?')
+    q = request.GET['q']
+
+    if len(q) > 0:
+        query = q
+    else:
+        query = "何か調整が必要でしょうか?"
+
+    res_strings.append("Search for Japanese text: {0}<br><br>".format(query))
+    response = Search().search(query)
 
     for hit in response:
         if hasattr(hit, 'buildNum'):
