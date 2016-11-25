@@ -1,8 +1,0 @@
-{
-    "date": "Wed, 09 Nov 2005 15:20:34 +0900",
-    "from": "info-request@co-conv.jp",
-    "reply-to": "info@co-conv.jp",
-    "subject": "[INFO 2044] プレスリリース [ 有限会社 CO-CONV] Windows 認証を拡張するライブラリ CO-GINA  新製品のご案内",
-    "text": "ご担当者様\n\n平素よりお世話になっております。\n有限会社CO-CONVの丸山と申します。\n\nこの度、私どもの会社で新しく製品を出すにあたり、\n貴殿ご提供の ITmedia などへの媒体への\nプレスリリースの掲載を希望いたしております。\n\n本メールに添付の形にてプレスリリース2件をご提出いたしますので、\n掲載をご検討いただきますよう、宜しくお願いいたします。\n\n(参考) 本プレスリリースの参照先\nhttp://www.co-conv.jp/press/press20051109-1.pdf\nhttp://www.co-conv.jp/press/press20051109-2.pdf\n\n＝＝＝\n有限会社 CO-CONV （シー・オー・コンヴ）  取締役・社長   丸山 伸\n〒606-8225    京都市左京区田中門前町72いのはらビル2F\nTEL: 075-703-0740    Mail:   info@co-conv.jp\nFAX: 075-703-0738    URL:   http://www.co-conv.jp/\n",
-    "to": "release@ml.itmedia.co.jp"
-}
