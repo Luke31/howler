@@ -4,7 +4,8 @@ from wally.elastic.search import Search
 
 
 def index(request):
-    res_strings = ["Hello, world. You're at the search index.<br><br>"]
+    res_strings = ["<style>em{ background:yellow}</style>",
+    "You're at the search index. Search by using the q-parameter: <a href='http://10.0.10.180/howler/search/?q=hello'>http://10.0.10.180/howler/search/?q=hello</a><br><br>"]
 
     q = request.GET['q']
 
@@ -13,7 +14,7 @@ def index(request):
     else:
         query = "何か調整が必要でしょうか?"
 
-    res_strings.append("Search for Japanese text: {0}<br><br>".format(query))
+    res_strings.append("Search in e-mails for text: {0}<br><br>".format(query))
     response = Search().search(query)
 
     for hit in response:
