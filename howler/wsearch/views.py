@@ -20,7 +20,8 @@ def index(request):
     for hit in response:
         if hasattr(hit, 'buildNum'):
             continue
-        res_strings.append('<br><br><hr>{0}, {1}, {2} <br> {3}<hr>'.format(hit.meta.score, hit.langCode, hit.langPercent, hit.subject))
+        res_strings.append('<br><br><hr>Search Score: {0}, Sent: {1}, Language: {2}({3}% of total content) <br> {4}<hr>'
+                           .format(hit.meta.score, hit.date, hit.langCode, hit.langPercent, hit.subject))
         if hasattr(hit.meta.highlight, 'body'):
             for fragment in hit.meta.highlight.body:
                 res_strings.append('{0}<br>'.format(fragment))
