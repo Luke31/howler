@@ -15,22 +15,22 @@ class TestIndexMethods(unittest.TestCase):
 
         idx.add_mapping_to_index_multi()
 
-        inDir = 'data_in'
-        basepath = os.getcwd()
-        inPath = os.path.join(basepath, inDir)
+        in_dir = 'data_in'
+        basepath = os.path.dirname(os.path.realpath(__file__)) # os.getcwd()
+        in_path = os.path.join(basepath, in_dir)
         cnt = 0
-        cntErr = 0
-        for filename in os.listdir(inPath):
+        cnt_err = 0
+        for filename in os.listdir(in_path):
             if cnt % 1000 == 0:
                 print(cnt)
-            if os.path.isdir(os.path.join(inPath, filename)):
+            if os.path.isdir(os.path.join(in_path, filename)):
                 continue
             mail = filename
-            filepath = os.path.join(basepath, inDir, mail).replace('\\', '/')
-            cntErr += idx.index_from_file(filepath)
+            filepath = os.path.join(basepath, in_dir, mail).replace('\\', '/')
+            cnt_err += idx.index_from_file(filepath)
             cnt += 1
 
-        print("Successfully indexed {0}/{1} emails".format(cnt - cntErr, cnt))
+        print("Successfully indexed {0}/{1} emails".format(cnt - cnt_err, cnt))
 
         self.assertEqual(True, True)  # expect, actual
 
