@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='wally',
     version='1.0.0.dev1',
-    packages=['wally', 'wally.elastic', 'wally.dementor'],
+    packages=['wally', 'wally.test_elastic', 'wally.dementor'],
     url='',
     license='',
     author='Lukas Schmid',
