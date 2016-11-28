@@ -2,27 +2,30 @@
 
 {% block content %}
 
-<p>Search in e-mails for text: {{ query }}</p>
+<a href="{% url 'wally:search' %}">Back to search</a><p>Search in e-mails for text: {{ query }}</p>
 
-{% if hit_list %}
-    <ul>
-    {% for hit in hit_list %}
-        <li><a href="{% url 'wally:detail' hit.meta.id %}">{{ hit.subject }}</a></li>
-        <span>Search score: {{ hit.meta.score }}, Sent:  {{ hit.date }}, Language: {{ hit.langCode }} ({{ hit.langPercent }}% of total content)</span>
-        {% for fragment in hit.meta.highlight.subject %}
-            <p>
-                {{ fragment|safe }}
-            </p>
-        {% endfor %}
+<div class="hits">
+    {% if hit_list %}
+        {% for hit in hit_list %}
+            <div class="hit">
+                <p><a href="{% url 'wally:detail' hit.meta.id %}">{{ hit.subject }}</a></p>
+                <p>Search score: {{ hit.meta.score }}, Sent:  {{ hit.date }}, Language: {{ hit.langCode }} ({{ hit.langPercent }}% of total content)</p>
 
-        {% for fragment in hit.meta.highlight.body %}
-            <p>
-                {{ fragment|safe }}
-            </p>
+                {% for fragment in hit.meta.highlight.subject %}
+                    <p class="fragment">
+                        {{ fragment|safe }}
+                    </p>
+                {% endfor %}
+
+                {% for fragment in hit.meta.highlight.body %}
+                    <p class="fragment">
+                        {{ fragment|safe }}
+                    </p>
+                {% endfor %}
+            </div>
         {% endfor %}
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No emails found.</p>
-{% endif %}
+    {% else %}
+        <p>No emails found.</p>
+    {% endif %}
+</div>
 {% endblock %}

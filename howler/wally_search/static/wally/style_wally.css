@@ -5,3 +5,16 @@
 input.fulltext{
     width: 50em;
 }
+
+div.hits{
+
+}
+div.hit {
+    padding: 2px;
+    background-color: #f9f9f9;
+    margin: 2px;
+}
+p.fragment {
+    border-top: 1px dotted lightgrey;
+    border-bottom: 1px dotted lightgrey;
+}
