@@ -17,6 +17,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^search/', include('wsearch.urls')),
+    url(r'^wally/', include('wally_search.urls')),
     url(r'^admin/', admin.site.urls),
 ]

@@ -1,0 +1,7 @@
+#header .content{
+    background: white url("img/wally100.png") no-repeat right bottom;
+}
+
+input.fulltext{
+    width: 50em;
+}

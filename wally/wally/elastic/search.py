@@ -56,7 +56,7 @@ class Search:
 
     def search_low(self, qterm):
         response = self._es.search(
-            index="test-email-index",
+            index="test-email-results.html",
             body=
             {
                 "query": {

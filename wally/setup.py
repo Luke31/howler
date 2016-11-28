@@ -8,5 +8,5 @@ setup(
     license='',
     author='Lukas Schmid',
     author_email='lukas.m.schmid@gmail.com',
-    description='E-Mail wsearch based on elasticsearch'
+    description='E-Mail wally_search based on elasticsearch'
 )

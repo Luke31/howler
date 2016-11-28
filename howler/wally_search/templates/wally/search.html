@@ -1,0 +1,32 @@
+{% extends "wally/base_wally.html" %}
+
+{% block content %}
+    <h2>email search</h2>
+    <p>Welcome to Wally the email search! Please input at least one of the fields below to search your emails.</p>
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'wally:find' %}" method="get">
+        <input type="text" name="query" class="fulltext" id="query" />
+        <label for="query">full-text search</label><br />
+
+        <label for="from">from:</label>
+        <input type="datetime-local" name="from" id="from"  />
+        <label for="to">to:</label>
+        <input type="datetime-local" name="to" id="to" />
+        <br />
+
+        <input type="checkbox" name="include_spam" id="include_spam"/>
+        <label for="include_spam">include spam mails</label>
+        <br />
+        <input type="submit" value="Search" />
+    </form>
+    {##}
+    {#POST:#}
+    {#<form action="{% url 'wally:wally' %}" method="post">#}
+    {#    {% csrf_token %}#}
+    {#    <input type="text" name="query" id="query" value="" />#}
+    {#    <label for="query">Query-text</label><br />#}
+    {#    <input type="submit" value="Search" />#}
+    {#</form>#}
+{% endblock %}
