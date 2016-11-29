@@ -18,6 +18,7 @@ def test():
 
 def deploy():
     pull_copy()
+    bower_install()
     deploy_static()
     disable_debug_remote()
     inform_webserver()
@@ -29,9 +30,14 @@ def pull_copy():
         run("cp -r /var/git/lukas-sandbox/howler/ /var/www/")
 
 
+def bower_install():
+    with cd(env.project_root):
+        run(os.path.join(python3_dir, 'python') + ' ./manage.py bower install')
+
+
 def deploy_static():
     with cd(env.project_root):
-        run(os.path.join(python3_dir,'python') + ' ./manage.py collectstatic -v0 --noinput')
+        run(os.path.join(python3_dir, 'python') + ' ./manage.py collectstatic -v0 --noinput')
 
 
 def disable_debug_remote():
