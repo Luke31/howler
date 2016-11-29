@@ -16,24 +16,11 @@ def test():
         abort("Aborting at user request.")
 
 
-def prepare_deploy():
-    # test()
-    # commit()
-    push()
-
-
 def deploy():
     pull_copy()
     deploy_static()
-    disable_debug()
+    disable_debug_remote()
     inform_webserver()
-
-def commit():
-    local("git add -p && git commit")
-
-
-def push():
-    local("git push")
 
 
 def pull_copy():
@@ -47,7 +34,7 @@ def deploy_static():
         run(os.path.join(python3_dir,'python') + ' ./manage.py collectstatic -v0 --noinput')
 
 
-def disable_debug():
+def disable_debug_remote():
     settings_path = os.path.join(env.project_root, 'howler', 'settings.py')
     sed(settings_path, "DEBUG = True", "DEBUG = False")
 
