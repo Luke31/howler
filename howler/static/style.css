@@ -1,40 +1,16 @@
-body{
-    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
-    font-size: 11pt;
-}
-
 /*Containers*/
 div.content{
-    padding: 5px;
-}
-
-#header {
-    width: 100%;
-    border: 1px solid lightgrey;
+    padding: 1px;
 
 }
-
-#content {
-    width: 100%;
-    border: 1px solid lightgrey;
-    margin-top: 10px;
-}
-
-#sidebar {
-    display:none;
+a.navbar-brand{
+    padding: 0px 15px;
 }
 
 /*Text*/
-h1 {
-    margin-top: 5px;
-}
-h2 {
-    margin-top: 4px;
-}
 em {
-    background:yellow;
+    background:#ff0;
 }
-p {
-    margin-top: 0px;
-    margin-bottom: 2px;
+blockquote{
+    font-size:1em;
 }

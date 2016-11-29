@@ -35,19 +35,9 @@ class Search:
         # TODO: ATTENTION: EVEN MORE INDEXES CREATED ON LANGUAGE -> PUT ALL TO UN
         s = s.highlight_options(order='score')
         s = s.highlight('body', fragment_size=50)
+        #s = s.highlight('body', number_of_fragments=0)
         s = s.highlight('subject')
         response = s.execute()
-
-        for hit in response:
-            if hasattr(hit, 'buildNum'):
-                continue
-            print(hit.meta.score, hit.langCode, hit.langPercent, '\n', hit.subject)
-            if hasattr(hit.meta.highlight, 'body'):
-                for fragment in hit.meta.highlight.body:
-                    print(fragment)
-            if hasattr(hit.meta.highlight, 'subject'):
-                for fragment in hit.meta.highlight.subject:
-                    print(fragment)
 
         # Multiple languages: https://www.elastic.co/guide/en/elasticsearch/guide/current/mixed-lang-fields.html
         # Identifying languages: https://www.elastic.co/guide/en/elasticsearch/guide/current/language-pitfalls.html#identifying-language

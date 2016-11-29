@@ -3,9 +3,20 @@
 {% load static %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static "wally/style_wally.css" %}" />
+    <link rel="stylesheet" href="{% static "wally/style_wally.css" %}"/>
+{% endblock %}
+
+{% block sidebar %}
+    <ul class="nav nav-sidebar">
+        <li class="active"><a href="{% url 'wally:search' %}">Email Search <span class="sr-only">(current)</span></a></li>
+
+    </ul>
 {% endblock %}
 
 {% block header_content %}
-{#    <img src="{% static "wally_search/img/wally100.png" %}" />#}
+    {#    <img src="{% static "wally_search/img/wally100.png" %}" />#}
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src='{% static 'wally/wally.js' %}'></script>
 {% endblock %}

@@ -39,6 +39,9 @@ def deploy_static():
     with cd(env.project_root):
         run(os.path.join(python3_dir, 'python') + ' ./manage.py collectstatic -v0 --noinput')
 
+def deploy_static_local():
+    with cd(env.project_root):
+        local('python ./manage.py collectstatic -v0 --noinput')
 
 def disable_debug_remote():
     settings_path = os.path.join(env.project_root, 'howler', 'settings.py')

@@ -11,9 +11,9 @@ def search(request):
 def find(request):
     try:
         query = request.GET['query']
-        from_datetime = request.GET['from']
-        to_datetime = request.GET['to']
         try:
+            from_datetime = request.GET['from']
+            to_datetime = request.GET['to']
             include_spam = request.GET['include_spam']
         except KeyError:
             include_spam = False

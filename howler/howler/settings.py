@@ -124,10 +124,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "public/static")
 
 STATIC_URL = "/static/" # How static files are accessed by URL
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    os.path.join(BASE_DIR, "wally_search", "static"),
-]
+BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -135,7 +132,10 @@ STATICFILES_FINDERS = [
     'djangobower.finders.BowerFinder',
 ]
 
-BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "wally_search", "static"),
+]
 
 BOWER_INSTALLED_APPS = (
     'jquery',

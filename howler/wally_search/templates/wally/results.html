@@ -1,31 +1,76 @@
 {% extends "wally/base_wally.html" %}
 
-{% block content %}
+{% block main %}
+{#    <h1 class="page-header">Results</h1>#}
+    <h2 class="sub-header">Hits for: {{ query }} <a class="btn btn-default" href="{% url 'wally:search' %}">Back to search</a>  </h2>
 
-<a href="{% url 'wally:search' %}">Back to search</a><p>Search in e-mails for text: {{ query }}</p>
 
-<div class="hits">
+
     {% if hit_list %}
-        {% for hit in hit_list %}
-            <div class="hit">
-                <p><a href="{% url 'wally:detail' hit.meta.id %}">{{ hit.subject }}</a></p>
-                <p>Search score: {{ hit.meta.score }}, Sent:  {{ hit.date }}, Language: {{ hit.langCode }} ({{ hit.langPercent }}% of total content)</p>
+        <div class="table-responsive">
+            <table class="table table-emails">
+                <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Search score</th>
+                    <th>Sent</th>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Language</th>
+                    <th>% Language</th>
+                </tr>
+                </thead>
+                {% for hit in hit_list %}
+                    <tbody>
+                        <tr class="js_hit success">
+                            <td><b>{{ hit.subject }}</b></td>
+                            <td>{{ hit.meta.score }}</td>
+                            <td>{{ hit.date }}</td>
+                            <td>{{ hit.fromEmail }}</td>
+                            <td>{{ hit.toEmail }}</td>
+                            <td>{{ hit.langCode }}</td>
+                            <td>{{ hit.langPercent }}</td>
+                        </tr>
+                        <tr class="js_hit_content">
+                            <td class="hit_content" colspan="7">
 
-                {% for fragment in hit.meta.highlight.subject %}
-                    <p class="fragment">
-                        {{ fragment|safe }}
-                    </p>
-                {% endfor %}
+                                {% for fragment in hit.meta.highlight.subject %}
+                                    <p class="fragment">
+                                        <b>Hit in subject:</b> {{ fragment|safe }}
+                                    </p>
+                                {% endfor %}
 
-                {% for fragment in hit.meta.highlight.body %}
-                    <p class="fragment">
-                        {{ fragment|safe }}
-                    </p>
+                                {% if hit_list %}
+                                    <b>Hits in body:</b>
+                                    {% for fragment in hit.meta.highlight.body %}
+                                        <p class="fragment">
+                                            {{ fragment|safe|linebreaks }}
+                                        </p>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <p class=" js_showmail_btn">
+                                    <a class="btn btn-success">View Email</a>
+                                </p>
+
+                                <div class="js_text mailcontent collapse">
+                                    <blockquote>
+{#                                        {% for fragment in hit.meta.highlight.body %}#}
+{#                                            {{ fragment|safe|linebreaks}}#}
+{#                                        {% endfor %}#}
+                                        <p><b>Sender:</b> {{ hit.fromName }} &lt;{{ hit.fromEmail }}&gt;</p>
+                                        <p><b>Receiver:</b> {{ hit.toName }} &lt;{{ hit.toEmail }}&gt;</p>
+
+                                         {{ hit.body|linebreaks}}#}
+                                    </blockquote>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
                 {% endfor %}
-            </div>
-        {% endfor %}
+            </table>
+        </div>
     {% else %}
         <p>No emails found.</p>
     {% endif %}
-</div>
 {% endblock %}

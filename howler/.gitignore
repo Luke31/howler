@@ -1,6 +1,11 @@
+# Bower
+components
+
+# static files
+public
+
 # pyenv
 .python-version
-bower_components
 
 # Python
 
