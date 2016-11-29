@@ -46,17 +46,13 @@ def deploy_static():
     with cd(env.project_root):
         run(os.path.join(python3_dir,'python') + ' ./manage.py collectstatic -v0 --noinput')
 
+
 def disable_debug():
-    with cd(os.path.join(env.project_root,'howler')):
-        run()
+    settings_path = os.path.join(env.project_root, 'howler', 'settings.py')
+    sed(settings_path, "DEBUG = True", "DEBUG = False")
 
 
 def inform_webserver():
     with cd(env.project_root):
         run("touch wsgi.py")
 
-
-def _update_settings(source_folder, site_name):
-    settings_path = source_folder + '/superlists/settings.py'
-    sed(settings_path, "DEBUG = True", "DEBUG = False")
-    sed(settings_path, 'DOMAIN = "localhost"', 'DOMAIN = "%s"' % (site_name,))
