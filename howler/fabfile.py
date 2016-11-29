@@ -1,9 +1,11 @@
-from fabric.api import local, settings, abort, run, cd, env
+from fabric.api import local, settings, abort, run, cd, env, prefix
 from fabric.contrib.console import confirm
 
-env.hosts = ['10.0.10.180']  # Passphrase private key: hogehoge
+env.hosts = ['lukas@10.0.10.180']  # Passphrase private key: hogehoge
 env.project_root = '/var/www/howler'
 code_dir = '/var/git/lukas-sandbox'
+python3_dir = '/home/lukas/.pyenv/versions/howler/bin'
+
 
 def test():
     with settings(warn_only=True):
@@ -19,7 +21,6 @@ def prepare_deploy():
 
 
 def deploy():
-    #activate_pyenv()
     pull_copy()
     deploy_static()
     deploy_webserver()
@@ -33,10 +34,6 @@ def push():
     local("git push")
 
 
-def activate_pyenv():
-    run("pyenv shell howler")
-
-
 def pull_copy():
     with cd(code_dir):
         run("git pull")
@@ -45,7 +42,7 @@ def pull_copy():
 
 def deploy_static():
     with cd(env.project_root):
-        run('./manage.py collectstatic -v0 --noinput')
+        run(python3_dir+'/python ./manage.py collectstatic -v0 --noinput')
 
 
 def deploy_webserver():
