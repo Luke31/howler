@@ -1,5 +1,7 @@
 from fabric.api import local, settings, abort, run, cd, env, prefix
+from fabric.contrib.files import sed
 from fabric.contrib.console import confirm
+import os
 
 env.hosts = ['lukas@10.0.10.180']  # Passphrase private key: hogehoge
 env.project_root = '/var/www/howler'
@@ -23,8 +25,8 @@ def prepare_deploy():
 def deploy():
     pull_copy()
     deploy_static()
-    deploy_webserver()
-
+    disable_debug()
+    inform_webserver()
 
 def commit():
     local("git add -p && git commit")
@@ -42,9 +44,19 @@ def pull_copy():
 
 def deploy_static():
     with cd(env.project_root):
-        run(python3_dir+'/python ./manage.py collectstatic -v0 --noinput')
+        run(os.path.join(python3_dir,'python') + ' ./manage.py collectstatic -v0 --noinput')
+
+def disable_debug():
+    with cd(os.path.join(env.project_root,'howler')):
+        run()
 
 
-def deploy_webserver():
+def inform_webserver():
     with cd(env.project_root):
         run("touch wsgi.py")
+
+
+def _update_settings(source_folder, site_name):
+    settings_path = source_folder + '/superlists/settings.py'
+    sed(settings_path, "DEBUG = True", "DEBUG = False")
+    sed(settings_path, 'DOMAIN = "localhost"', 'DOMAIN = "%s"' % (site_name,))
