@@ -54,9 +54,9 @@ class Search:
               Match(fromEmail={'query': qterm, 'boost': 2}) | \
               Match(toEmail={'query': qterm, 'boost': 2}) | \
               Match(replyToEmail={'query': qterm, 'boost': 2}) | \
-              Match(fromName={'query': qterm, 'boost': 1.5}) | \
-              Match(toName={'query': qterm, 'boost': 1.5}) | \
-              Match(replyToName={'query': qterm, 'boost': 1.5}) | \
+              Match(fromName={'query': qterm, 'boost': 1}) | \
+              Match(toName={'query': qterm, 'boost': 1}) | \
+              Match(replyToName={'query': qterm, 'boost': 1}) | \
               Match(subject={'query': qterm, 'boost': 1.5}) | \
               Match(body=qterm)
 

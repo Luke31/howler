@@ -55,7 +55,7 @@ class Index:
             docid = os.path.basename(file)
             self.index(docid, jsonstr)
             return 0
-        except (LookupError, AttributeError, ValueError, TypeError) as e:
+        except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError) as e:
             ret = 'An exception of type {0} occured, when reading file {1}: {2}'.format(type(e).__name__, file, e)
             print(ret)
             return 1
