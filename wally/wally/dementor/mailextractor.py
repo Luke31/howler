@@ -62,7 +62,7 @@ class EmailMessageEncoder(json.JSONEncoder):
             to_tup = email.utils.parseaddr(obj['to'])
             replyto_tup = email.utils.parseaddr(obj['reply-to'])
             sent = email.utils.parsedate_to_datetime(obj['date'])
-            date_time_no_millis = '{:%Y-%m-%dT%H:%M:%S%z}'.format(sent)
+            date_time_no_millis = ('{:'+constants.JSON_DATETIME_FORMAT+'}').format(sent)
             # (https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html#built-in-date-formats)
             # date_time_no_millis -> yyyy-MM-dd'T'HH:mm:ssZZ
             # or custom format: https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html

@@ -7,3 +7,4 @@ SUPPORTED_LANG_CODES_ANALYZERS = {'ja': 'kuromoji',
                                   'en': 'english',
                                   'un': 'standard'}
 FALLBACK_LANG_CODE = 'un'
+
