@@ -12,7 +12,7 @@
     </div>
     <form action="{% url 'wally:find' %}" method="get">
         <div class="row">
-            <div class='col-md-10'>
+            <div class='col-md-11'>
                 <div class="form-group">
                     <label for="query">Full-text search</label>
                     <input type="text" class="form-control" name="query" class="fulltext" id="query"
@@ -21,7 +21,30 @@
             </div>
         </div>
         <div class="row">
-            <div class='col-md-5'>
+            <div class='col-md-2'>
+                <div class="form-group">
+                    <label for="date_sliding_value">Only search in last</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="date_sliding_value" name="date_sliding_value" value="5">
+                    </div>
+                </div>
+            </div>
+            <div class='col-md-2'>
+                <div class="form-group">
+                    <label for="date_sliding_type">Duration type</label>
+                    <div class="input-group">
+                        <select class="form-control" id="date_sliding_type" name="date_sliding_type">
+                            <option value="y" selected="selected">Years</option>
+                            <option value="M">Month</option>
+                            <option value="d">Days</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class='col-md-1'>
+                <h3 class="text-primary">OR</h3>
+            </div>
+            <div class='col-md-3'>
                 <div class="form-group">
                     <label for="from">From</label> - JST time
                     <div class='input-group date' id='datetimepicker-from'>
@@ -32,11 +55,12 @@
                     </div>
                 </div>
             </div>
-            <div class='col-md-5'>
+            <div class='col-md-3'>
                 <div class="form-group">
                     <label for="to">To</label> - JST time
                     <div class='input-group date' id='datetimepicker-to'>
-                        <input type='text' class="form-control" name="to" placeholder="2016/10/31 12:18"/><!--type="datetime-local"-->
+                        <input type='text' class="form-control" name="to" placeholder="2016/10/31 12:18"/>
+                        <!--type="datetime-local"-->
                         <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>

@@ -35,13 +35,17 @@ class Search:
         date_gte = None  # '2010-01-31T22:28:14+0300'  # from
         date_lte = 'now'  #  ''2012-09-20T17:41:14+0900' # 'now'  # to
         date_sliding = None
+        date_sliding_value = ''
+        date_sliding_type = ''
         for key, value in kwargs.items():
             if key == 'date_gte':
                 date_gte = ('{:'+dementor_constants.JSON_DATETIME_FORMAT+'}').format(value)
             if key == 'date_lte':
                 date_lte = ('{:'+dementor_constants.JSON_DATETIME_FORMAT+'}').format(value)
-            if key == 'date_sliding':
-                date_sliding = value
+            if key == 'date_sliding_value':
+                date_sliding_value = value
+            if key == 'date_sliding_type':
+                date_sliding_type = value
 
         s = DslSearch(using=self._es, index=constants.ES_INDEX_PREFIX.format('*'))
 
@@ -63,8 +67,8 @@ class Search:
         # Filter
         if date_gte is not None:
             s = s.filter('range', date={'lte': date_lte, 'gte': date_gte})
-        elif date_sliding is not None:
-            s = s.filter('range', date={'gte': 'now-{0}'.format(date_sliding)})
+        elif (date_sliding_value != '') & (date_sliding_type != ''):
+            s = s.filter('range', date={'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type)})
 
         # Extra
         s = s.extra(indices_boost={
@@ -85,69 +89,4 @@ class Search:
         # Multiple languages: https://www.elastic.co/guide/en/elasticsearch/guide/current/mixed-lang-fields.html
         # Identifying languages: https://www.elastic.co/guide/en/elasticsearch/guide/current/language-pitfalls.html#identifying-language
 
-        return response
-
-    def search_low(self, qterm):
-        response = self._es.search(
-            index="test-email-results.html",
-            body=
-            {
-                "query": {
-                    "boosting": {
-                        "positive": [{
-                            "bool": {
-                                "should": [
-                                    {
-                                        "multi_match": {
-                                            "query": qterm,
-                                            "type": "phrase",
-                                            "fields": ["body"],
-                                            "boost": 2.0
-                                        }
-                                    },
-                                    {
-                                        "multi_match": {
-                                            "query": qterm,
-                                            "type": "most_fields",
-                                            "fields": ["body"]
-                                        }
-                                    }
-                                ]
-                            }
-                        }],
-                        "negative": [
-                            {
-                                "bool": {
-                                    "should": [
-                                        {
-                                            "match": {
-                                                "subject": "spam"
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        "negative_boost": 0.2
-                    }
-                }
-            }
-        )
-
-        for hit in response['hits']['hits']:
-            print(hit['_score'], '\n', hit['subject'])
-            for fragment in hit.meta.highlight.body:
-                print(fragment)
-
-        for hit in response:
-            if hasattr(hit, 'buildNum'):
-                continue
-            print(hit.meta.score, '\n', hit.subject)
-            if hasattr(hit, '_highlight.body'):
-                for fragment in hit['_highlight.body']:
-                    print(fragment)
-
-            if hasattr(hit, '_highlight.subject'):
-                for fragment in hit['_highlight.subject']:
-                    print(fragment)
         return response

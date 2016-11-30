@@ -29,6 +29,9 @@ def find(request):
         except ValueError:
             return render(request, 'wally/search.html', {'error_message': "Incorrent field format to-date"})
 
+        kwargs['date_sliding_value'] = request.GET.get('date_sliding_value', '')
+        kwargs['date_sliding_type'] = request.GET.get('date_sliding_type', '')
+
         try:
             include_spam = request.GET['include_spam']
         except KeyError:
