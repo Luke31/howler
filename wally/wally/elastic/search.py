@@ -51,6 +51,12 @@ class Search:
 
         # Query
         pos = MatchPhrase(body={'query': qterm, 'boost': 2}) | \
+              Match(fromEmail={'query': qterm, 'boost': 2}) | \
+              Match(toEmail={'query': qterm, 'boost': 2}) | \
+              Match(replyToEmail={'query': qterm, 'boost': 2}) | \
+              Match(fromName={'query': qterm, 'boost': 1.5}) | \
+              Match(toName={'query': qterm, 'boost': 1.5}) | \
+              Match(replyToName={'query': qterm, 'boost': 1.5}) | \
               Match(subject={'query': qterm, 'boost': 1.5}) | \
               Match(body=qterm)
 
@@ -82,6 +88,12 @@ class Search:
         s = s.highlight('body', fragment_size=50)
         # s = s.highlight('body', number_of_fragments=0)
         s = s.highlight('subject')
+        s = s.highlight('fromEmail')
+        s = s.highlight('toEmail')
+        s = s.highlight('replyToEmail')
+        s = s.highlight('fromName')
+        s = s.highlight('toName')
+        s = s.highlight('replyToName')
 
         # Execute
         response = s.execute()

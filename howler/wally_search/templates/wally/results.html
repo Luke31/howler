@@ -23,31 +23,60 @@
                 {% for hit in hit_list %}
                     <tbody>
                         <tr class="js_hit success">
-                            <td><b>{{ hit.subject }}</b></td>
+                            <td>
+                                <b>
+                                {% if hit.meta.highlight.subject.0 %}
+                                    {{ hit.meta.highlight.subject.0|safe }}
+                                {% else %}
+                                    {{ hit.subject }}
+                                {% endif %}
+                                </b>
+                            </td>
                             <td>{{ hit.meta.score }}</td>
                             <td>{{ hit.date }}</td>
-                            <td>{{ hit.fromEmail }}</td>
-                            <td>{{ hit.toEmail }}</td>
+                            <td>
+                                {% if hit.meta.highlight.fromEmail.0 %}
+                                    {{ hit.meta.highlight.fromEmail.0|safe }}
+                                {% else %}
+                                    {{ hit.fromEmail }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if hit.meta.highlight.toEmail.0 %}
+                                    {{ hit.meta.highlight.toEmail.0|safe }}
+                                {% else %}
+                                    {{ hit.toEmail }}
+                                {% endif %}
+                            </td>
                             <td>{{ hit.langCode }}</td>
                             <td>{{ hit.langPercent }}</td>
                         </tr>
                         <tr class="js_hit_content">
                             <td class="hit_content" colspan="7">
-
-                                {% for fragment in hit.meta.highlight.subject %}
+                                {% if hit.meta.highlight.replyToEmail.0 %}
                                     <p class="fragment">
-                                        <b>Hit in subject:</b> {{ fragment|safe }}
+                                        <b>Hit in Reply-To Email/Name:</b> {{ hit.meta.highlight.replyToEmail.0|safe }} {{ hit.meta.highlight.replyToName.0|safe }}
+                                    </p>
+                                {% endif %}
+
+                                {% if hit.meta.highlight.fromName.0 %}
+                                    <p class="fragment">
+                                        <b>Hit in sender name:</b> {{ hit.meta.highlight.fromName.0|safe }}
+                                    </p>
+                                {% endif %}
+
+                                {% if hit.meta.highlight.toName.0 %}
+                                    <p class="fragment">
+                                        <b>Hit in receiver name:</b> {{ hit.meta.highlight.toName.0|safe }}
+                                    </p>
+                                {% endif %}
+
+                                <b>Hits in body:</b>
+                                {% for fragment in hit.meta.highlight.body %}
+                                    <p class="fragment">
+                                        {{ fragment|safe|linebreaks }}
                                     </p>
                                 {% endfor %}
-
-                                {% if hit_list %}
-                                    <b>Hits in body:</b>
-                                    {% for fragment in hit.meta.highlight.body %}
-                                        <p class="fragment">
-                                            {{ fragment|safe|linebreaks }}
-                                        </p>
-                                    {% endfor %}
-                                {% endif %}
 
                                 <p class=" js_showmail_btn">
                                     <a class="btn btn-success">View Email</a>
