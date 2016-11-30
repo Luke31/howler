@@ -22,16 +22,19 @@ $(function () {
     $("#datetimepicker-to").on("dp.change", function (e) {
         $('#datetimepicker-from').data("DateTimePicker").maxDate(e.date);
     });
-});
 
-// Results:
-$(function () {
-    $('.js_hit').on('click', function () {
-        $(this).siblings('tr.js_hit_content').find('div.js_text').toggle();
-    });
+    $("#js_searchform").submit(function (e) {
+        var url = $(this).attr('action');
 
-    $('.js_showmail_btn').on('click', function () {
-        event.preventDefault();
-        $(this).siblings('div.js_text').toggle();
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: $("#js_searchform").serialize(), // serializes the form's elements.
+            success: function (data) {
+                $("#js_result").html(data);
+            }
+        });
+
+        e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 });

@@ -25,23 +25,24 @@ class Index:
 
     def add_mapping_to_index(self, lang_code, lang_analyzer):
         analyzer_lang = analysis.analyzer(lang_analyzer)
+        analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'), filter=['lowercase', 'unique'])
 
         m = Mapping(self._type_name)
         m.field('fromName', 'text',
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('fromEmail', 'keyword')
+        m.field('fromEmail', 'text', analyzer=analyzer_email)
         m.field('toName', 'text',
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('toEmail', 'keyword')
+        m.field('toEmail', 'text', analyzer=analyzer_email)
         m.field('replyToName', 'text',
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('replyToEmail', 'keyword')
+        m.field('replyToEmail', 'text', analyzer=analyzer_email)
         m.field('subject','text', analyzer=analyzer_lang)
         m.field('date', 'date')
         m.field('body', 'text', analyzer=analyzer_lang)
