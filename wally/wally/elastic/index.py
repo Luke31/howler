@@ -1,5 +1,6 @@
-import elasticsearch
-from elasticsearch_dsl import Mapping, Text, Keyword, analysis, exceptions
+from elasticsearch import Elasticsearch
+from elasticsearch import helpers as es_helpers
+from elasticsearch_dsl import Mapping, analysis
 from ..dementor.mailextractor import MailExtractor
 from . import constants
 from . import helpers
@@ -17,8 +18,8 @@ class Index:
     """
 
     def __init__(self, mailextractor=MailExtractor()):
-        # self._es = elasticsearch.Elasticsearch()
-        self._es = elasticsearch.Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
+        # self._es = Elasticsearch()
+        self._es = Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
         self._mailextractor = mailextractor
         self._index_name = constants.ES_INDEX_PREFIX
         self._type_name = constants.ES_TYPE_NAME
@@ -77,10 +78,10 @@ class Index:
 
         docs = self._mailextractor.extract_jsons(files)  # Generator-Iterable
         actions = self.convert_docstrs_to_bulk_actions(docs)  # Generator-Iterable
-        #(cnt_success, errors_index) = elasticsearch.helpers.bulk(
-            # self._es, actions, chunk_size=2000)
-        (cnt_success, errors_index) = elasticsearch.helpers.parallel_bulk(
-            self._es, actions, chunk_size=2000, thread_count=3)  # Leave one thread/4 to system respond
+        (cnt_success, errors_index) = es_helpers.bulk(
+          self._es, actions, chunk_size=2000)
+        # (cnt_success, errors_index) = es_helpers.parallel_bulk(
+        # self._es, actions, chunk_size=2000, thread_count=2)  # Leave one thread/4 to system respond
 
         cnt_total = self._mailextractor.cnt_total
         errors_convert = self._mailextractor.errors_convert
@@ -92,7 +93,7 @@ class Index:
         """
         Generator: Convert json doc-strings to bulk-import actions
 
-        :param docs: List of tuples (Docid, email-data in json-str) Any iterable, generator preferred for optimal memory usage
+        :param docs: List of tuples (Docid, email-JSON-str) Any iterable, generator preferred for optimal memory usage
         :return: actions (Generator-Iterable)
         """
         for (docid, docstr) in docs:
@@ -104,7 +105,7 @@ class Index:
             data['_type'] = self._type_name
             if docid.isdigit():
                 data['_id'] = docid
-            yield data # json.dumps(data, sort_keys=True, ensure_ascii=False) # indent=4,
+            yield data  # json.dumps(data, sort_keys=True, ensure_ascii=False) # indent=4,
 
     def index_from_file(self, file):
         """

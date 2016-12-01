@@ -16,7 +16,7 @@ class TestIndexMethods(unittest.TestCase):
         idx.add_mapping_to_index_multi()
 
         in_dir = 'data_in'
-        basepath = os.path.dirname(os.path.realpath(__file__)) # os.getcwd()
+        basepath = os.path.dirname(os.path.realpath(__file__))  # os.getcwd()
         in_path = os.path.join(basepath, in_dir)
         cnt = 0
         cnt_err = 0

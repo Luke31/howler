@@ -2,32 +2,35 @@ from email import policy
 import email
 import email.message as message
 import json
-import cld2
 import os
 from . import constants
+from . import language
+from . import helpers_mail
 
 
 class MailExtractor:
     """Mailextractor
 
-    Convert email-file to json-file
-    Classifies its content language with a reliability
+    Convert email-file to json-file or multiple
+    Classifies its content language and adds it to the json
+    Development based on mail formats: RFC 822, RFC 2822, RFC 5322
+    Attachment is ignored in this version
     """
 
-    def __init__(self, func=None):
+    def __init__(self):
         self.cnt_total = 0
         self.errors_convert = []
 
     def extract_jsons(self, files):
         """
-        Generator: Convert multiple files into jsons applying the generator pattern
+        Generator: Convert multiple mail-files into jsons applying the generator pattern
         State-variables cnt_total and erros on class MailExtractor will be updated
 
         :param files: Any iterable, generator preferred for optimal memory usage
-        :return: Tuples (Generator-Iterable) of (Id, E-mail JSON)
+        :return: Tuples (Generator-Iterable) of (Id, E-mail JSON-String)
         """
 
-        # Reset coutners
+        # Reset counters
         self.cnt_total = 0
         self.errors_convert = []
 
@@ -35,18 +38,16 @@ class MailExtractor:
             self.cnt_total += 1
             try:
                 yield (os.path.basename(file), self.extract_json(file))  # id, data
-            except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError) as e:
+            except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError) as exc:
                 errmsg = 'An exception of type {0} occured, when reading file {1}: {2}'.format(
-                    type(e).__name__, file, e)
-                #print(errmsg)  # TODO: Remove this later!
+                    type(e).__name__, file, exc)
                 self.errors_convert.append(errmsg)
                 continue
-                #yield (constants.ERROR_EXTRACT, errmsg)
 
     @staticmethod
     def extract_json(file):
         """
-        Convert file into json
+        Convert mail-file into json
         :param file: Path to a file which can be read (File will be opened here)
         :return: JSON-String
         """
@@ -58,38 +59,11 @@ class MailExtractor:
         return jsonstr
 
 
-def _extract_body_plain_text(msg):
-    bodyplain = msg.get_body(preferencelist='plain')
-    if bodyplain is not None:
-        return bodyplain.get_content()
-
-    htmlbody = msg.get_body(preferencelist='html')
-    if htmlbody is not None:
-        html = htmlbody.get_content()
-        plain = html  # TODO: Html-Escaping
-        return plain
-
-    return None
-
-
-def is_preferred_lang(lang_details):
-    return (lang_details.language_code == constants.PREFERRED_LANG) & (
-        lang_details.percent >= constants.PREFERRED_THRESHOLD)
-
-
-def select_language(text):
-    lang_is_reliable, text_bytes_found, lang_details_list = cld2.detect(text)
-
-    lang_selected_details = next((x for x in lang_details_list if is_preferred_lang(x)), None)
-
-    # If preferred language not significant enough, use language with highest percentage
-    if lang_selected_details is None:
-        lang_selected_details = lang_details_list[0]
-
-    return lang_selected_details
-
-
 class EmailMessageEncoder(json.JSONEncoder):
+    """
+    Custom JSONEncoder for converting email.message.Message to json-string
+    """
+
     def default(self, obj):
         if isinstance(obj, message.Message):
             from_tup = email.utils.parseaddr(obj['from'])
@@ -101,10 +75,10 @@ class EmailMessageEncoder(json.JSONEncoder):
             # date_time_no_millis -> yyyy-MM-dd'T'HH:mm:ssZZ
             # or custom format: https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html
 
-            body_plain = _extract_body_plain_text(obj)
+            body_plain = helpers_mail.extract_body_plain_text(obj)
 
             # detect language
-            lang_selected_details = select_language(body_plain)
+            lang_selected_details = language.detect_select_language(body_plain)
             lang_detected_code = lang_selected_details.language_code
             lang_percent = lang_selected_details.percent
 
@@ -127,6 +101,7 @@ class EmailMessageEncoder(json.JSONEncoder):
 
 if __name__ == "__main__":
     import codecs
+
     inDir = 'data_in'
     outDir = 'data_out'
 

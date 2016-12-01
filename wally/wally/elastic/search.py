@@ -1,9 +1,9 @@
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search as DslSearch
-from elasticsearch_dsl import Q
-from elasticsearch_dsl.query import Boosting, Match, MultiMatch, MatchPhrase
+from elasticsearch_dsl.query import Boosting, Match, MatchPhrase
 from ..dementor import constants as dementor_constants
 from . import constants
+
 
 class Search:
     """Basic Search object.
@@ -14,6 +14,7 @@ class Search:
     def __init__(self):
         self._es = Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
 
+    # noinspection PyIncorrectDocstring
     def search(self, qterm, **kwargs):
         r"""Searches in the elasticsearch index for the mail
             :param qterm:
@@ -33,15 +34,14 @@ class Search:
 
             """
         date_gte = None  # '2010-01-31T22:28:14+0300'  # from
-        date_lte = 'now'  #  ''2012-09-20T17:41:14+0900' # 'now'  # to
-        date_sliding = None
+        date_lte = 'now'  # ''2012-09-20T17:41:14+0900' # 'now'  # to
         date_sliding_value = ''
         date_sliding_type = ''
         for key, value in kwargs.items():
             if key == 'date_gte':
-                date_gte = ('{:'+dementor_constants.JSON_DATETIME_FORMAT+'}').format(value)
+                date_gte = ('{:' + dementor_constants.JSON_DATETIME_FORMAT + '}').format(value)
             if key == 'date_lte':
-                date_lte = ('{:'+dementor_constants.JSON_DATETIME_FORMAT+'}').format(value)
+                date_lte = ('{:' + dementor_constants.JSON_DATETIME_FORMAT + '}').format(value)
             if key == 'date_sliding_value':
                 date_sliding_value = value
             if key == 'date_sliding_type':
@@ -51,14 +51,14 @@ class Search:
 
         # Query
         pos = MatchPhrase(body={'query': qterm, 'boost': 2}) | \
-              Match(fromEmail={'query': qterm, 'boost': 2}) | \
-              Match(toEmail={'query': qterm, 'boost': 2}) | \
-              Match(replyToEmail={'query': qterm, 'boost': 2}) | \
-              Match(fromName={'query': qterm, 'boost': 1}) | \
-              Match(toName={'query': qterm, 'boost': 1}) | \
-              Match(replyToName={'query': qterm, 'boost': 1}) | \
-              Match(subject={'query': qterm, 'boost': 1.5}) | \
-              Match(body=qterm)
+            Match(fromEmail={'query': qterm, 'boost': 2}) | \
+            Match(toEmail={'query': qterm, 'boost': 2}) | \
+            Match(replyToEmail={'query': qterm, 'boost': 2}) | \
+            Match(fromName={'query': qterm, 'boost': 1}) | \
+            Match(toName={'query': qterm, 'boost': 1}) | \
+            Match(replyToName={'query': qterm, 'boost': 1}) | \
+            Match(subject={'query': qterm, 'boost': 1.5}) | \
+            Match(body=qterm)
 
         # pos = MultiMatch(query=qterm, type='phrase', boost=2.0, fields=['body']) \
         #      | MultiMatch(query=qterm, type='most_fields', fields=['body'])
@@ -99,6 +99,8 @@ class Search:
         response = s.execute()
 
         # Multiple languages: https://www.elastic.co/guide/en/elasticsearch/guide/current/mixed-lang-fields.html
-        # Identifying languages: https://www.elastic.co/guide/en/elasticsearch/guide/current/language-pitfalls.html#identifying-language
+
+        # Identifying languages:
+        # https://www.elastic.co/guide/en/elasticsearch/guide/current/language-pitfalls.html#identifying-language
 
         return response
