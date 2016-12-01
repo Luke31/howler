@@ -40,7 +40,7 @@ class MailExtractor:
                 yield (os.path.basename(file), self.extract_json(file))  # id, data
             except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError) as exc:
                 errmsg = 'An exception of type {0} occured, when reading file {1}: {2}'.format(
-                    type(e).__name__, file, exc)
+                    type(exc).__name__, file, exc)
                 self.errors_convert.append(errmsg)
                 continue
 
