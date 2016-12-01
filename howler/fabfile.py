@@ -10,10 +10,11 @@ python3_dir = '/home/lukas/.pyenv/versions/howler/bin'
 
 
 def deploy():
-    """[Main] Deploy on server: Git Pull, Bower Install, Serve statics, Disable Debug, Restart app"""
+    """[Main] Deploy on server: Git Pull, Bower Install, Serve statics, Gen translations, Disable Debug, Restart app"""
     pull_copy()
     bower_install()
     deploy_static()
+    compmsg()
     disable_debug_remote()
     inform_webserver()
 
@@ -35,6 +36,12 @@ def deploy_static():
     """Django collect/deploy static files"""
     with cd(env.project_root):
         run(os.path.join(python3_dir, 'python') + ' ./manage.py collectstatic -v0 --noinput')
+
+
+def compmsg():
+    """Generate .mo file locally (gettext required)"""
+    with cd(env.project_root):
+        run('django-admin compilemessages')
 
 
 def l_deploy_static():
