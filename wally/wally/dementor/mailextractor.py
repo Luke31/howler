@@ -14,14 +14,46 @@ class MailExtractor:
     """
 
     def __init__(self, func=None):
-        pass
+        self.cnt_total = 0
+        self.errors_convert = []
 
-    def extract_json(self, f):
-        with open(f, 'rb') as fp: #read as byte-string
+    def extract_jsons(self, files):
+        """
+        Generator: Convert multiple files into jsons applying the generator pattern
+        State-variables cnt_total and erros on class MailExtractor will be updated
+
+        :param files: Any iterable, generator preferred for optimal memory usage
+        :return: Tuples (Generator-Iterable) of (Id, E-mail JSON)
+        """
+
+        # Reset coutners
+        self.cnt_total = 0
+        self.errors_convert = []
+
+        for file in files:
+            self.cnt_total += 1
+            try:
+                yield (os.path.basename(file), self.extract_json(file))  # id, data
+            except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError) as e:
+                errmsg = 'An exception of type {0} occured, when reading file {1}: {2}'.format(
+                    type(e).__name__, file, e)
+                #print(errmsg)  # TODO: Remove this later!
+                self.errors_converts.append(errmsg)
+                continue
+                #yield (constants.ERROR_EXTRACT, errmsg)
+
+    @staticmethod
+    def extract_json(file):
+        """
+        Convert file into json
+        :param file: Path to a file which can be read (File will be opened here)
+        :return: JSON-String
+        """
+
+        with open(file, 'rb') as fp:  # read as byte-string
             msg = email.message_from_binary_file(fp, policy=policy.default)
 
         jsonstr = json.dumps(msg, sort_keys=True, indent=4, ensure_ascii=False, cls=EmailMessageEncoder)
-
         return jsonstr
 
 
@@ -33,14 +65,15 @@ def _extract_body_plain_text(msg):
     htmlbody = msg.get_body(preferencelist='html')
     if htmlbody is not None:
         html = htmlbody.get_content()
-        plain = html #TODO: Html-Escaping
+        plain = html  # TODO: Html-Escaping
         return plain
 
     return None
 
 
 def is_preferred_lang(lang_details):
-    return (lang_details.language_code == constants.PREFERRED_LANG) & (lang_details.percent >= constants.PREFERRED_THRESHOLD)
+    return (lang_details.language_code == constants.PREFERRED_LANG) & (
+        lang_details.percent >= constants.PREFERRED_THRESHOLD)
 
 
 def select_language(text):
@@ -62,7 +95,7 @@ class EmailMessageEncoder(json.JSONEncoder):
             to_tup = email.utils.parseaddr(obj['to'])
             replyto_tup = email.utils.parseaddr(obj['reply-to'])
             sent = email.utils.parsedate_to_datetime(obj['date'])
-            date_time_no_millis = ('{:'+constants.JSON_DATETIME_FORMAT+'}').format(sent)
+            date_time_no_millis = ('{:' + constants.JSON_DATETIME_FORMAT + '}').format(sent)
             # (https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html#built-in-date-formats)
             # date_time_no_millis -> yyyy-MM-dd'T'HH:mm:ssZZ
             # or custom format: https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html
@@ -75,20 +108,21 @@ class EmailMessageEncoder(json.JSONEncoder):
             lang_percent = lang_selected_details.percent
 
             return {
-                'fromName' : from_tup[0],
+                'fromName': from_tup[0],
                 'fromEmail': from_tup[1],
                 'toName': to_tup[0],
                 'toEmail': to_tup[1],
                 'replyToName': replyto_tup[0],
                 'replyToEmail': replyto_tup[1],
                 'subject': obj['subject'],
-                'date': date_time_no_millis, # obj['date']
+                'date': date_time_no_millis,  # obj['date']
                 'body': body_plain,
                 'langCode': lang_detected_code,
                 'langPercent': lang_percent
-                 }
+            }
         # Let the base class default method raise the TypeError
         return json.JSONEncoder.default(self, obj)
+
 
 if __name__ == "__main__":
     import codecs
