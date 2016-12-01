@@ -1,4 +1,5 @@
 {% extends "wally/base_wally.html" %}
+{% load i18n %}
 
 {% block main %}
     <div class="row">
@@ -18,17 +19,18 @@
                 <div class="row">
                     <div class='col-md-9'>
                         <div class="form-group">
+                            {% comment %}Translators: placeholder of search-box{% endcomment %}
                             <input type="text" class="form-control" name="query" class="fulltext" id="query"
-                                   placeholder="Full-text search"/>
+                                   placeholder="{% trans "Full-text search" %}"/>
                         </div>
                     </div>
                     <div class='col-md-1'>
-                        <button type="submit" class="btn btn-primary">Search</button>
+                        <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
                     </div>
                     <div class='col-md-2'>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="include_spam" id="include_spam"/> search in spam
+                                <input type="checkbox" name="include_spam" id="include_spam"/> {% trans "search in spam" %}
                             </label>
                         </div>
                     </div>
@@ -38,7 +40,7 @@
                 <div class="row">
                     <div class='col-md-2'>
                         <div class="form-group">
-                            <label for="date_sliding_value">Only search in last</label>
+                            <label for="date_sliding_value">{% trans "Only search in past" %}</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="date_sliding_value"
                                        name="date_sliding_value" value="5">
@@ -47,22 +49,24 @@
                     </div>
                     <div class='col-md-2'>
                         <div class="form-group">
-                            <label for="date_sliding_type">Duration type</label>
+                            <label for="date_sliding_type">{% trans "Duration type" %}</label>
                             <div class="input-group">
                                 <select class="form-control" id="date_sliding_type" name="date_sliding_type">
-                                    <option value="y" selected="selected">Years</option>
-                                    <option value="M">Month</option>
-                                    <option value="d">Days</option>
+                                    <option value="y" selected="selected">{% trans "Years" %}</option>
+                                    <option value="M">{% trans "Months" %}</option>
+                                    <option value="d">{% trans "Days" %}</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class='col-md-1'>
-                        <h3 class="text-primary">OR</h3>
+                        {% comment %}Translators: Separator between sliding window and fix dates{% endcomment %}
+                        <h3 class="text-primary">{% trans "OR" %}</h3>
                     </div>
+                    {% trans "JST time" as jsttime %}
                     <div class='col-md-3'>
                         <div class="form-group">
-                            <label for="from">From</label> - JST time
+                            <label for="from">{% trans "From" context "datetime" %}</label> - {{ jsttime }}
                             <div class='input-group date' id='datetimepicker-from'>
                                 <input type='text' class="form-control" name="from" placeholder="2012/11/01 00:00"/>
                                 <span class="input-group-addon">
@@ -73,7 +77,7 @@
                     </div>
                     <div class='col-md-3'>
                         <div class="form-group">
-                            <label for="to">To</label> - JST time
+                            <label for="to">{% trans "To" context "datetime" %}</label> - {{ jsttime }}
                             <div class='input-group date' id='datetimepicker-to'>
                                 <input type='text' class="form-control" name="to" placeholder="2016/10/31 12:18"/>
                                 <!--type="datetime-local"-->

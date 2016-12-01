@@ -3,16 +3,20 @@
 {#  {% block main %}#}
 {#    <h1 class="page-header">Results</h1>#}
 {#    <h2 class="sub-header">Hits for: {{ query }} <a class="btn btn-default" href="{% url 'wally:search' %}">Back to search</a>  </h2>#}
+{% load i18n %}
 
-
-
+{% comment %}Translators: Sender of email{% endcomment %}
+{% trans "Sender:" as sender %}
+{% comment %}Translators: Receiver of email{% endcomment %}
+{% trans "Receiver:" as receiver %}
 {% if hit_list %}
     {% for hit in hit_list %}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="row">
                     <div class='col-md-10'>
-                        <label>Subject:</label>
+                        {% comment %}Translators: email-subject{% endcomment %}
+                        <label>{% trans "Subject:" %}</label>
                         {% if hit.meta.highlight.subject.0 %}
                             {{ hit.meta.highlight.subject.0|safe }}
                         {% else %}
@@ -20,15 +24,17 @@
                         {% endif %}
                     </div>
                     <div class='col-md-2'>
-                        <label>Score:</label> {{ hit.meta.score|floatformat:1 }}
+                        {% comment %}Translators: Score of a search result{% endcomment %}
+                        <label>{% trans "Score:" %}</label> {{ hit.meta.score|floatformat:1 }}
                     </div>
                 </div>
                 <div class="row">
                     <div class='col-md-3'>
-                        <label>Sent:</label> {{ hit.date }}
+                        {% comment %}Translators: Sent (date/time){% endcomment %}
+                        <label>{% trans "Sent:" %}</label> {{ hit.date }}
                     </div>
                     <div class='col-md-3'>
-                        <label>Sender:</label>
+                        <label>{{ sender }}</label>
                         {% if hit.meta.highlight.fromEmail.0 %}
                             {{ hit.meta.highlight.fromEmail.0|safe }}
                         {% else %}
@@ -36,7 +42,7 @@
                         {% endif %}
                     </div>
                     <div class='col-md-4'>
-                        <label>Receiver:</label>
+                        <label>{{ receiver }}</label>
                         {% if hit.meta.highlight.toEmail.0 %}
                             {{ hit.meta.highlight.toEmail.0|safe }}
                         {% else %}
@@ -44,7 +50,7 @@
                         {% endif %}
                     </div>
                     <div class='col-md-2'>
-                        <label>Langauge:</label>
+                        <label>{% trans "Language:" %}</label>
                         {{ hit.langCode }} ({{ hit.langPercent }}%)
                     </div>
                 </div>
@@ -52,25 +58,27 @@
             <div class="panel-body">
                 {% if hit.meta.highlight.replyToEmail.0 %}
                     <p class="fragment">
-                        <b>Hit in Reply-To
-                            Email/Name:</b> {{ hit.meta.highlight.replyToEmail.0|safe }} {{ hit.meta.highlight.replyToName.0|safe }}
+                        <b>{% trans "Hit in Reply-To/Email/Name:" %}
+                        </b>
+                        {{ hit.meta.highlight.replyToEmail.0|safe }} {{ hit.meta.highlight.replyToName.0|safe }}
                     </p>
                 {% endif %}
 
                 {% if hit.meta.highlight.fromName.0 %}
                     <p class="fragment">
-                        <b>Hit in sender name:</b> {{ hit.meta.highlight.fromName.0|safe }}
+                        <b>{% trans "Hit in sender name:" %}</b>
+                        {{ hit.meta.highlight.fromName.0|safe }}
                     </p>
                 {% endif %}
 
                 {% if hit.meta.highlight.toName.0 %}
                     <p class="fragment">
-                        <b>Hit in receiver name:</b> {{ hit.meta.highlight.toName.0|safe }}
+                        <b>{% trans "Hit in receiver name:" %}</b> {{ hit.meta.highlight.toName.0|safe }}
                     </p>
                 {% endif %}
 
                 {% if hit.meta.highlight.body %}
-                    <b>Hits in body:</b>
+                    <b>{% trans "Hits in body:" %}</b>
                     {% for fragment in hit.meta.highlight.body %}
                         <p class="fragment">
                             {{ fragment|safe|linebreaks }}
@@ -82,14 +90,14 @@
                     <div class="panel panel-success">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" href="#collapse{{ forloop.counter0 }}">View email content</a>
+                                <a data-toggle="collapse" href="#collapse{{ forloop.counter0 }}">{% trans "View email content" %}</a>
                             </h4>
                         </div>
                         <div id="collapse{{ forloop.counter0 }}" class="panel-collapse collapse">
                             <div class="panel-body">
                                 <div class="well">
-                                    <p><b>Sender:</b> {{ hit.fromName }} &lt;{{ hit.fromEmail }}&gt;</p>
-                                    <p><b>Receiver:</b> {{ hit.toName }} &lt;{{ hit.toEmail }}&gt;</p>
+                                    <p><b>{{ sender }}</b> {{ hit.fromName }} &lt;{{ hit.fromEmail }}&gt;</p>
+                                    <p><b>{{ receiver }}</b> {{ hit.toName }} &lt;{{ hit.toEmail }}&gt;</p>
 
                                     {{ hit.body|linebreaks }}#}
                                 </div>
@@ -104,7 +112,7 @@
 {% else %}
     <div class="panel panel-warning">
         <div class="panel-heading">
-            <span class="">No emails found</span>
+            <span class="">{% trans "No emails found" %}</span>
         </div>
     </div>
 {% endif %}

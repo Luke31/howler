@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from wally.elastic.search import Search
 from datetime import datetime
-
+from django.utils.translation import ugettext as _
 
 def search(request):
     return render(request, 'wally/search.html')
@@ -20,14 +20,16 @@ def find(request):
             if request_from != '':
                 kwargs['date_gte'] = datetime.strptime(request_from, web_datetime_format)
         except ValueError:
-            return render(request, 'wally/search.html', {'error_message': "Incorrent field format from-date"})
+            # Translators: The user didn't submit the correct values in the form
+            return render(request, 'wally/search.html', {'error_message': _("Incorrent field format from-date")})
 
         try:
             request_to = request.GET.get('to', '')
             if request_to != '':
                 kwargs['date_lte'] = datetime.strptime(request_to, web_datetime_format)
         except ValueError:
-            return render(request, 'wally/search.html', {'error_message': "Incorrent field format to-date"})
+            # Translators: The user didn't submit the correct values in the form
+            return render(request, 'wally/search.html', {'error_message': _("Incorrent field format to-date")})
 
         kwargs['date_sliding_value'] = request.GET.get('date_sliding_value', '')
         kwargs['date_sliding_type'] = request.GET.get('date_sliding_type', '')
@@ -38,9 +40,10 @@ def find(request):
             include_spam = False
 
         response = Search().search(query, **kwargs)
-    except KeyError:
-        # Redisplay the wally form.
-        return render(request, 'wally/search.html', {'error_message': "Incorrent query"})
+    except KeyError as exc:
+        # Redisplay the search form.
+        # Translators: The user didn't submit a correct query, a value is missing
+        return render(request, 'wally/search.html', {'error_message': _("Incorrent query: {exception}").format(exception=exc)})
     else:
         context = {
             'query': query,

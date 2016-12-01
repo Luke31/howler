@@ -142,3 +142,7 @@ BOWER_INSTALLED_APPS = (
     'bootstrap',
     'eonasdan-bootstrap-datetimepicker#latest',
 )
+
+# LOCALE_PATHS = [
+#     os.path.join(BASE_DIR, "locale"),
+# ]
