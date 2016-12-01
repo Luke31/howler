@@ -77,8 +77,10 @@ class Index:
 
         docs = self._mailextractor.extract_jsons(files)  # Generator-Iterable
         actions = self.convert_docstrs_to_bulk_actions(docs)  # Generator-Iterable
-        (cnt_success, errors_index) = elasticsearch.helpers.bulk(self._es, actions, stats_only=False, chunk_size=2000)
-        # es_summary = helpers.parallel_bulk(self._es, actions, stats_only=False)
+        #(cnt_success, errors_index) = elasticsearch.helpers.bulk(
+            # self._es, actions, chunk_size=2000)
+        (cnt_success, errors_index) = elasticsearch.helpers.parallel_bulk(
+            self._es, actions, chunk_size=2000, thread_count=3)  # Leave one thread/4 to system respond
 
         cnt_total = self._mailextractor.cnt_total
         errors_convert = self._mailextractor.errors_convert
@@ -116,7 +118,7 @@ class Index:
             docid = os.path.basename(file)
             self.index(docid, jsonstr)
             return 0
-        except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError) as e:
+        except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError, AssertionError) as e:
             ret = 'An exception of type {0} occured, when reading file {1}: {2}'.format(type(e).__name__, file, e)
             print(ret)
             return 1
