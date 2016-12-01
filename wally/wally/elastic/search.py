@@ -12,7 +12,7 @@ class Search:
     """
 
     def __init__(self):
-        self._es = Elasticsearch([constants.ES_HOST_IP], maxsize=25)
+        self._es = Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
 
     def search(self, qterm, **kwargs):
         r"""Searches in the elasticsearch index for the mail

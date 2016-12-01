@@ -18,7 +18,7 @@ class Index:
 
     def __init__(self, mailextractor=MailExtractor()):
         # self._es = elasticsearch.Elasticsearch()
-        self._es = elasticsearch.Elasticsearch([constants.ES_HOST_IP], maxsize=25)
+        self._es = elasticsearch.Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
         self._mailextractor = mailextractor
         self._index_name = constants.ES_INDEX_PREFIX
         self._type_name = constants.ES_TYPE_NAME
