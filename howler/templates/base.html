@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
 
-    <title>Wally e-mail search</title>
+    <title>Howler email search</title>
 
     <link rel="stylesheet" href="{% static 'style.css' %}"/>
 
@@ -54,10 +54,10 @@
                 <li><a href="#">Settings</a></li>
                 <!--<li><a href="#">Help</a></li>-->
             </ul>
-            <form class="navbar-form navbar-right" action="{% url 'wally:find' %}" method="get">
-                <input type="text" class="form-control" name="query" class="fulltext" id="query"
-                       placeholder="Email search..."/>
-            </form>
+{#            <form class="navbar-form navbar-right" action="{% url 'wally:find' %}" method="get">#}
+{#                <input type="text" class="form-control" name="query" class="fulltext" id="query"#}
+{#                       placeholder="Email search..."/>#}
+{#            </form>#}
         </div>
     </div>
 </nav>
