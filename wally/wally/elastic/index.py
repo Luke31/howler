@@ -1,5 +1,5 @@
-from elasticsearch import Elasticsearch, helpers
-from elasticsearch_dsl import Mapping, Text, Keyword, analysis
+import elasticsearch
+from elasticsearch_dsl import Mapping, Text, Keyword, analysis, exceptions
 from ..dementor.mailextractor import MailExtractor
 from . import constants
 from . import helpers
@@ -17,17 +17,17 @@ class Index:
     """
 
     def __init__(self, mailextractor=MailExtractor()):
-        # self._es = Elasticsearch()
-        self._es = Elasticsearch([constants.ES_HOST_IP], maxsize=25)
+        # self._es = elasticsearch.Elasticsearch()
+        self._es = elasticsearch.Elasticsearch([constants.ES_HOST_IP], maxsize=25)
         self._mailextractor = mailextractor
         self._index_name = constants.ES_INDEX_PREFIX
         self._type_name = constants.ES_TYPE_NAME
 
-    def add_mapping_to_index_multi(self):
+    def add_mapping_to_index_multi(self, delete_old_indices=False):
         for lang_code, lang_analyzer in constants.SUPPORTED_LANG_CODES_ANALYZERS.items():
-            self.add_mapping_to_index(lang_code, lang_analyzer)
+            self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices)
 
-    def add_mapping_to_index(self, lang_code, lang_analyzer):
+    def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False):
         analyzer_lang = analysis.analyzer(lang_analyzer)
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=['lowercase', 'unique'])
@@ -52,6 +52,9 @@ class Index:
         m.field('date', 'date')
         m.field('body', 'text', analyzer=analyzer_lang)
 
+        if delete_old_index:
+            self._es.indices.delete(index=self._index_name.format(lang_code), ignore=[400, 404])
+
         m.save(self._index_name.format(lang_code), using=self._es)
 
     def index_bulk_from_dir(self, dir_data_in):
@@ -73,13 +76,12 @@ class Index:
         """
 
         docs = self._mailextractor.extract_jsons(files)  # Generator-Iterable
-        cnt_total = self._mailextractor.cnt_total
-        errors_convert = self._mailextractor.errors_convert
-
         actions = self.convert_docstrs_to_bulk_actions(docs)  # Generator-Iterable
-        (cnt_success, errors_index) = helpers.bulk(self._es, actions, stats_only=False)
+        (cnt_success, errors_index) = elasticsearch.helpers.bulk(self._es, actions, stats_only=False)
         # es_summary = helpers.parallel_bulk(self._es, actions, stats_only=False)
 
+        cnt_total = self._mailextractor.cnt_total
+        errors_convert = self._mailextractor.errors_convert
         cnt_error = len(errors_convert) + len(errors_index)
         return Summary(cnt_total=cnt_total, cnt_success=cnt_success, cnt_error=cnt_error,
                        errors_convert=errors_convert, errors_index=errors_index)
@@ -95,11 +97,12 @@ class Index:
             data = json.loads(docstr)
             lang_code = get_lang_code(data['langCode'])
 
+            data['_op_type'] = 'index'
             data['_index'] = self._index_name.format(lang_code)
             data['_type'] = self._type_name
             if docid.isdigit():
                 data['_id'] = docid
-            yield json.dumps(data, sort_keys=True, indent=4, ensure_ascii=False)
+            yield data # json.dumps(data, sort_keys=True, ensure_ascii=False) # indent=4,
 
     def index_from_file(self, file):
         """
@@ -136,14 +139,6 @@ def get_lang_code(lang_code):
     if lang_code not in constants.SUPPORTED_LANG_CODES_ANALYZERS:
         return constants.FALLBACK_LANG_CODE
     return lang_code
-
-
-if __name__ == "__main__":
-    index = Index()
-    index.add_mapping_to_index_multi()
-    summary = index.index_bulk_from_dir(os.getcwd())
-    print("Successfully indexed {0}/{1} emails. Errors on json-convert: {2}, Errors in indexing: {3}".format(
-        summary.cnt_success, summary.cnt_total, len(summary.errors_convert), len(summary.errors_index)))
 
 
 class Summary(object):

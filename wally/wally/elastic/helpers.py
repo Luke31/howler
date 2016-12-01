@@ -1,4 +1,3 @@
-from .index import Index
 import os
 
 

@@ -3,6 +3,7 @@ import email
 import email.message as message
 import json
 import cld2
+import os
 from . import constants
 
 
@@ -38,7 +39,7 @@ class MailExtractor:
                 errmsg = 'An exception of type {0} occured, when reading file {1}: {2}'.format(
                     type(e).__name__, file, e)
                 #print(errmsg)  # TODO: Remove this later!
-                self.errors_converts.append(errmsg)
+                self.errors_convert.append(errmsg)
                 continue
                 #yield (constants.ERROR_EXTRACT, errmsg)
 
@@ -126,8 +127,6 @@ class EmailMessageEncoder(json.JSONEncoder):
 
 if __name__ == "__main__":
     import codecs
-    import os
-
     inDir = 'data_in'
     outDir = 'data_out'
 
