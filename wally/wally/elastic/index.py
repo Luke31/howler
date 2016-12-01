@@ -77,7 +77,7 @@ class Index:
 
         docs = self._mailextractor.extract_jsons(files)  # Generator-Iterable
         actions = self.convert_docstrs_to_bulk_actions(docs)  # Generator-Iterable
-        (cnt_success, errors_index) = elasticsearch.helpers.bulk(self._es, actions, stats_only=False, chunk_size=1000)
+        (cnt_success, errors_index) = elasticsearch.helpers.bulk(self._es, actions, stats_only=False, chunk_size=2000)
         # es_summary = helpers.parallel_bulk(self._es, actions, stats_only=False)
 
         cnt_total = self._mailextractor.cnt_total
