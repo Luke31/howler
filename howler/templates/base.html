@@ -69,6 +69,12 @@
                             {{ language.name_local }} ({{ language.code }})
                         </option>
                     {% endfor %}
+                    {#                    <option value="en" {% if 'en' == LANGUAGE_CODE %} selected="selected"{% endif %}>#}
+                    {#                        English#}
+                    {#                    </option>#}
+                    {#                    <option value="ja" {% if 'ja' == LANGUAGE_CODE %} selected="selected"{% endif %}>#}
+                    {#                        日本語#}
+                    {#                    </option>#}
                 </select>
                 <!--<button type="submit" class="btn btn-default">Go</button>-->
             </form>
