@@ -10,9 +10,10 @@ python3_dir = '/home/lukas/.pyenv/versions/howler/bin'
 
 
 def deploy():
-    """[Main] Deploy on server: Git Pull, Bower Install, Serve statics, Gen translations, Disable Debug,
+    """[Main] Deploy on server: Git Pull, Pip inst, Bower inst, Serve statics, Gen translations, Disable Debug,
     Migrate db, Restart app and apache"""
     pull_copy()
+    pip_install()
     bower_install()
     deploy_static()
     compmsg()
@@ -20,6 +21,12 @@ def deploy():
     migrate_db()
     inform_webserver()
     restart_apache()
+
+
+def pip_install():
+    with cd(code_dir):
+        run('pip3 install -r /path/to/requirements.txt')
+        run(os.path.join(python3_dir, 'pip3') + ' install -r /path/to/requirements.txt')
 
 
 def pull_copy():
