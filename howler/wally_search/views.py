@@ -4,8 +4,13 @@ from django.template import loader
 from wally.elastic.search import Search
 from datetime import datetime
 from django.utils.translation import ugettext as _
+from django.utils import translation
+
 
 def search(request):
+    user_language = 'ja'
+    #translation.activate(user_language)
+    #request.session[translation.LANGUAGE_SESSION_KEY] = user_language
     return render(request, 'wally/search.html')
 
 web_datetime_format = '%Y/%m/%d %H:%M'

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-01 17:46+0900\n"
+"POT-Creation-Date: 2016-12-02 10:19+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
 #: wally_search/templates/wally/base_wally.html:12
 msgid "Email search"
 msgstr "メール検索"
@@ -24,17 +25,17 @@ msgstr "メール検索"
 #. Translators: Sender of email
 #: wally_search/templates/wally/results.html:9
 msgid "Sender:"
-msgstr ""
+msgstr "差出人:"
 
 #. Translators: Receiver of email
 #: wally_search/templates/wally/results.html:11
 msgid "Receiver:"
-msgstr ""
+msgstr "宛先:"
 
 #. Translators: email-subject
 #: wally_search/templates/wally/results.html:19
 msgid "Subject:"
-msgstr ""
+msgstr "件名:"
 
 #. Translators: Score of a search result
 #: wally_search/templates/wally/results.html:28
@@ -44,67 +45,67 @@ msgstr "スコア"
 #. Translators: Sent (date/time)
 #: wally_search/templates/wally/results.html:34
 msgid "Sent:"
-msgstr ""
+msgstr "送信日時:"
 
 #: wally_search/templates/wally/results.html:53
 msgid "Language:"
-msgstr ""
+msgstr "言語:"
 
 #: wally_search/templates/wally/results.html:61
-msgid "Hit in Reply-To/Email/Name:"
-msgstr ""
+msgid "Hit in Reply-To Email/Name:"
+msgstr "返信アドレス/名前のヒット"
 
 #: wally_search/templates/wally/results.html:69
 msgid "Hit in sender name:"
-msgstr ""
+msgstr "差出人の名前のヒット"
 
 #: wally_search/templates/wally/results.html:76
 msgid "Hit in receiver name:"
-msgstr ""
+msgstr "差出人の名前のヒット"
 
 #: wally_search/templates/wally/results.html:81
 msgid "Hits in body:"
-msgstr ""
+msgstr "本文のヒット"
 
 #: wally_search/templates/wally/results.html:93
 msgid "View email content"
-msgstr ""
+msgstr "メールを見る"
 
 #: wally_search/templates/wally/results.html:115
 msgid "No emails found"
-msgstr ""
+msgstr "メールを見つけらなかった"
 
 #: wally_search/templates/wally/search.html:24
 msgid "Full-text search"
-msgstr ""
+msgstr "フルテキスト検索"
 
 #: wally_search/templates/wally/search.html:28
 msgid "Search"
 msgstr "検索"
 
 #: wally_search/templates/wally/search.html:33
-msgid "search in spam"
-msgstr ""
+msgid "search in spam as well"
+msgstr "スパムも検索"
 
 #: wally_search/templates/wally/search.html:43
-msgid "Only search in past"
-msgstr ""
+msgid "Within the past"
+msgstr "過去以内"
 
 #: wally_search/templates/wally/search.html:52
 msgid "Duration type"
-msgstr ""
+msgstr "期間型"
 
 #: wally_search/templates/wally/search.html:55
 msgid "Years"
-msgstr ""
+msgstr "年"
 
 #: wally_search/templates/wally/search.html:56
 msgid "Months"
-msgstr ""
+msgstr "月"
 
 #: wally_search/templates/wally/search.html:57
 msgid "Days"
-msgstr ""
+msgstr "日"
 
 #. Translators: Separator between sliding window and fix dates
 #: wally_search/templates/wally/search.html:64
@@ -113,30 +114,30 @@ msgstr "又は"
 
 #: wally_search/templates/wally/search.html:66
 msgid "JST time"
-msgstr ""
+msgstr "JSTの時間"
 
 #: wally_search/templates/wally/search.html:69
 msgctxt "datetime"
 msgid "From"
-msgstr ""
+msgstr "から"
 
 #: wally_search/templates/wally/search.html:80
 msgctxt "datetime"
 msgid "To"
-msgstr ""
+msgstr "まで"
 
 #. Translators: The user didn't submit the correct values in the form
-#: wally_search/views.py:24
+#: wally_search/views.py:29
 msgid "Incorrent field format from-date"
-msgstr ""
+msgstr "日本語: Incorrent field format from-date"
 
 #. Translators: The user didn't submit the correct values in the form
-#: wally_search/views.py:32
+#: wally_search/views.py:37
 msgid "Incorrent field format to-date"
-msgstr ""
+msgstr "日本語: Incorrent field format to-date"
 
 #. Translators: The user didn't submit a correct query, a value is missing
-#: wally_search/views.py:46
+#: wally_search/views.py:51
 #, python-brace-format
 msgid "Incorrent query: {exception}"
-msgstr ""
+msgstr "日本語: Incorrent query: {exception}"
