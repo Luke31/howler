@@ -25,8 +25,8 @@ def deploy():
 
 def pip_install():
     with cd(env.project_root):
-        run('pip3 install -r requirements.txt')
-        run(os.path.join(python3_dir, 'pip3') + ' install -r requirements.txt')
+        run('sudo pip3 install -r requirements.txt')  # apache uses this python3 version 3.4.2 (latest debian available)
+        run(os.path.join(python3_dir, 'pip3') + ' install -r requirements.txt')  # installer python 3.5.2 (pyenv howler)
 
 
 def pull_copy():
