@@ -143,10 +143,10 @@ BOWER_INSTALLED_APPS = (
 LANGUAGE_CODE = 'en'  # Default language
 
 LANGUAGES = [
-  ('en', 'English'),
-  ('ja', '日本語'),
+    ('en', 'English'),
+    ('ja', '日本語'),
 ]
 
-# LOCALE_PATHS = [
-#     os.path.join(BASE_DIR, "locale"),
-# ]
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, "locale"),
+]

@@ -73,7 +73,7 @@ msgstr "メールを見る"
 
 #: wally_search/templates/wally/results.html:115
 msgid "No emails found"
-msgstr "メールを見つけらなかった"
+msgstr "メールが見つからなかった"
 
 #: wally_search/templates/wally/search.html:24
 msgid "Full-text search"
