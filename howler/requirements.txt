@@ -1,0 +1,16 @@
+cffi==1.9.1
+cld2-cffi==0.1.4
+Django==1.10.3
+django-bower==5.2.0
+ecdsa==0.13
+elasticsearch==5.0.1
+elasticsearch-dsl==5.0.0
+Fabric3==1.12.post1
+paramiko==1.17.2
+psycopg2==2.6.2
+pycparser==2.17
+pycrypto==2.6.1
+python-dateutil==2.6.0
+six==1.10.0
+urllib3==1.19.1
+-e git+ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git@1976bb9e180960c21256a0458cf6eff0673d4ad5#egg=wally&subdirectory=wally
