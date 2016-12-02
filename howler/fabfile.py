@@ -10,12 +10,14 @@ python3_dir = '/home/lukas/.pyenv/versions/howler/bin'
 
 
 def deploy():
-    """[Main] Deploy on server: Git Pull, Bower Install, Serve statics, Gen translations, Disable Debug, Restart app"""
+    """[Main] Deploy on server: Git Pull, Bower Install, Serve statics, Gen translations, Disable Debug,
+    Migrate db, Restart app and apache"""
     pull_copy()
     bower_install()
     deploy_static()
     compmsg()
-    disable_debug_remote()
+    disable_debug_remote()  # TODO: Better: Use production configuration
+    migrate_db()
     inform_webserver()
     restart_apache()
 
@@ -69,6 +71,17 @@ def l_compmsg():
     local('django-admin compilemessages')
 
 
+def migrate_db():
+    """Migrate database"""
+    with cd(env.project_root):
+        run("python manage.py migrate")
+
+
+def l_migrate_db():
+    """[Local] Migrate database"""
+    local("python manage.py migrate")
+
+
 def inform_webserver():
     """trigger restart app (touch wsgi)"""
     with cd(env.project_root):
@@ -78,6 +91,7 @@ def inform_webserver():
 def restart_apache():
     """trigger an apache service restart using sudo"""
     run("sudo /etc/init.d/apache2 restart")
+
 
 def l_test():
     """[Local] Run Tests locally"""
