@@ -13,4 +13,4 @@ pycrypto==2.6.1
 python-dateutil==2.6.0
 six==1.10.0
 urllib3==1.19.1
--e git+ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git@1976bb9e180960c21256a0458cf6eff0673d4ad5#egg=wally&subdirectory=wally
+-e git+ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git#egg=wally&subdirectory=wally
