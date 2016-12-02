@@ -74,7 +74,7 @@ def l_compmsg():
 def migrate_db():
     """Migrate database"""
     with cd(env.project_root):
-        run("python manage.py migrate")
+        run(os.path.join(python3_dir, 'python') + ' ./manage.py migrate')
 
 
 def l_migrate_db():
