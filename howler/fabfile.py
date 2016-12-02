@@ -17,6 +17,7 @@ def deploy():
     compmsg()
     disable_debug_remote()
     inform_webserver()
+    restart_apache()
 
 
 def pull_copy():
@@ -73,6 +74,10 @@ def inform_webserver():
     with cd(env.project_root):
         run("touch wsgi.py")
 
+
+def restart_apache():
+    """trigger an apache service restart using sudo"""
+    run("sudo /etc/init.d/apache2 restart")
 
 def l_test():
     """[Local] Run Tests locally"""
