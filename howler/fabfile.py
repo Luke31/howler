@@ -26,7 +26,7 @@ def deploy():
 def pip_install():
     with cd(code_dir):
         run('pip3 install -r /path/to/requirements.txt')
-        run(os.path.join(python3_dir, 'pip3') + ' install -r /path/to/requirements.txt')
+        run(os.path.join(python3_dir, 'pip3') + ' install -r requirements.txt')
 
 
 def pull_copy():
