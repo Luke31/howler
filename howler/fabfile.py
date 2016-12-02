@@ -28,8 +28,9 @@ def pip_install():
     with cd(env.project_root):
         run('sudo pip3 install -r requirements.txt')  # apache uses this python3 version 3.4.2 (latest debian available)
         run(os.path.join(python3_dir, 'pip3') + ' install -r requirements.txt')  # installer python 3.5.2 (pyenv howler)
-        #run('sudo pip3 install --upgrade --no-deps --force-reinstall {0}'.format(wally_git))
-        #run(os.path.join(python3_dir, 'pip3') + ' install --upgrade --no-deps --force-reinstall {0}'.format(wally_git))
+        # run('sudo pip3 install --upgrade --no-deps --force-reinstall {0}'.format(wally_git))
+        # run(os.path.join(python3_dir, 'pip3') + ' install --upgrade --no-deps --force-reinstall {0}'.format(wally_git))
+
 
 def pull_copy():
     """Git pull and copy to server place"""

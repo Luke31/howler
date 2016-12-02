@@ -25,13 +25,19 @@ $(function () {
 
     $("#js_searchform").submit(function (e) {
         var url = $(this).attr('action');
-
+        $(".loading").show();
         $.ajax({
             type: "GET",
             url: url,
             data: $("#js_searchform").serialize(), // serializes the form's elements.
             success: function (data) {
                 $("#js_result").html(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            },
+            complete: function(jqXHR, textStatus){
+                $(".loading").hide();
             }
         });
 
