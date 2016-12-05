@@ -33,7 +33,7 @@ def fix_wrong_encoded_words_header(header_value):
 
     fixed_header = re.sub(r"(=\?.*\?=)(?!$)", r"\1 ", header_value)
     dh = decode_header(fixed_header)
-    default_charset = 'ASCII'
-    result = ''.join([string(t[0], t[1] or default_charset) for t in dh])
+    #default_charset = 'ASCII'
+    #result = ''.join([string(t[0], t[1] or default_charset) for t in dh])
 
-    return result
+    return dh
