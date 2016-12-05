@@ -38,8 +38,11 @@ def fix_wrong_encoded_words_header(header_value):
         return header_value
     else:
         dh = decode_header(fixed_header)
-        print(dh)
-        default_charset = 'ASCII'
-        result = ''.join([string(t[0], t[1] or default_charset) for t in dh])
-        print(result)
+        default_charset = 'utf-8'  # same as ASCII
+        result = ''.join([str(t[0], t[1] or default_charset) for t in dh])
+        print("NEXT: "+result)
         return result
+
+[(b'[INFO 147388] [comm3 2107] Re: \\u300c\\u30b3\\u30a2\\u4f1a\\u8b70\\u300d (1/9(', None),
+ (b'\x1b$B6b\x1b(B', 'iso-2022-jp'),
+ (b' ) 6:00pm-7:00pm)  \\u306e\\u304a\\u77e5\\u3089\\u305b', None)]
