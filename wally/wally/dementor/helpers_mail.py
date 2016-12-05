@@ -2,6 +2,7 @@ import re
 from email.header import decode_header
 import string
 
+
 def extract_body_plain_text(msg):
     """
     Get body of message (first choice plain, second html)
@@ -31,10 +32,14 @@ def fix_wrong_encoded_words_header(header_value):
     :return: Valid MIME Encoded Word string
     """
 
-    fixed_header = re.sub(r"(=\?.*\?=)(?!$)", r"\1 ", header_value)
-    dh = decode_header(fixed_header)
-    print(dh)
-    #default_charset = 'ASCII'
-    #result = ''.join([string(t[0], t[1] or default_charset) for t in dh])
-
-    return dh
+    fixed_header = re.sub(r"(=\?.*\?=)(?=\S)", r"\1 ", header_value)  # re.sub((=\?.*\?=)(?=\S))
+    # fixed_header = re.sub(r"(=\?.*\?=)(?!$)", r"\1 ", header_value)
+    if fixed_header == header_value:  # nothing needed to fix
+        return header_value
+    else:
+        dh = decode_header(fixed_header)
+        print(dh)
+        default_charset = 'ASCII'
+        result = ''.join([string(t[0], t[1] or default_charset) for t in dh])
+        print(result)
+        return result
