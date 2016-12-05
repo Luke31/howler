@@ -1,6 +1,6 @@
 
 ES_HOST_IP = '10.0.10.180'
-ES_INDEX_PREFIX = 'mailing-{0}'
+ES_INDEX_PREFIX = 'testnew-mailing-{0}'
 ES_TYPE_NAME = 'email'
 ES_TIMEOUT = 30
 
