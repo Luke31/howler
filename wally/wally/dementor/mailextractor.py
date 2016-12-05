@@ -71,14 +71,16 @@ class EmailMessageEncoder(json.JSONEncoder):
             replyto_tup = email.utils.parseaddr(obj['reply-to'])
             sent = email.utils.parsedate_to_datetime(obj['date'])
             date_time_no_millis = ('{:' + constants.JSON_DATETIME_FORMAT + '}').format(sent)
-            # (https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html#built-in-date-formats)
+            # (https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html#built-in-date-formats   )
             # date_time_no_millis -> yyyy-MM-dd'T'HH:mm:ssZZ
             # or custom format: https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html
 
+            subject = obj['subject']
             body_plain = helpers_mail.extract_body_plain_text(obj)
+            text_combined = ''.join((subject, ' ', body_plain))  # Analyze text of subject and body
 
             # detect language
-            lang_selected_details = language.detect_select_language(body_plain)
+            lang_selected_details = language.detect_select_language(text_combined)
             lang_detected_code = lang_selected_details.language_code
             lang_percent = lang_selected_details.percent
 
@@ -89,7 +91,7 @@ class EmailMessageEncoder(json.JSONEncoder):
                 'toEmail': to_tup[1],
                 'replyToName': replyto_tup[0],
                 'replyToEmail': replyto_tup[1],
-                'subject': obj['subject'],
+                'subject': subject,
                 'date': date_time_no_millis,  # obj['date']
                 'body': body_plain,
                 'langCode': lang_detected_code,
