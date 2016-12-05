@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers as es_helpers
-from elasticsearch_dsl import Mapping, analysis
+from elasticsearch_dsl import Mapping, analysis, Keyword
 from ..dementor.mailextractor import MailExtractor
 from . import constants
 from . import helpers
@@ -30,7 +30,9 @@ class Index:
 
     def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False):
         if lang_analyzer == constants.SUPPORTED_LANG_CODES_ANALYZERS['ja']:
-            analyzer_lang = analysis.analyzer(lang_analyzer, user_dictionary="userdict_ja.txt")  # /etc/elasticsearch/
+            analyzer_lang = analysis.analyzer(lang_analyzer,
+                                              tokenizer='kuromoji_tokenizer',
+                                              user_dictionary="userdict_ja.txt")  # /etc/elasticsearch/
 
             # analyzer_lang = analysis.analyzer(lang_analyzer,
             #                                   tokenizer=['', {"kuromoji_user_dict": {
@@ -58,17 +60,17 @@ class Index:
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('fromEmail', 'keyword', search_analyzer=analyzer_email)
+        m.field('fromEmail', Keyword({'search_analyzer': analyzer_email}))
         m.field('toName', 'text',
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('toEmail', 'keyword', search_analyzer=analyzer_email)
+        m.field('toEmail', Keyword({'search_analyzer': analyzer_email}))
         m.field('replyToName', 'text',
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('replyToEmail', 'keyword', search_analyzer=analyzer_email)
+        m.field('replyToEmail', Keyword({'search_analyzer': analyzer_email}))
         m.field('subject', 'text', analyzer=analyzer_lang)
         m.field('date', 'date')
         m.field('body', 'text', analyzer=analyzer_lang)
