@@ -53,7 +53,9 @@ class MailExtractor:
         """
 
         with open(file, 'rb') as fp:  # read as byte-string
-            msg = email.message_from_binary_file(fp, policy=policy.default)
+            bytes_res = helpers_mail.fix_wrong_encoded_words_header_body(fp)
+            msg = email.message_from_bytes(bytes_res, policy=policy.default)
+            #msg = email.message_from_binary_file(fp, policy=policy.default)
 
         jsonstr = json.dumps(msg, sort_keys=True, indent=4, ensure_ascii=False, cls=EmailMessageEncoder)
         return jsonstr
