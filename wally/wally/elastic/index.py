@@ -29,7 +29,19 @@ class Index:
             self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices)
 
     def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False):
-        analyzer_lang = analysis.analyzer(lang_analyzer)
+        if lang_analyzer == constants.SUPPORTED_LANG_CODES_ANALYZERS['ja']:
+            analyzer_lang = analysis.analyzer(lang_analyzer, user_dictionary="userdict_ja.txt")  # /etc/elasticsearch/
+
+            # analyzer_lang = analysis.analyzer(lang_analyzer,
+            #                                   tokenizer=['', {"kuromoji_user_dict": {
+            #                                       "type": "kuromoji_tokenizer",
+            #                                       "user_dictionary": "userdict_ja.txt"  # /etc/elasticsearch/
+            #                                   }}]#,
+            # filter=['lowercase']
+            # )  # kuromoji
+
+        else:
+            analyzer_lang = analysis.analyzer(lang_analyzer)
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=[
                                                analysis.token_filter('email', 'pattern_capture', preserve_original=True,
