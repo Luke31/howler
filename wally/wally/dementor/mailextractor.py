@@ -76,7 +76,7 @@ class EmailMessageEncoder(json.JSONEncoder):
             # or custom format: https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html
 
             # Get subject, fix MIME Encoded Words and decode again
-            subject = obj['subject'] # helpers_mail.fix_wrong_encoded_words_header(obj['subject'])
+            subject = helpers_mail.fix_wrong_encoded_words_header(obj['subject'])  # obj['subject'] #
             body_plain = helpers_mail.extract_body_plain_text(obj)
             text_combined = ''.join((subject, ' ', body_plain))  # Analyze text of subject and body
 
