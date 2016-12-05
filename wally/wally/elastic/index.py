@@ -31,24 +31,32 @@ class Index:
     def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False):
         analyzer_lang = analysis.analyzer(lang_analyzer)
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
-                                           filter=['lowercase', 'unique'])
+                                           filter=[
+                                               analysis.token_filter('email', 'pattern_capture', preserve_original=True,
+                                                                     patterns=['([^@]+)',
+                                                                               '(\\p{L}+)',
+                                                                               '(\\d+)',
+                                                                               '@(.+)',
+                                                                               # '([^-@]+)',  # needd?
+                                                                               ]),
+                                               'lowercase', 'unique'])
 
         m = Mapping(self._type_name)
         m.field('fromName', 'text',
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('fromEmail', 'text', analyzer=analyzer_email)
+        m.field('fromEmail', 'keyword', search_analyzer=analyzer_email)
         m.field('toName', 'text',
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('toEmail', 'text', analyzer=analyzer_email)
+        m.field('toEmail', 'keyword', search_analyzer=analyzer_email)
         m.field('replyToName', 'text',
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('replyToEmail', 'text', analyzer=analyzer_email)
+        m.field('replyToEmail', 'keyword', search_analyzer=analyzer_email)
         m.field('subject', 'text', analyzer=analyzer_lang)
         m.field('date', 'date')
         m.field('body', 'text', analyzer=analyzer_lang)
@@ -79,7 +87,7 @@ class Index:
         docs = self._mailextractor.extract_jsons(files)  # Generator-Iterable
         actions = self.convert_docstrs_to_bulk_actions(docs)  # Generator-Iterable
         (cnt_success, errors_index) = es_helpers.bulk(
-          self._es, actions, chunk_size=2000)
+            self._es, actions, chunk_size=2000)
         # (cnt_success, errors_index) = es_helpers.parallel_bulk(
         # self._es, actions, chunk_size=2000, thread_count=2)  # Leave one thread/4 to system respond
 

@@ -76,6 +76,14 @@ class Search:
         elif (date_sliding_value != '') & (date_sliding_type != ''):
             s = s.filter('range', date={'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type)})
 
+        # Sorting
+        s = s.sort(
+            '-date',
+            '-_score',
+            'fromEmail',
+            # Array: {"lines": {"order": "asc", "mode": "avg"}}
+        )
+
         # Extra
         s = s.extra(indices_boost={
             constants.ES_INDEX_PREFIX.format('ja'): 1,
