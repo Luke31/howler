@@ -24,18 +24,19 @@ class Index:
         self._index_name = constants.ES_INDEX_PREFIX
         self._type_name = constants.ES_TYPE_NAME
 
-    def add_mapping_to_index_multi(self, delete_old_indices=False):
+    def add_mapping_to_index_multi(self, delete_old_indices=False, kuromoji_synonyms=None):
         for lang_code, lang_analyzer in constants.SUPPORTED_LANG_CODES_ANALYZERS.items():
-            self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices)
+            self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices, kuromoji_synonyms)
 
-    def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False):
+    def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False, kuromoji_synonyms=None):
         """
         :param lang_code: Language of index
         :param lang_analyzer: Name of analyzer for language
         :param delete_old_index: Delete index if existing? Default: False = Update existing index (Close, Update, Open)
+        :param kuromoji_synonyms: Synonyms for kuromoji Japanese analyzer
         :return: None
         """
-        analyzer_lang = helpers.get_analyzer(lang_analyzer, synonyms=['京産大, 京都産業大学', '京都大学, 京大'])
+        analyzer_lang = helpers.get_analyzer(lang_analyzer, synonyms=kuromoji_synonyms)
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=[
                                                # Don't allow searching parts of email
