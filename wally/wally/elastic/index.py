@@ -29,6 +29,12 @@ class Index:
             self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices)
 
     def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False):
+        """
+        :param lang_code: Language of index
+        :param lang_analyzer: Name of analyzer for language
+        :param delete_old_index: Delete index if existing? Default: False = Update existing index (Close, Update, Open)
+        :return: None
+        """
         analyzer_lang = helpers.get_analyzer(lang_analyzer, synonyms=['京産大, 京都産業大学','東京、京都'])
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=[
@@ -76,7 +82,7 @@ class Index:
         index_name = self._index_name.format(lang_code)
 
         reopen_index = False
-        if self._es.indices.exists():
+        if self._es.indices.exists(index=index_name):
             if delete_old_index:
                 self._es.indices.delete(index=index_name, ignore=[400, 404])
             else:
