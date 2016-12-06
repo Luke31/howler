@@ -29,30 +29,7 @@ class Index:
             self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices)
 
     def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False):
-        if lang_analyzer == constants.SUPPORTED_LANG_CODES_ANALYZERS['ja']:
-            analyzer_lang = analysis.analyzer('{0}_custom'.format(lang_analyzer),
-                                              tokenizer=analysis.tokenizer('kuromoji_tokenizer_user_dict',
-                                                                           type='kuromoji_tokenizer',
-                                                                           user_dictionary='userdict_ja.txt'),
-                                              filter=['kuromoji_baseform', 'kuromoji_part_of_speech', 'cjk_width',
-                                                      'ja_stop', 'kuromoji_stemmer', 'lowercase',
-                                                      analysis.token_filter('synonym', type='synonym',
-                                                                            synonyms=['京産大, 京都産業大学']),
-                                                      ])
-            # Extra token filters: kuromoji_number, kuromoji_readingform
-            # Extra character filter: kuromoji_iteration_mark
-            # user_dictionary="userdict_ja.txt")  # /etc/elasticsearch/
-
-            # analyzer_lang = analysis.analyzer(lang_analyzer,
-            #                                   tokenizer=['', {"kuromoji_user_dict": {
-            #                                       "type": "kuromoji_tokenizer",
-            #                                       "user_dictionary": "userdict_ja.txt"  # /etc/elasticsearch/
-            #                                   }}]#,
-            # filter=['lowercase']
-            # )  # kuromoji
-
-        else:
-            analyzer_lang = analysis.analyzer(lang_analyzer)
+        analyzer_lang = helpers.get_analyzer(lang_analyzer, synonyms=['京産大, 京都産業大学'])
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=[
                                                # Don't allow searching parts of email
