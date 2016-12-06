@@ -11,7 +11,7 @@ wally_git = '-e git+ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git#
 
 
 def deploy():
-    """[Main] Deploy on server: Git Pull, Pip inst, Bower inst, Serve statics, Gen translations, Disable Debug,
+    """[Main] RUN l_migrate_db FIRST! Deploy on server: Git Pull, Pip inst, Bower inst, Serve statics, Gen translations, Disable Debug,
     Migrate db, Restart app and apache"""
     pull_copy()
     pip_install()
@@ -84,11 +84,14 @@ def l_compmsg():
 def migrate_db():
     """Migrate database"""
     with cd(env.project_root):
+        # run(os.path.join(python3_dir, 'python') + ' ./manage.py makemigrations')  # Don't make migrations server-side
+        # Make migrations local, commit to git and then run fab deploy!
         run(os.path.join(python3_dir, 'python') + ' ./manage.py migrate')
 
 
 def l_migrate_db():
     """[Local] Migrate database"""
+    local("python manage.py makemigrations")
     local("python manage.py migrate")
 
 
