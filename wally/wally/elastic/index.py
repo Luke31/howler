@@ -35,7 +35,7 @@ class Index:
         :param delete_old_index: Delete index if existing? Default: False = Update existing index (Close, Update, Open)
         :return: None
         """
-        analyzer_lang = helpers.get_analyzer(lang_analyzer, synonyms=['京産大, 京都産業大学','東京、京都'])
+        analyzer_lang = helpers.get_analyzer(lang_analyzer, synonyms=['京産大, 京都産業大学', '京都大学, 京大'])
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=[
                                                # Don't allow searching parts of email
