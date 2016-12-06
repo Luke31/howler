@@ -14,5 +14,5 @@ urlpatterns = [
     url(r'^(?P<email_id>[0-9]+)/$', views.detail, name='detail'),
 
     url(r'^synonyms/$', views.IndexView.as_view(), name='synonyms'),
-
+    url(r'^synonyms/index/$', views.synonyms_index, name='synonymsindex'),
 ]

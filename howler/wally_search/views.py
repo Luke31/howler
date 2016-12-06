@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.template import loader
 from wally.elastic.search import Search
+from wally.elastic.index import Index
 from datetime import datetime
 from django.utils.translation import ugettext as _
 from django.utils import translation
@@ -82,3 +83,11 @@ class IndexView(generic.ListView):
         """Return all synonyms."""
         return Synonym.objects.order_by('synonym_term_a')
 
+
+def synonyms_index(request):
+    obj_list = Synonym.objects.order_by('synonym_term_a')
+    kuromoji_synonyms = [x.synonyms_combo() for x in obj_list]
+    index = Index()
+    # old_kuromoji_synonyms = ['京産大, 京都産業大学', '京都大学, 京大']
+    index.add_mapping_to_index_multi(delete_old_indices=False, kuromoji_synonyms=kuromoji_synonyms)  # Update index
+    return HttpResponseRedirect(reverse('wally:synonyms'))  # Redirect to synonyms
