@@ -51,9 +51,9 @@ class Search:
 
         # Query
         pos = MatchPhrase(body={'query': qterm, 'boost': 2}) | \
-              MatchPhrase(fromEmail={'query': qterm, 'boost': 3}) | \
-              MatchPhrase(toEmail={'query': qterm, 'boost': 3}) | \
-              MatchPhrase(replyToEmail={'query': qterm, 'boost': 3}) | \
+              Match(fromEmail={'query': qterm, 'boost': 2}) | \
+              Match(toEmail={'query': qterm, 'boost': 2}) | \
+              Match(replyToEmail={'query': qterm, 'boost': 2}) | \
               Match(fromName={'query': qterm, 'boost': 1}) | \
               Match(toName={'query': qterm, 'boost': 1}) | \
               Match(replyToName={'query': qterm, 'boost': 1}) | \
@@ -80,7 +80,7 @@ class Search:
         s = s.sort(
             #'-date',
             '-_score',
-            'fromEmail.keyword',
+            'fromEmail.raw',
             # Array: {"lines": {"order": "asc", "mode": "avg"}}
         )
 

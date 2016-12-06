@@ -46,13 +46,13 @@ class Index:
             analyzer_lang = analysis.analyzer(lang_analyzer)
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=[
-                                               analysis.token_filter('email', 'pattern_capture', preserve_original=True,
-                                                                     patterns=['([^@]+)',
-                                                                               '(\\p{L}+)',
-                                                                               '(\\d+)',
-                                                                               '@(.+)',
-                                                                               # '([^-@]+)',  # needd?
-                                                                               ]),
+                                               # analysis.token_filter('email', 'pattern_capture', preserve_original=True,
+                                               #                       patterns=['([^@]+)',
+                                               #                                 '(\\p{L}+)',
+                                               #                                 '(\\d+)',
+                                               #                                 '@(.+)',
+                                               #                                 # '([^-@]+)',  # need?
+                                               #                                 ]),
                                                'lowercase', 'unique'])
 
         m = Mapping(self._type_name)
