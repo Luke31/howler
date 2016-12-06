@@ -31,14 +31,17 @@ class Index:
     def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False):
         if lang_analyzer == constants.SUPPORTED_LANG_CODES_ANALYZERS['ja']:
             analyzer_lang = analysis.analyzer('{0}_custom'.format(lang_analyzer),
-                                              tokenizer='kuromoji_tokenizer',
+                                              tokenizer=analysis.tokenizer('kuromoji_tokenizer_user_dict',
+                                                                           type='kuromoji_tokenizer',
+                                                                           user_dictionary='userdict_ja.txt'),
                                               filter=['kuromoji_baseform', 'kuromoji_part_of_speech', 'cjk_width',
                                                       'ja_stop', 'kuromoji_stemmer', 'lowercase',
                                                       analysis.token_filter('synonym', type='synonym',
                                                                             synonyms=['京産大, 京都産業大学']),
-                                                      'kuromoji_number'],  # , 'kuromoji_readingform' EXTRA
-                                              # Extra character filter: kuromoji_iteration_mark
-                                              user_dictionary="userdict_ja.txt")  # /etc/elasticsearch/
+                                                      'kuromoji_number'],
+            # Extra token filters: kuromoji_readingform
+            # Extra character filter: kuromoji_iteration_mark
+            # user_dictionary="userdict_ja.txt")  # /etc/elasticsearch/
 
             # analyzer_lang = analysis.analyzer(lang_analyzer,
             #                                   tokenizer=['', {"kuromoji_user_dict": {
@@ -48,55 +51,55 @@ class Index:
             # filter=['lowercase']
             # )  # kuromoji
 
-        else:
+            else:
             analyzer_lang = analysis.analyzer(lang_analyzer)
-        analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
-                                           filter=[
-                                               # Don't allow searching parts of email
-                                               # analysis.token_filter('email', 'pattern_capture', preserve_original=True,
-                                               #                       patterns=['([^@]+)',
-                                               #                                 '(\\p{L}+)',
-                                               #                                 '(\\d+)',
-                                               #                                 '@(.+)',
-                                               #                                 # '([^-@]+)',  # need?
-                                               #                                 ]),
-                                               'lowercase', 'unique'])
+            analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
+                                               filter=[
+                                                   # Don't allow searching parts of email
+                                                   # analysis.token_filter('email', 'pattern_capture', preserve_original=True,
+                                                   #                       patterns=['([^@]+)',
+                                                   #                                 '(\\p{L}+)',
+                                                   #                                 '(\\d+)',
+                                                   #                                 '@(.+)',
+                                                   #                                 # '([^-@]+)',  # need?
+                                                   #                                 ]),
+                                                   'lowercase', 'unique'])
 
-        m = Mapping(self._type_name)
-        m.field('fromName', 'text',
-                fields={
-                    'raw': 'keyword',
-                })
-        m.field('fromEmail', 'text', analyzer=analyzer_email,
-                fields={
-                    'raw': 'keyword',
-                })
+            m = Mapping(self._type_name)
+            m.field('fromName', 'text',
+                    fields={
+                        'raw': 'keyword',
+                    })
+            m.field('fromEmail', 'text', analyzer=analyzer_email,
+                    fields={
+                        'raw': 'keyword',
+                    })
 
-        m.field('toName', 'text',
-                fields={
-                    'raw': 'keyword',
-                })
-        m.field('toEmail', 'text', analyzer=analyzer_email,
-                fields={
-                    'raw': 'keyword',
-                })
+            m.field('toName', 'text',
+                    fields={
+                        'raw': 'keyword',
+                    })
+            m.field('toEmail', 'text', analyzer=analyzer_email,
+                    fields={
+                        'raw': 'keyword',
+                    })
 
-        m.field('replyToName', 'text',
-                fields={
-                    'raw': 'keyword',
-                })
-        m.field('replyToEmail', 'text', analyzer=analyzer_email,
-                fields={
-                    'raw': 'keyword',
-                })
-        m.field('subject', 'text', analyzer=analyzer_lang)
-        m.field('date', 'date')
-        m.field('body', 'text', analyzer=analyzer_lang)
+            m.field('replyToName', 'text',
+                    fields={
+                        'raw': 'keyword',
+                    })
+            m.field('replyToEmail', 'text', analyzer=analyzer_email,
+                    fields={
+                        'raw': 'keyword',
+                    })
+            m.field('subject', 'text', analyzer=analyzer_lang)
+            m.field('date', 'date')
+            m.field('body', 'text', analyzer=analyzer_lang)
 
-        if delete_old_index:
-            self._es.indices.delete(index=self._index_name.format(lang_code), ignore=[400, 404])
+            if delete_old_index:
+                self._es.indices.delete(index=self._index_name.format(lang_code), ignore=[400, 404])
 
-        m.save(self._index_name.format(lang_code), using=self._es)
+            m.save(self._index_name.format(lang_code), using=self._es)
 
     def index_bulk_from_dir(self, dir_data_in):
         """
