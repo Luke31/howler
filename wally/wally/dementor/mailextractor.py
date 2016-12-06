@@ -53,9 +53,7 @@ class MailExtractor:
         """
 
         with open(file, 'rb') as fp:  # read as byte-string
-            bytes_res = helpers_mail.fix_wrong_encoded_words_header_body(fp)
-            msg = email.message_from_bytes(bytes_res, policy=policy.default)
-            #msg = email.message_from_binary_file(fp, policy=policy.default)
+            msg = email.message_from_binary_file(fp, policy=policy.default)
 
         jsonstr = json.dumps(msg, sort_keys=True, indent=4, ensure_ascii=False, cls=EmailMessageEncoder)
         return jsonstr
@@ -78,7 +76,7 @@ class EmailMessageEncoder(json.JSONEncoder):
             # or custom format: https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html
 
             # Get subject, fix MIME Encoded Words and decode again
-            subject = helpers_mail.fix_wrong_encoded_words_header(obj['subject'])  # obj['subject'] #
+            subject = helpers_mail.fix_wrong_encoded_words_header(obj['subject'])
             body_plain = helpers_mail.extract_body_plain_text(obj)
             text_combined = ''.join((subject, ' ', body_plain))  # Analyze text of subject and body
 
@@ -102,42 +100,3 @@ class EmailMessageEncoder(json.JSONEncoder):
             }
         # Let the base class default method raise the TypeError
         return json.JSONEncoder.default(self, obj)
-
-
-if __name__ == "__main__":
-    import codecs
-
-    inDir = 'data_in'
-    outDir = 'data_out'
-
-    print("Start reading emails from folder {0}...".format(inDir))
-
-    cnt = 0
-    cntErr = 0
-    basepath = os.getcwd()
-    inPath = os.path.join(basepath, inDir)
-    for filename in os.listdir(inPath):
-        if os.path.isdir(os.path.join(inPath, filename)):
-            continue
-        mail = filename
-        f = os.path.join(basepath, inDir, mail).replace('\\', '/')
-        outf = os.path.join(basepath, outDir, ''.join([mail, str(cnt), '.txt']))
-
-        try:
-            ret = MailExtractor().extract_json(f)
-        except (LookupError, AttributeError, ValueError, TypeError) as e:
-            # TODO: Print Type of Exception!
-            ret = 'Error when reading file {0}: {1}'.format(filename, e)
-            cntErr += 1
-            print(ret)
-
-        with codecs.open(outf, 'w', 'utf-8') as outfp:
-            outfp.write(ret)
-
-            # for key, value in message.items():
-            #    print('{0}: {1}'.format(key, value))
-            # file.write('{0}: {1}\n'.format(key, value))
-
-        cnt += 1
-
-    print("Successfully read {0}/{1} emails, output to folder {2}".format(cnt - cntErr, cnt, outDir))
