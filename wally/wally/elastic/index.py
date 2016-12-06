@@ -36,7 +36,7 @@ class Index:
                                                       'ja_stop', 'kuromoji_stemmer', 'lowercase',
                                                       analysis.token_filter('synonym', type='synonym',
                                                                             synonyms=['京産大, 京都産業大学']),
-                                                      'kuromoji_number', 'kuromoji_readingform'],  # EXTRA
+                                                      'kuromoji_number'],  # , 'kuromoji_readingform' EXTRA
                                               # Extra character filter: kuromoji_iteration_mark
                                               user_dictionary="userdict_ja.txt")  # /etc/elasticsearch/
 
