@@ -29,7 +29,7 @@ class Index:
             self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices)
 
     def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False):
-        analyzer_lang = helpers.get_analyzer(lang_analyzer, synonyms=['京産大, 京都産業大学'])
+        analyzer_lang = helpers.get_analyzer(lang_analyzer, synonyms=['京産大, 京都産業大学','東京、京都'])
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=[
                                                # Don't allow searching parts of email
