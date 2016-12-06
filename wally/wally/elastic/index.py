@@ -32,6 +32,12 @@ class Index:
         if lang_analyzer == constants.SUPPORTED_LANG_CODES_ANALYZERS['ja']:
             analyzer_lang = analysis.analyzer(lang_analyzer,
                                               tokenizer='kuromoji_tokenizer',
+                                              filter=['kuromoji_baseform', 'kuromoji_part_of_speech', 'cjk_width',
+                                                      'ja_stop', 'kuromoji_stemmer', 'lowercase',
+                                                      analysis.token_filter('synonym', type='synonym',
+                                                                            synonyms=['京産大, 京都産業大学']),
+                                                      'kuromoji_number', 'kuromoji_readingform'],  # EXTRA
+                                              # Extra character filter: kuromoji_iteration_mark
                                               user_dictionary="userdict_ja.txt")  # /etc/elasticsearch/
 
             # analyzer_lang = analysis.analyzer(lang_analyzer,
@@ -46,6 +52,7 @@ class Index:
             analyzer_lang = analysis.analyzer(lang_analyzer)
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=[
+                                               # Don't allow searching parts of email
                                                # analysis.token_filter('email', 'pattern_capture', preserve_original=True,
                                                #                       patterns=['([^@]+)',
                                                #                                 '(\\p{L}+)',
