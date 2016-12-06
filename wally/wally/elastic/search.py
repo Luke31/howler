@@ -51,14 +51,14 @@ class Search:
 
         # Query
         pos = MatchPhrase(body={'query': qterm, 'boost': 2}) | \
-            Match(fromEmail={'query': qterm, 'boost': 2}) | \
-            Match(toEmail={'query': qterm, 'boost': 2}) | \
-            Match(replyToEmail={'query': qterm, 'boost': 2}) | \
-            Match(fromName={'query': qterm, 'boost': 1}) | \
-            Match(toName={'query': qterm, 'boost': 1}) | \
-            Match(replyToName={'query': qterm, 'boost': 1}) | \
-            Match(subject={'query': qterm, 'boost': 1.5}) | \
-            Match(body=qterm)
+              MatchPhrase(fromEmail={'query': qterm, 'boost': 3}) | \
+              MatchPhrase(toEmail={'query': qterm, 'boost': 3}) | \
+              MatchPhrase(replyToEmail={'query': qterm, 'boost': 3}) | \
+              Match(fromName={'query': qterm, 'boost': 1}) | \
+              Match(toName={'query': qterm, 'boost': 1}) | \
+              Match(replyToName={'query': qterm, 'boost': 1}) | \
+              Match(subject={'query': qterm, 'boost': 1.5}) | \
+              Match(body=qterm)
 
         # pos = MultiMatch(query=qterm, type='phrase', boost=2.0, fields=['body']) \
         #      | MultiMatch(query=qterm, type='most_fields', fields=['body'])
@@ -78,7 +78,7 @@ class Search:
 
         # Sorting
         s = s.sort(
-            '-date',
+            #'-date',
             '-_score',
             'fromEmail',
             # Array: {"lines": {"order": "asc", "mode": "avg"}}
@@ -86,7 +86,7 @@ class Search:
 
         # Extra
         s = s.extra(indices_boost={
-            constants.ES_INDEX_PREFIX.format('ja'): 1,
+            constants.ES_INDEX_PREFIX.format('ja'): 1.5,
             constants.ES_INDEX_PREFIX.format('en'): 1,
             constants.ES_INDEX_PREFIX.format('un'): 0.5
         })
