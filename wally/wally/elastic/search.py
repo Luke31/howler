@@ -80,7 +80,7 @@ class Search:
         s = s.sort(
             #'-date',
             '-_score',
-            'fromEmail',
+            'fromEmail.keyword',
             # Array: {"lines": {"order": "asc", "mode": "avg"}}
         )
 

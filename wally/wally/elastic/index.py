@@ -60,17 +60,28 @@ class Index:
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('fromEmail', 'text', analyzer=analyzer_email)  # Keyword({'search_analyzer': analyzer_email}))
+        m.field('fromEmail', 'text', analyzer=analyzer_email,
+                fields={
+                    'raw': 'keyword',
+                })
+
         m.field('toName', 'text',
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('toEmail', 'text', analyzer=analyzer_email)  # Keyword({'search_analyzer': analyzer_email}))
+        m.field('toEmail', 'text', analyzer=analyzer_email,
+                fields={
+                    'raw': 'keyword',
+                })
+
         m.field('replyToName', 'text',
                 fields={
                     'raw': 'keyword',
                 })
-        m.field('replyToEmail', 'text', analyzer=analyzer_email)  # Keyword({'search_analyzer': analyzer_email}))
+        m.field('replyToEmail', 'text', analyzer=analyzer_email,
+                fields={
+                    'raw': 'keyword',
+                })
         m.field('subject', 'text', analyzer=analyzer_lang)
         m.field('date', 'date')
         m.field('body', 'text', analyzer=analyzer_lang)
