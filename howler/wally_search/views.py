@@ -1,17 +1,21 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from django.views import generic
 from django.template import loader
 from wally.elastic.search import Search
 from datetime import datetime
 from django.utils.translation import ugettext as _
 from django.utils import translation
+from .models import Synonym
 
 
 def search(request):
     user_language = 'ja'
-    #translation.activate(user_language)
-    #request.session[translation.LANGUAGE_SESSION_KEY] = user_language
+    # translation.activate(user_language)
+    # request.session[translation.LANGUAGE_SESSION_KEY] = user_language
     return render(request, 'wally/search.html')
+
 
 web_datetime_format = '%Y/%m/%d %H:%M'
 
@@ -48,7 +52,8 @@ def find(request):
     except KeyError as exc:
         # Redisplay the search form.
         # Translators: The user didn't submit a correct query, a value is missing
-        return render(request, 'wally/search.html', {'error_message': _("Incorrent query: {exception}").format(exception=exc)})
+        return render(request, 'wally/search.html',
+                      {'error_message': _("Incorrent query: {exception}").format(exception=exc)})
     else:
         context = {
             'query': query,
@@ -67,3 +72,13 @@ def detail(request, email_id):
 
     # question = get_object_or_404(Question, pk=question_id)
     return HttpResponse("You're looking at email %s." % email_id)
+
+
+class IndexView(generic.ListView):
+    template_name = 'wally/synonyms/index.html'
+    context_object_name = 'synonym_list'
+
+    def get_queryset(self):
+        """Return all synonyms."""
+        return Synonym.objects.order_by('synonym_term_a')
+

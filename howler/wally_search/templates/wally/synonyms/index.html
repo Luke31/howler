@@ -1,0 +1,26 @@
+{% extends "wally/base_wally.html" %}
+{% load i18n %}
+
+{% block main %}
+    {% if synonym_list %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class='col-md-10'>
+                        <ul>
+                            {% for synonym in synonym_list %}
+                                <li>{{ synonym.synonym_term_a }}, {{ synonym.synonym_term_b }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <span class="">{% trans "No synonyms found" %}</span>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

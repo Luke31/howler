@@ -1,3 +1,5 @@
+from django.contrib import admin
+
 from django.db import models
 
 
@@ -10,3 +12,5 @@ class Synonym(models.Model):
 
     def __str__(self):
         return self.synonyms_combo()
+
+admin.site.register(Synonym)
