@@ -49,6 +49,13 @@ class Index:
                                                'lowercase', 'unique'])
 
         m = Mapping(self._type_name)
+        index_name = self._index_name.format(lang_code)
+        if self._es.indices.exists(index=index_name):
+            if delete_old_index:
+                self._es.indices.delete(index=index_name, ignore=[400, 404])
+            else:
+                m = Mapping.from_es(index_name, self._type_name)  # Get existing index from server
+
         m.field('fromName', 'text',
                 fields={
                     'raw': 'keyword',
@@ -79,20 +86,20 @@ class Index:
         m.field('date', 'date')
         m.field('body', 'text', analyzer=analyzer_lang)
 
-        index_name = self._index_name.format(lang_code)
 
-        reopen_index = False
-        if self._es.indices.exists(index=index_name):
-            if delete_old_index:
-                self._es.indices.delete(index=index_name, ignore=[400, 404])
-            else:
-                self._es.indices.close(index=index_name)
-                reopen_index = True
+        #
+        # reopen_index = False
+        # if self._es.indices.exists(index=index_name):
+        #     if delete_old_index:
+        #         self._es.indices.delete(index=index_name, ignore=[400, 404])
+        #     else:
+        #         self._es.indices.close(index=index_name)
+        #         reopen_index = True
 
-        m.save(index_name, using=self._es)
+        m.save(index_name, using=self._es)  # Insert or update
 
-        if reopen_index:
-            self._es.indices.open(index=index_name)
+        # if reopen_index:
+        #     self._es.indices.open(index=index_name)
 
     def index_bulk_from_dir(self, dir_data_in):
         """
