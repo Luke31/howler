@@ -30,7 +30,7 @@ class Index:
 
     def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False):
         if lang_analyzer == constants.SUPPORTED_LANG_CODES_ANALYZERS['ja']:
-            analyzer_lang = analysis.analyzer(lang_analyzer,
+            analyzer_lang = analysis.analyzer('{0}_custom'.format(lang_analyzer),
                                               tokenizer='kuromoji_tokenizer',
                                               filter=['kuromoji_baseform', 'kuromoji_part_of_speech', 'cjk_width',
                                                       'ja_stop', 'kuromoji_stemmer', 'lowercase',
