@@ -54,7 +54,7 @@ class Index:
             if delete_old_index:
                 self._es.indices.delete(index=index_name, ignore=[400, 404])
             else:
-                m = Mapping.from_es(index_name, self._type_name)  # Get existing index from server
+                m = Mapping.from_es(index_name, self._type_name, using=self._es)  # Get existing index from server
 
         m.field('fromName', 'text',
                 fields={
