@@ -73,10 +73,20 @@ class Index:
         m.field('date', 'date')
         m.field('body', 'text', analyzer=analyzer_lang)
 
-        if delete_old_index:
-            self._es.indices.delete(index=self._index_name.format(lang_code), ignore=[400, 404])
+        index_name = self._index_name.format(lang_code)
 
-        m.save(self._index_name.format(lang_code), using=self._es)
+        reopen_index = False
+        if self._es.indices.exists():
+            if delete_old_index:
+                self._es.indices.delete(index=index_name, ignore=[400, 404])
+            else:
+                self._es.indices.close(index=index_name)
+                reopen_index = True
+
+        m.save(index_name, using=self._es)
+
+        if reopen_index:
+            self._es.indices.open(index=index_name)
 
     def index_bulk_from_dir(self, dir_data_in):
         """
