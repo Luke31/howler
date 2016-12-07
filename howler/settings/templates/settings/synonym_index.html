@@ -1,0 +1,77 @@
+{% extends "settings/base_settings.html" %}
+{% load i18n %}
+
+{% block main %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {% trans "Manage here all synonyms" %}
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class='col-md-4'>
+                    <a href="{% url "settings:synonym_new" %}">
+                        <button type="button" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-plus"
+                                  aria-hidden="true"></span> {% trans "Add new synonym" %}
+                        </button>
+                    </a>
+                </div>
+                <div class='col-md-8 text-right'>
+                    <span class="collapse" id="js_result_container">
+                        <span id="js_result" class="label label-success"></span>
+                    </span>
+                    <span class="btn btn-warning btn-sm js_transfer" data-toggle="confirmation"
+                          data-on-confirm="synonym_transfer" data-url="{% url 'settings:synonym_import' %}"
+                          title="{% trans "Really update Elasticsearch index? The search will not be available during the update." %}">
+                        <span class="glyphicon glyphicon-transfer"
+                              aria-hidden="true"></span> {% trans "Update synonyms to elasticsearch index" %}
+                    </span>
+                </div>
+            </div>
+
+            <div class="pull-right">
+
+            </div>
+        </div>
+        {% if synonym_list %}
+            <div class="table-responsive"> {#  #}
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{% trans "Term A" %}</th>
+                        <th>{% trans "Term B" %}</th>
+                        <th class="text-right"></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for synonym in synonym_list %}
+                        <tr>
+                            <td>{{ synonym.synonym_term_a }}</td>
+                            <td>{{ synonym.synonym_term_b }}</td>
+                            <td class="text-right">
+                                <a href="{% url "settings:synonym_edit" synonym.pk %}" title="{% trans "Edit" %}">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </a>
+                                <a href="{% url "settings:synonym_delete" synonym.pk %}"
+                                   title="{% trans "Delete?" %}" data-toggle="confirmation"
+                                   data-placement="left">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% else %}
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <span class="">{% trans "No synonyms found" %}</span>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

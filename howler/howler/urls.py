@@ -15,9 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.views.i18n import JavaScriptCatalog
+
 
 urlpatterns = [
     url(r'^', include('wally_search.urls')),
+    url(r'^settings/', include('settings.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^i18n/', include('django.conf.urls.i18n')),
+    url(r'^jsi18n/$', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 ]

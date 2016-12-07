@@ -1,0 +1,9 @@
+{% extends "settings/base_settings.html" %}
+{% load i18n %}
+
+{% block main %}
+    <form method="post">{% csrf_token %}
+        [Are you sure you want to delete "{{ object }}" ?]
+        <input type="submit" value="Submit"/>
+    </form>
+{% endblock %}

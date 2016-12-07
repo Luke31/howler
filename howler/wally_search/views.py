@@ -1,14 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
-from django.views import generic
 from django.template import loader
 from wally.elastic.search import Search
-from wally.elastic.index import Index
 from datetime import datetime
 from django.utils.translation import ugettext as _
 from django.utils import translation
-from .models import Synonym
 
 
 def search(request):
@@ -74,20 +70,3 @@ def detail(request, email_id):
     # question = get_object_or_404(Question, pk=question_id)
     return HttpResponse("You're looking at email %s." % email_id)
 
-
-class IndexView(generic.ListView):
-    template_name = 'wally/synonyms/index.html'
-    context_object_name = 'synonym_list'
-
-    def get_queryset(self):
-        """Return all synonyms."""
-        return Synonym.objects.order_by('synonym_term_a')
-
-
-def synonyms_index(request):
-    obj_list = Synonym.objects.order_by('synonym_term_a')
-    kuromoji_synonyms = [x.synonyms_combo() for x in obj_list]
-    index = Index()
-    # old_kuromoji_synonyms = ['京産大, 京都産業大学', '京都大学, 京大']
-    index.add_mapping_to_index_multi(delete_old_indices=False, kuromoji_synonyms=kuromoji_synonyms)  # Update index
-    return HttpResponseRedirect(reverse('wally:synonyms'))  # Redirect to synonyms

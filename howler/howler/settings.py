@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djangobower',
     'wally_search',
+    'settings',
 ]
 
 # Middleware-order matters!
@@ -148,6 +149,7 @@ STATICFILES_DIRS = [
 BOWER_INSTALLED_APPS = (
     'jquery',
     'bootstrap',
+    'bootstrap-confirmation2',
     'eonasdan-bootstrap-datetimepicker#latest',
 )
 

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block head %}
+    {#    <link rel="stylesheet" href="{% static "wally/style_wally.css" %}"/>#}
+{% endblock %}
+
+{% block sidebar %}
+{#    <ul class="nav nav-sidebar">#}
+{#        {% url 'settings:synonym' as url_synonm %}#}
+{#        <li{% if request.path == url_synonm %} class="active"{% endif %}>#}
+{#            <a href="{{ url_synonm }}">{% trans "Synonyms" %}</a>#}
+{#        </li>#}
+{#    </ul>#}
+{% endblock %}
+
+{% block main_pre %}
+    <h2>{% trans "Settings" %}</h2>
+{% endblock %}
+
+{% block header_content %}
+    {#    <img src="{% static "wally_search/img/wally100.png" %}" />#}
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src='{% static 'settings/settings.js' %}'></script>
+{% endblock %}

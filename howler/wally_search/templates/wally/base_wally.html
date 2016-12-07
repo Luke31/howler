@@ -7,11 +7,8 @@
     <link rel="stylesheet" href="{% static "wally/style_wally.css" %}"/>
 {% endblock %}
 
-{% block sidebar %}
-    <ul class="nav nav-sidebar">
-        <li class="active"><a href="{% url 'wally:search' %}">{% trans "Email search" %} <span class="sr-only">(current)</span></a></li>
+{% block sidebar_nav %}
 
-    </ul>
 {% endblock %}
 
 {% block header_content %}

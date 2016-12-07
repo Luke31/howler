@@ -1,0 +1,10 @@
+{% extends "settings/base_settings.html" %}
+{% load i18n %}
+
+{% block main %}
+    <form method="post"> {# action="{% url 'settings:synonym_detail' %}" #}
+        {% csrf_token %}
+        {{ form.as_p }} {# {{ form }}  #}
+        <button class="btn btn-primary" type="submit">{% trans "Save" %}</button>
+    </form>
+{% endblock %}

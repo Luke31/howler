@@ -52,7 +52,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <!--<li><a href="{% url 'wally:search' %}">Search</a></li>-->
-                <li><a href="{% url 'wally:synonyms' %}">{% trans "Settings" %}</a></li>
+                <li><a href="{% url 'settings:synonym' %}">{% trans "Settings" %}</a></li>
                 <li><a href="{% url 'admin:index' %}">{% trans "Admin" %}</a></li>
                 <!--<li><a href="#">Help</a></li>-->
             </ul>
@@ -92,21 +92,39 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                {% url 'wally:search' as url_wally_search %}
+                <li{% if request.path == url_wally_search %} class="active"{% endif %}>
+                    <a href="{{ url_wally_search }}">{% trans "Email search" %}</a>
+                </li>
+                {% block sidebar_nav %}
+
+                {% endblock %}
+            </ul>
+
             {% block sidebar %}
 
             {% endblock %}
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            {% block main_pre %}
+
+            {% endblock %}
+
             {% block main %}
 
             {% endblock %}
+
+            <div class="loading glyphicon collapse"></div>
         </div>
     </div>
 </div>
 
+<script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
 
 <script type="text/javascript" src='{% static 'jquery/dist/jquery.js' %}'></script>
 <script type="text/javascript" src='{% static 'bootstrap/dist/js/bootstrap.js' %}'></script><!--TODO: USE MIN!-->
+<script type="text/javascript" src='{% static 'bootstrap-confirmation2/bootstrap-confirmation.js' %}'></script>
 
 <script type="text/javascript" src="{% static 'moment/min/moment.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'moment/locale/ja.js' %}"></script>
