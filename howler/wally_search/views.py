@@ -39,11 +39,26 @@ def find(request):
 
         kwargs['date_sliding_value'] = request.GET.get('date_sliding_value', '')
         kwargs['date_sliding_type'] = request.GET.get('date_sliding_type', '')
-        kwargs['use_sliding_value'] = request.GET.get('use_sliding_value', 1)
+
         try:
-            include_spam = request.GET['include_spam']
-        except KeyError:
-            include_spam = False
+            kwargs['use_sliding_value'] = bool(int(request.GET.get('use_sliding_value', True)))
+        except ValueError:
+            return render(request, 'wally/search.html', {'error_message': _("Incorrent use of date selection")})
+
+        try:
+            kwargs['number_results'] = int(request.GET.get('number_results', 10))
+        except ValueError:
+            return render(request, 'wally/search.html', {'error_message': _("Incorrent number of results")})
+
+        try:
+            kwargs['include_spam'] = bool(request.GET.get('include_spam'))
+        except ValueError:
+            return render(request, 'wally/search.html', {'error_message': _("Incorrent value for include spam")})
+
+        try:
+            kwargs['only_attachment'] = bool(request.GET.get('only_attachment'))
+        except ValueError:
+            return render(request, 'wally/search.html', {'error_message': _("Incorrent value for only attachment")})
 
         response = Search().search(query, **kwargs)
     except KeyError as exc:

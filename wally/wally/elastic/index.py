@@ -89,7 +89,7 @@ class Index:
         m.field('subject', 'text', analyzer=analyzer_lang)
         m.field('date', 'date')
         m.field('body', 'text', analyzer=analyzer_lang)
-
+        m.field('spam', 'boolean')
 
         #
         # reopen_index = False

@@ -96,7 +96,9 @@ class EmailMessageEncoder(json.JSONEncoder):
                 'date': date_time_no_millis,  # obj['date']
                 'body': body_plain,
                 'langCode': lang_detected_code,
-                'langPercent': lang_percent
+                'langPercent': lang_percent,
+                'spam': 0,  # TODO: Check if spam
+                'hasattachment': 0,  # TODO: Check if has attachment
             }
         # Let the base class default method raise the TypeError
         return json.JSONEncoder.default(self, obj)

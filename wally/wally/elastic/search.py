@@ -31,6 +31,17 @@ class Search:
                 * *date_sliding* (``str``) --
                   Filter sliding window, only emails of the past XX-hours/days/years... e.g. '-1d/d','-5y/y' --
                   See: https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#date-math
+                * *date_sliding_type* (``str``) --
+                  Valid date-type: e.g. y M d
+                * *use_sliding_value* (``bool``) --
+                  True: Only respect date_sliding and date_sliding_type.
+                  False: only respect fix date: date_gte and date_lte
+                * *include_spam* (``bool``) --
+                  True: Include spam in search (Both)
+                  False: Spam will be filtered and not respected in search
+                * *hasattachment* (``bool``) --
+                  True: Only find emails with attachments
+                  False: emails with and without attachments (Both)
 
             """
         date_gte = None  # '2010-01-31T22:28:14+0300'  # from
@@ -38,17 +49,26 @@ class Search:
         date_sliding_value = ''
         date_sliding_type = ''
         use_sliding_value = True
+        number_results = 10
+        include_spam = False
+        only_attachment = False
         for key, value in kwargs.items():
             if key == 'date_gte':
                 date_gte = ('{:' + dementor_constants.JSON_DATETIME_FORMAT + '}').format(value)
             if key == 'date_lte':
                 date_lte = ('{:' + dementor_constants.JSON_DATETIME_FORMAT + '}').format(value)
             if key == 'use_sliding_value':
-                use_sliding_value = bool(int(value))
+                use_sliding_value = value
             if key == 'date_sliding_value':
                 date_sliding_value = value
             if key == 'date_sliding_type':
                 date_sliding_type = value
+            if key == 'number_results':
+                number_results = value
+            if key == 'include_spam':
+                include_spam = value
+            if key == 'only_attachment':
+                only_attachment = value
 
         s = DslSearch(using=self._es, index=constants.ES_INDEX_PREFIX.format('*'))
 
@@ -79,6 +99,14 @@ class Search:
         elif date_gte is not None:
             s = s.filter('range', date={'lte': date_lte, 'gte': date_gte})
 
+        # Filter spam
+        if ~include_spam:
+            s = s.filter('term', spam=0)
+
+        # Filter attachment
+        if only_attachment:
+            s = s.filter('term', hasattachment=1)
+
         # Sorting
         s = s.sort(
             #'-date',
@@ -86,6 +114,9 @@ class Search:
             'fromEmail.raw',
             # Array: {"lines": {"order": "asc", "mode": "avg"}}
         )
+
+        # Number of results
+        s = s[0:number_results]
 
         # Extra
         s = s.extra(indices_boost={
