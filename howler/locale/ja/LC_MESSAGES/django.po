@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-02 10:19+0900\n"
+"POT-Creation-Date: 2016-12-07 16:23+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,3 +29,25 @@ msgstr ""
 #: templates/base.html:55
 msgid "Settings"
 msgstr "設定"
+
+#: templates/base.html:56
+msgid "Admin"
+msgstr ""
+
+#: templates/base.html:98
+#, fuzzy
+#| msgid "Howler email search"
+msgid "Email search"
+msgstr "Howler メール検索"
+
+#~ msgid "Save"
+#~ msgstr "保存する"
+
+#~ msgid "Add new synonym"
+#~ msgstr "新しい同意語を付ける"
+
+#~ msgid "Delete?"
+#~ msgstr "削除"
+
+#~ msgid "No synonyms found"
+#~ msgstr "同意語を見つけらなかった"

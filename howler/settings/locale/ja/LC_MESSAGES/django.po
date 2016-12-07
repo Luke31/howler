@@ -1,0 +1,64 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-07 16:23+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+#: settings/templates/settings/base_settings.html:20
+msgid "Settings"
+msgstr ""
+
+#: settings/templates/settings/synonym_form.html:8
+msgid "Save"
+msgstr ""
+
+#: settings/templates/settings/synonym_index.html:7
+msgid "Manage here all synonyms"
+msgstr ""
+
+#: settings/templates/settings/synonym_index.html:15
+msgid "Add new synonym"
+msgstr ""
+
+#: settings/templates/settings/synonym_index.html:25
+msgid ""
+"Really update Elasticsearch index? The search will not be available during "
+"the update."
+msgstr ""
+
+#: settings/templates/settings/synonym_index.html:27
+msgid "Update synonyms to elasticsearch index"
+msgstr ""
+
+#: settings/templates/settings/synonym_index.html:41
+msgid "Term A"
+msgstr ""
+
+#: settings/templates/settings/synonym_index.html:42
+msgid "Term B"
+msgstr ""
+
+#: settings/templates/settings/synonym_index.html:53
+msgid "Edit"
+msgstr ""
+
+#: settings/templates/settings/synonym_index.html:57
+msgid "Delete?"
+msgstr ""
+
+#: settings/templates/settings/synonym_index.html:71
+msgid "No synonyms found"
+msgstr ""

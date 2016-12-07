@@ -76,7 +76,7 @@ def l_genmsg():
 
 
 def l_compmsg():
-    """[Local] Generate .mo file locally (gettext required)"""
+    """[Local] Generate .mo file (binary) locally (gettext required)"""
     # local('pyenv shell howler')
     local('django-admin compilemessages')
 
