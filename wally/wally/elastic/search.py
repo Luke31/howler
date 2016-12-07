@@ -37,11 +37,14 @@ class Search:
         date_lte = 'now'  # ''2012-09-20T17:41:14+0900' # 'now'  # to
         date_sliding_value = ''
         date_sliding_type = ''
+        use_sliding_value = True
         for key, value in kwargs.items():
             if key == 'date_gte':
                 date_gte = ('{:' + dementor_constants.JSON_DATETIME_FORMAT + '}').format(value)
             if key == 'date_lte':
                 date_lte = ('{:' + dementor_constants.JSON_DATETIME_FORMAT + '}').format(value)
+            if key == 'use_sliding_value':
+                use_sliding_value = bool(int(value))
             if key == 'date_sliding_value':
                 date_sliding_value = value
             if key == 'date_sliding_type':
@@ -70,11 +73,11 @@ class Search:
 
         s = s.query(boosting)
 
-        # Filter
-        if date_gte is not None:
-            s = s.filter('range', date={'lte': date_lte, 'gte': date_gte})
-        elif (date_sliding_value != '') & (date_sliding_type != ''):
+        # Filter Date
+        if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
             s = s.filter('range', date={'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type)})
+        elif date_gte is not None:
+            s = s.filter('range', date={'lte': date_lte, 'gte': date_gte})
 
         # Sorting
         s = s.sort(

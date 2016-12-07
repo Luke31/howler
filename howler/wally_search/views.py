@@ -39,7 +39,7 @@ def find(request):
 
         kwargs['date_sliding_value'] = request.GET.get('date_sliding_value', '')
         kwargs['date_sliding_type'] = request.GET.get('date_sliding_type', '')
-
+        kwargs['use_sliding_value'] = request.GET.get('use_sliding_value', 1)
         try:
             include_spam = request.GET['include_spam']
         except KeyError:

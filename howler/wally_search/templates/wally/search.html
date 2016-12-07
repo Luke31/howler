@@ -41,50 +41,57 @@
                 <div class="row">
                     <div class='col-md-2'>
                         <div class="form-group">
-                            <label for="date_sliding_value">{% trans "Within the past" %}</label>
+                            <label for="use_sliding_value">{% trans "Date filter mode" %}</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="date_sliding_value"
-                                       name="date_sliding_value" value="5">
-                            </div>
-                        </div>
-                    </div>
-                    <div class='col-md-2'>
-                        <div class="form-group">
-                            <label for="date_sliding_type">{% trans "Duration type" %}</label>
-                            <div class="input-group">
-                                <select class="form-control" id="date_sliding_type" name="date_sliding_type">
-                                    <option value="y" selected="selected">{% trans "Years" %}</option>
-                                    <option value="M">{% trans "Months" %}</option>
-                                    <option value="d">{% trans "Days" %}</option>
+                                <select class="form-control" id="use_sliding_value" name="use_sliding_value">
+                                    <option value="1" selected="selected">{% trans "Sliding duration" %}</option>
+                                    <option value="0">{% trans "Fixed date" %}</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div class='col-md-1 text-nowrap'>
-                        {% comment %}Translators: Separator between sliding window and fix dates{% endcomment %}
-                        <h3 class="text-primary">{% trans "OR" %}</h3>
-                    </div>
-                    {% trans "JST time" as jsttime %}
-                    <div class='col-md-3'>
-                        <div class="form-group">
-                            <label for="from">{% trans "From" context "datetime" %}</label> - {{ jsttime }}
-                            <div class='input-group date' id='datetimepicker-from'>
-                                <input type='text' class="form-control" name="from" placeholder="2012/11/01 00:00"/>
-                                <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+                    <div class='js_date_sliding_value collapse col-md-4'>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label for="date_sliding_value">{% trans "Within the past" %}</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="date_sliding_value"
+                                           name="date_sliding_value" value="5">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="date_sliding_type">{% trans "Duration type" %}</label>
+                                <div class="input-group">
+                                    <select class="form-control" id="date_sliding_type" name="date_sliding_type">
+                                        <option value="y" selected="selected">{% trans "Years" %}</option>
+                                        <option value="M">{% trans "Months" %}</option>
+                                        <option value="d">{% trans "Days" %}</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class='col-md-3'>
-                        <div class="form-group">
-                            <label for="to">{% trans "To" context "datetime" %}</label> - {{ jsttime }}
-                            <div class='input-group date' id='datetimepicker-to'>
-                                <input type='text' class="form-control" name="to" placeholder="2016/10/31 12:18"/>
-                                <!--type="datetime-local"-->
-                                <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+                    {% trans "JST time" as jsttime %}
+                    <div class='js_date_fixed collapse col-md-6'>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label for="from">{% trans "From" context "datetime" %}</label> - {{ jsttime }}
+                                <div class='input-group date' id='datetimepicker-from'>
+                                    <input type='text' class="form-control" name="from" placeholder="2012/11/01 00:00"/>
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="to">{% trans "To" context "datetime" %}</label> - {{ jsttime }}
+                                <div class='input-group date' id='datetimepicker-to'>
+                                    <input type='text' class="form-control" name="to" placeholder="2016/10/31 12:18"/>
+                                    <!--type="datetime-local"-->
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
                             </div>
                         </div>
                     </div>
