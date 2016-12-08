@@ -30,19 +30,21 @@ class Index:
         self._type_name = es_type_name
         self._user_dictionary_file = user_dictionary_file
 
-    def add_mapping_to_index_multi(self, delete_old_indices=False, kuromoji_synonyms=None):
+    def add_mapping_to_index_multi(self, delete_old_indices=False, kuromoji_synonyms=[]):
         for lang_code, lang_analyzer in constants.SUPPORTED_LANG_CODES_ANALYZERS.items():
             self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices, kuromoji_synonyms)
 
-    def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False, kuromoji_synonyms=None):
+    def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False, kuromoji_synonyms=[]):
         """
         :param lang_code: Language of index
         :param lang_analyzer: Name of analyzer for language
         :param delete_old_index: Delete index if existing? Default: False = Update existing index (Close, Update, Open)
-        :param kuromoji_synonyms: Synonyms for kuromoji Japanese analyzer
+        :param kuromoji_synonyms: Synonyms for kuromoji Japanese analyzer.
+        Keep old synonyms if synonyms list empty and index not deleted
         :return: None
         """
-        analyzer_lang = helpers.get_analyzer(lang_analyzer, user_dictionary_file=self._user_dictionary_file,
+        analyzer_lang = helpers.get_analyzer(lang_analyzer, delete_old_index=delete_old_index,
+                                             user_dictionary_file=self._user_dictionary_file,
                                              synonyms=kuromoji_synonyms)
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=[
@@ -161,37 +163,37 @@ class Index:
                 data['_id'] = docid
             yield data  # json.dumps(data, sort_keys=True, ensure_ascii=False) # indent=4,
 
-    # def index_from_file(self, file):
-    #     """
-    #     Index a single mail from file
-    #
-    #     :param file: Path to file to index
-    #     :return: 0 if success, 1 if failure (will be printed on console)
-    #     """
-    #
-    #
-    #     try:
-    #         jsonstr = self._mailextractor.extract_json(file)
-    #         docid = os.path.basename(file)
-    #         self.index(docid, jsonstr)
-    #         return 0
-    #     except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError, AssertionError) as e:
-    #         ret = 'An exception of type {0} occured, when reading file {1}: {2}'.format(type(e).__name__, file, e)
-    #         print(ret)
-    #         return 1
+            # def index_from_file(self, file):
+            #     """
+            #     Index a single mail from file
+            #
+            #     :param file: Path to file to index
+            #     :return: 0 if success, 1 if failure (will be printed on console)
+            #     """
+            #
+            #
+            #     try:
+            #         jsonstr = self._mailextractor.extract_json(file)
+            #         docid = os.path.basename(file)
+            #         self.index(docid, jsonstr)
+            #         return 0
+            #     except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError, AssertionError) as e:
+            #         ret = 'An exception of type {0} occured, when reading file {1}: {2}'.format(type(e).__name__, file, e)
+            #         print(ret)
+            #         return 1
 
-    # def index(self, docid, docstr):
-    #     """
-    #     Index a json to elasticsearch.
-    #
-    #     :param docid: id of new document to index
-    #     :param docstr: json docstr, must contain property 'langCode'
-    #     :return: elasticsearch index result
-    #     """
-    #     data = json.loads(docstr)
-    #     lang_code = get_lang_code(data['langCode'])
-    #     res = self._es.index(index=self._index_prefix.format(lang_code), doc_type=self._type_name, id=docid, body=docstr)
-    #     return res
+            # def index(self, docid, docstr):
+            #     """
+            #     Index a json to elasticsearch.
+            #
+            #     :param docid: id of new document to index
+            #     :param docstr: json docstr, must contain property 'langCode'
+            #     :return: elasticsearch index result
+            #     """
+            #     data = json.loads(docstr)
+            #     lang_code = get_lang_code(data['langCode'])
+            #     res = self._es.index(index=self._index_prefix.format(lang_code), doc_type=self._type_name, id=docid, body=docstr)
+            #     return res
 
 
 def get_lang_code(lang_code):

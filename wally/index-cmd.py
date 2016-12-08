@@ -4,12 +4,16 @@ import argparse
 from wally.elastic.index import Index
 from elasticsearch import Elasticsearch
 from wally.elastic import constants
+from argparse import RawTextHelpFormatter
 
 
 def update(args):
     es = Elasticsearch([args.estargethost], timeout=args.timeout, maxsize=args.maxcon)
-    index = Index(es, es_index_prefix=args.indexprefix, es_type_name=args.type)
-    kuromoji_synonyms = ['京産大, 京都産業大学', '京都大学, 京大']
+    index = Index(es, es_index_prefix=args.indexprefix, es_type_name=args.doctype)
+    if args.force:
+        kuromoji_synonms = ['京産大, 京都産業大学', '京都大学, 京大']
+    else:
+        kuromoji_synonyms = None
     index.add_mapping_to_index_multi(delete_old_indices=args.force, kuromoji_synonyms=kuromoji_synonyms)
 
     if os.path.isdir(args.src):
@@ -23,10 +27,21 @@ def update(args):
         summary.cnt_success, summary.cnt_total, len(summary.errors_convert), len(summary.errors_index)))
 
 
-parser = argparse.ArgumentParser()
+description = \
+    'Update elasticsearch index with one or many new emails.\n\n' \
+    'Example usage:\n' \
+    '-All mails in folder to es-server:\n' \
+    'python3 index-cmd.py update data_in 10.0.10.180\n\n' \
+    '-All mails in folder to es-server with force update all (deletes existing indices):\n' \
+    'python3 index-cmd.py update data_in 10.0.10.180 --force\n\n' \
+    '-Single mail file to es-server:\n' \
+    'python3 index-cmd.py update data_in/99992 10.0.10.180\n\n'
+
+parser = argparse.ArgumentParser(
+    description=description,
+    epilog='epilog', allow_abbrev=True, formatter_class=RawTextHelpFormatter)
 # parser.add_argument('--version', action='version', version='1.0.1')
 subparsers = parser.add_subparsers()
-
 update_parser = subparsers.add_parser('update')
 update_parser.add_argument('src', help='src folder of emails OR email filename')
 update_parser.add_argument('estargethost',
@@ -37,7 +52,7 @@ update_parser.add_argument('--maxcon', default=25, help='Elasticsearch max numbe
 update_parser.add_argument('--timeout', default=30, help='Elasticsearch connection timeout in seconds [default: 30]')
 update_parser.add_argument('--indexprefix', default='mailing-{0}',
                            help='Elasticsearch index-prefix [default: "mailing-{0}"], {0} replaced by lang-code')
-update_parser.add_argument('--type', default='email', help='Elasticsearch email-type [default: "email"]')
+update_parser.add_argument('--doctype', default='email', help='Elasticsearch email-doctype [default: "email"]')
 update_parser.set_defaults(func=update)
 
 if __name__ == '__main__':
