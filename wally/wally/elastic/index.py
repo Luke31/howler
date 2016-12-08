@@ -31,7 +31,8 @@ class Index:
         self._user_dictionary_file = user_dictionary_file
 
         self.already_imported_ids = helpers.get_already_imported_ids(es=self._es, es_index_prefix=self._index_prefix,
-                                                                      es_type_name=self._type_name)
+                                                                     es_type_name=self._type_name)
+        self._cur_print = 0
 
     def add_mapping_to_index_multi(self, delete_old_indices=False, kuromoji_synonyms=[]):
         for lang_code, lang_analyzer in constants.SUPPORTED_LANG_CODES_ANALYZERS.items():
@@ -145,8 +146,11 @@ class Index:
 
         docs = self._mailextractor.extract_jsons(files)  # Generator-Iterable
         actions = self.convert_docstrs_to_bulk_actions(docs)  # Generator-Iterable
+
+        self._cur_print = 0
+        actions_for_chunk = self.print_chunk_progress(actions)  # Generator-Iterable
         (cnt_success, errors_index) = es_helpers.bulk(
-            self._es, actions, chunk_size=2000)
+            self._es, actions_for_chunk, chunk_size=constants.ES_BULK_CHUNK_SIZE)
 
         cnt_total = self._mailextractor.cnt_total
         errors_convert = self._mailextractor.errors_convert
@@ -170,7 +174,14 @@ class Index:
             data['_type'] = self._type_name
             if docid.isdigit():
                 data['_id'] = docid
-            yield data  # json.dumps(data, sort_keys=True, ensure_ascii=False) # indent=4,
+            yield data
+
+    def print_chunk_progress(self, actions):
+        for action in actions:
+            if (self._cur_print % constants.ES_BULK_CHUNK_SIZE == 0) & (self._cur_print > 0):
+                print("{0} emails converted. Ready for bulk import (chunk size: {1})".format(self._cur_print,
+                                                                                             constants.ES_BULK_CHUNK_SIZE))
+            yield action
 
             # def index_from_file(self, file):
             #     """
