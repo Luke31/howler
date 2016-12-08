@@ -17,17 +17,15 @@ def rename(file_name, dst, num=1):
 
 
 def copy_files(src, dst, file_list):
+    print("Copying {0} files from file_list...".format(len(file_list)))
     for files in file_list:
         src_file_path = os.path.realpath(os.path.join(src, files))
-        if ~os.path.exists(src_file_path):
-            print("{0} doesn't exist".format(src_file_path))
-            continue
         dst_file_path = os.path.realpath(os.path.join(dst, files))
         if os.path.exists(dst_file_path):
             new_file_name = rename(files, dst)
             dst_file_path = os.path.join(dst, new_file_name)
 
-        print("Copying: {0}".format(dst_file_path))
+        #print("Copying: {0}".format(dst_file_path))
         try:
             shutil.copyfile(src_file_path, dst_file_path)
         except IOError:
