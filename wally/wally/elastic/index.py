@@ -90,6 +90,8 @@ class Index:
         m.field('date', 'date')
         m.field('body', 'text', analyzer=analyzer_lang)
         m.field('spam', 'boolean')
+        m.field('hasAttachmet', 'boolean')
+        m.field('attachmentNames', 'text')
 
         #
         # reopen_index = False

@@ -1,5 +1,6 @@
 import re
 from email.header import decode_header
+from . import constants
 
 
 def extract_body_plain_text(msg):
@@ -23,26 +24,21 @@ def extract_body_plain_text(msg):
 
 def has_attachment(msg):
     """
-    Check if the message has an attachment
+    Check if the message has one or more attachments
     :param msg: email.message.Message
-    :return: True if msg has attachment
+    :return: Tuple (has_attachment, attachment_names)
+    True if msg has one or more attachment
+    attachment_names: Names of attachments as string
     """
     body = msg.get_body()
-    attach = False
+    filenames = []
     for part in msg.iter_attachments():
         fn = part.get_filename()
-        print(fn)
-        attach = True
-        # if fn:
-        #     extension = os.path.splitext(part.get_filename())[1]
-        # else:
-        #     extension = mimetypes.guess_extension(part.get_content_type())
-        # with tempfile.NamedTemporaryFile(suffix=extension, delete=False) as f:
-        #     f.write(part.get_content())
-        #     # again strip the <> to go from email form of cid to html form.
-        #     partfiles[part['content-id'][1:-1]] = f.name
+        if fn is None:
+            fn = constants.NO_FILENAME
+        filenames.append(fn)
 
-    return attach
+    return len(filenames) > 0, ', '.join(filenames)
 
 
 invalid_encoded_words = r"(=\?.*\?=)(?=\S)"

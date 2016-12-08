@@ -6,3 +6,5 @@ PREFERRED_LANG_THRESHOLD = 0
 
 # Datetime format for export in JSON-String
 JSON_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'  # yyyy-MM-dd'T'HH:mm:ssZZ
+
+NO_FILENAME = '[-]'
