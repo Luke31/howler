@@ -45,7 +45,7 @@ def get_files_from_dir(dir_data_in, already_imported_ids):
 def get_analyzer(lang_analyzer, delete_old_index, user_dictionary_file='', synonyms=[]):
     if lang_analyzer == constants.SUPPORTED_LANG_CODES_ANALYZERS['ja']:
         # Use existing analyzer (with synonyms) if new synonyms list is empty. (Only if index is not re-built)
-        if ~delete_old_index & len(synonyms) == 0:
+        if (not delete_old_index) & (len(synonyms) == 0):
             analyzer_lang = '{0}_custom'.format(lang_analyzer)  # Use existing analyzer with existing synonyms
         else:
             analyzer_lang = analysis.analyzer('{0}_custom'.format(lang_analyzer),
