@@ -10,7 +10,7 @@ def rename(file_name, dst, num=1):
     renamed = "%s(%d)%s" % (file_prefix, num, exstension)
 
     # checks if renamed  file exists. Renames file if it does exist.
-    if os.path.exists(dst + renamed):
+    if os.path.exists(os.path.join(dst, renamed)):
         return rename(file_name, dst, num + 1)
     else:
         return renamed
@@ -18,17 +18,17 @@ def rename(file_name, dst, num=1):
 
 def copy_files(src, dst, file_list):
     for files in file_list:
-        src_file_path = src + files
-        dst_file_path = dst + files
+        src_file_path = os.path.join(src, files)
+        dst_file_path = os.path.join(dst, files)
         if os.path.exists(dst_file_path):
             new_file_name = rename(files, dst)
-            dst_file_path = dst + new_file_name
+            dst_file_path = os.path.join(dst, new_file_name)
 
-        print("Copying: " + dst_file_path)
+        print("Copying: {0}".format(dst_file_path))
         try:
             shutil.copyfile(src_file_path, dst_file_path)
         except IOError:
-            print(src_file_path + " does not exist")
+            print("{0} does not exist".format(src_file_path))
             input("Please, press enter to continue.")
 
 
