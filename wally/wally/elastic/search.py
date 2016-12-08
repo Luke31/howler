@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search as DslSearch
-from elasticsearch_dsl.query import Boosting, Match, MatchPhrase
+from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term
 from ..dementor import constants as dementor_constants
 from . import constants
 
@@ -105,7 +105,7 @@ class Search:
         # Filter spam
         if not include_spam:
             s = s.filter(~Match(subject={'query': 'spam'})) # tags=['search', 'python'])]) #'match', subject={'query': 'spam'})
-            # s = s.filter('term', spam=0) # TODO: Spam-flag not in use, only subject used
+            s = s.filter(~Term(spam=1))  # TODO: Spam-flag currently not in use, but for use with different spam filter
 
         # Filter attachment
         if only_attachment:
