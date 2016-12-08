@@ -17,12 +17,18 @@ class Index:
     Index multiple files using bulk (iterator or dir)
     """
 
-    def __init__(self, mailextractor=MailExtractor()):
+    def __init__(self, es_conn, es_index_prefix, es_type_name=constants.ES_TYPE_NAME,
+                 user_dictionary_file=constants.JA_USER_DICT, mailextractor=MailExtractor()):
+        """
+        :param es_conn: Elasticsearch connection
+        :param mailextractor: Parser for email-files to json (Default given)
+        """
         # self._es = Elasticsearch()
-        self._es = Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
+        self._es = es_conn  # Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
         self._mailextractor = mailextractor
-        self._index_name = constants.ES_INDEX_PREFIX
-        self._type_name = constants.ES_TYPE_NAME
+        self._index_prefix = es_index_prefix
+        self._type_name = es_type_name
+        self._user_dictionary_file = user_dictionary_file
 
     def add_mapping_to_index_multi(self, delete_old_indices=False, kuromoji_synonyms=None):
         for lang_code, lang_analyzer in constants.SUPPORTED_LANG_CODES_ANALYZERS.items():
@@ -36,7 +42,8 @@ class Index:
         :param kuromoji_synonyms: Synonyms for kuromoji Japanese analyzer
         :return: None
         """
-        analyzer_lang = helpers.get_analyzer(lang_analyzer, synonyms=kuromoji_synonyms)
+        analyzer_lang = helpers.get_analyzer(lang_analyzer, user_dictionary_file=self._user_dictionary_file,
+                                             synonyms=kuromoji_synonyms)
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=[
                                                # Don't allow searching parts of email
@@ -51,7 +58,7 @@ class Index:
 
         m = Mapping(self._type_name)
         reopen_index = False
-        index_name = self._index_name.format(lang_code)
+        index_name = self._index_prefix.format(lang_code)
         if self._es.indices.exists(index=index_name):
             if delete_old_index:
                 self._es.indices.delete(index=index_name, ignore=[400, 404])

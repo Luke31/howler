@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
 from wally.elastic.search import Search
 from datetime import datetime
 from django.utils.translation import ugettext as _
-from django.utils import translation
+from elasticsearch import Elasticsearch
+from django.conf import settings as djsettings
 
 
 def search(request):
@@ -60,7 +60,9 @@ def find(request):
         except ValueError:
             return render(request, 'wally/search.html', {'error_message': _("Incorrent value for only attachment")})
 
-        response = Search().search(query, **kwargs)
+        es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
+        response = Search(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME).search(
+            query, **kwargs)
     except KeyError as exc:
         # Redisplay the search form.
         # Translators: The user didn't submit a correct query, a value is missing
@@ -84,4 +86,3 @@ def detail(request, email_id):
 
     # question = get_object_or_404(Question, pk=question_id)
     return HttpResponse("You're looking at email %s." % email_id)
-

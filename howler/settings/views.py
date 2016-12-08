@@ -1,10 +1,10 @@
-from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from .models import Synonym
 from wally.elastic.index import Index
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from .forms import SynonymForm
+from django.conf import settings as djsettings
+from elasticsearch import Elasticsearch
 
 
 class SynonymIndex(generic.ListView):
@@ -89,8 +89,9 @@ class SynonymDelete(generic.DeleteView):
 def synonym_import(request):
     obj_list = Synonym.objects.order_by('synonym_term_a')
     kuromoji_synonyms = [x.synonyms_combo() for x in obj_list]
-    index = Index()
-    # old_kuromoji_synonyms = ['京産大, 京都産業大学', '京都大学, 京大']
+    es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
+    index = Index(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME,
+                  user_dictionary_file=djsettings.JA_USER_DICT)
     index.add_mapping_to_index_multi(delete_old_indices=False, kuromoji_synonyms=kuromoji_synonyms)  # Update index
-    return HttpResponse()
+    # return HttpResponse()
     return HttpResponseRedirect(reverse('settings:synonym'))  # Redirect to synonyms

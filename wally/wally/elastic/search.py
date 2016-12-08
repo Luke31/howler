@@ -11,8 +11,10 @@ class Search:
 
     """
 
-    def __init__(self):
-        self._es = Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
+    def __init__(self, es_conn, es_index_prefix, es_type_name=constants.ES_TYPE_NAME):
+        self._es = es_conn  # Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
+        self._index_prefix = es_index_prefix
+        self._type_name = es_type_name
 
     # noinspection PyIncorrectDocstring
     def search(self, qterm, **kwargs):
@@ -70,7 +72,7 @@ class Search:
             if key == 'only_attachment':
                 only_attachment = value
 
-        s = DslSearch(using=self._es, index=constants.ES_INDEX_PREFIX.format('*'))
+        s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
 
         # Query
         pos = MatchPhrase(body={'query': qterm, 'boost': 2}) | \
@@ -121,9 +123,9 @@ class Search:
 
         # Extra
         s = s.extra(indices_boost={
-            constants.ES_INDEX_PREFIX.format('ja'): 1.5,
-            constants.ES_INDEX_PREFIX.format('en'): 1,
-            constants.ES_INDEX_PREFIX.format('un'): 0.5
+            self._index_prefix.format('ja'): 1.5,
+            self._index_prefix.format('en'): 1,
+            self._index_prefix.format('un'): 0.5
         })
 
         # Highlight

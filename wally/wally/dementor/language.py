@@ -26,6 +26,7 @@ def detect_select_language(text):
     return lang_selected_details
 
 
-def _is_preferred_lang(lang_details):
-    return (lang_details.language_code == constants.PREFERRED_LANG) & (
-        lang_details.percent >= constants.PREFERRED_LANG_THRESHOLD)
+def _is_preferred_lang(lang_details, preferred_lang=constants.PREFERRED_LANG,
+                       preferred_lang_threshold=constants.PREFERRED_LANG_THRESHOLD):
+    return (lang_details.language_code == preferred_lang) & (
+        lang_details.percent >= preferred_lang_threshold)
