@@ -15,7 +15,7 @@ def get_already_imported_ids(es, es_index_prefix, es_type_name):
     """
     index_name = es_index_prefix.format('*')
     s = Search(using=es, index=index_name, doc_type=es_type_name)
-    s = s.fields([])  # only get ids, otherwise `fields` takes a list of field names
+    s = s.extra(stored_fields=[])
     ids = set()
     for h in s.scan():
         ids.add(h.meta.id)

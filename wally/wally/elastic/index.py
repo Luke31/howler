@@ -30,7 +30,7 @@ class Index:
         self._type_name = es_type_name
         self._user_dictionary_file = user_dictionary_file
 
-        self._already_imported_ids = helpers.get_already_imported_ids(es=self._es, es_index_prefix=self._index_prefix,
+        self.already_imported_ids = helpers.get_already_imported_ids(es=self._es, es_index_prefix=self._index_prefix,
                                                                       es_type_name=self._type_name)
 
     def add_mapping_to_index_multi(self, delete_old_indices=False, kuromoji_synonyms=[]):
@@ -128,7 +128,7 @@ class Index:
         :return: Summary of completed bulk import
         """
         if ignore_already_imported:
-            already_imported_ids = self._already_imported_ids
+            already_imported_ids = self.already_imported_ids
         else:
             already_imported_ids = set()
         return self.index_bulk_from_files(
