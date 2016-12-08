@@ -81,6 +81,7 @@ class Search:
               Match(toName={'query': qterm, 'boost': 1}) | \
               Match(replyToName={'query': qterm, 'boost': 1}) | \
               Match(subject={'query': qterm, 'boost': 1.5}) | \
+              Match(attachmentNames={'query': qterm, 'boost': 2}) | \
               Match(body=qterm)
 
         # pos = MultiMatch(query=qterm, type='phrase', boost=2.0, fields=['body']) \
@@ -136,6 +137,7 @@ class Search:
         s = s.highlight('fromName')
         s = s.highlight('toName')
         s = s.highlight('replyToName')
+        s = s.highlight('attachmentNames')
 
         # Execute
         response = s.execute()

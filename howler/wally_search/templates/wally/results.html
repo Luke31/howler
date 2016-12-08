@@ -9,6 +9,7 @@
 {% trans "Sender:" as sender %}
 {% comment %}Translators: Receiver of email{% endcomment %}
 {% trans "Receiver:" as receiver %}
+{% trans "Attachments:" as attachments %}
 {% if hit_list %}
     {% for hit in hit_list %}
         <div class="panel panel-default">
@@ -77,6 +78,12 @@
                     </p>
                 {% endif %}
 
+                {% if hit.meta.highlight.attachmentNames.0 %}
+                    <p class="fragment">
+                        <b>{% trans "Hit in attachment names:" %}</b> {{ hit.meta.highlight.attachmentNames.0|safe }}
+                    </p>
+                {% endif %}
+
                 {% if hit.meta.highlight.body %}
                     <b>{% trans "Hits in body:" %}</b>
                     {% for fragment in hit.meta.highlight.body %}
@@ -98,8 +105,9 @@
                                 <div class="well">
                                     <p><b>{{ sender }}</b> {{ hit.fromName }} &lt;{{ hit.fromEmail }}&gt;</p>
                                     <p><b>{{ receiver }}</b> {{ hit.toName }} &lt;{{ hit.toEmail }}&gt;</p>
+                                    <p><b>{{ attachments }}</b> {{ hit.attachmentNames }}</p>
 
-                                    {{ hit.body|linebreaks }}#}
+                                    {{ hit.body|linebreaks }}
                                 </div>
                             </div>
                         </div>
