@@ -13,7 +13,7 @@ def update(args):
     if args.force:
         kuromoji_synonyms = ['京産大, 京都産業大学', '京都大学, 京大']
     else:
-        kuromoji_synonyms = None
+        kuromoji_synonyms = []
 
     print('Existing emails in index: {0}'.format(len(index.already_imported_ids)))
     if args.force:
