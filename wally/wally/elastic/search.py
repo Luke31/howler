@@ -104,7 +104,7 @@ class Search:
 
         # Filter spam
         if not include_spam:
-            s = s.filter('match', subject={'query': 'spam'})
+            s = s.filter(~Match(subject={'query': 'spam'})) # tags=['search', 'python'])]) #'match', subject={'query': 'spam'})
             # s = s.filter('term', spam=0) # TODO: Spam-flag not in use, only subject used
 
         # Filter attachment
