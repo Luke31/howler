@@ -136,8 +136,6 @@ class Index:
         actions = self.convert_docstrs_to_bulk_actions(docs)  # Generator-Iterable
         (cnt_success, errors_index) = es_helpers.bulk(
             self._es, actions, chunk_size=2000)
-        # (cnt_success, errors_index) = es_helpers.parallel_bulk(
-        # self._es, actions, chunk_size=2000, thread_count=2)  # Leave one thread/4 to system respond
 
         cnt_total = self._mailextractor.cnt_total
         errors_convert = self._mailextractor.errors_convert
@@ -157,41 +155,43 @@ class Index:
             lang_code = get_lang_code(data['langCode'])
 
             data['_op_type'] = 'index'
-            data['_index'] = self._index_name.format(lang_code)
+            data['_index'] = self._index_prefix.format(lang_code)
             data['_type'] = self._type_name
             if docid.isdigit():
                 data['_id'] = docid
             yield data  # json.dumps(data, sort_keys=True, ensure_ascii=False) # indent=4,
 
-    def index_from_file(self, file):
-        """
-        Index a single mail from file
+    # def index_from_file(self, file):
+    #     """
+    #     Index a single mail from file
+    #
+    #     :param file: Path to file to index
+    #     :return: 0 if success, 1 if failure (will be printed on console)
+    #     """
+    #
+    #
+    #     try:
+    #         jsonstr = self._mailextractor.extract_json(file)
+    #         docid = os.path.basename(file)
+    #         self.index(docid, jsonstr)
+    #         return 0
+    #     except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError, AssertionError) as e:
+    #         ret = 'An exception of type {0} occured, when reading file {1}: {2}'.format(type(e).__name__, file, e)
+    #         print(ret)
+    #         return 1
 
-        :param file: Path to file to index
-        :return: 0 if success, 1 if failure (will be printed on console)
-        """
-        try:
-            jsonstr = self._mailextractor.extract_json(file)
-            docid = os.path.basename(file)
-            self.index(docid, jsonstr)
-            return 0
-        except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError, AssertionError) as e:
-            ret = 'An exception of type {0} occured, when reading file {1}: {2}'.format(type(e).__name__, file, e)
-            print(ret)
-            return 1
-
-    def index(self, docid, docstr):
-        """
-        Index a json to elasticsearch.
-
-        :param docid: id of new document to index
-        :param docstr: json docstr, must contain property 'langCode'
-        :return: elasticsearch index result
-        """
-        data = json.loads(docstr)
-        lang_code = get_lang_code(data['langCode'])
-        res = self._es.index(index=self._index_name.format(lang_code), doc_type=self._type_name, id=docid, body=docstr)
-        return res
+    # def index(self, docid, docstr):
+    #     """
+    #     Index a json to elasticsearch.
+    #
+    #     :param docid: id of new document to index
+    #     :param docstr: json docstr, must contain property 'langCode'
+    #     :return: elasticsearch index result
+    #     """
+    #     data = json.loads(docstr)
+    #     lang_code = get_lang_code(data['langCode'])
+    #     res = self._es.index(index=self._index_prefix.format(lang_code), doc_type=self._type_name, id=docid, body=docstr)
+    #     return res
 
 
 def get_lang_code(lang_code):
