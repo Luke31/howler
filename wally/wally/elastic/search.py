@@ -106,7 +106,7 @@ class Search:
 
         # Filter attachment
         if only_attachment:
-            s = s.filter('term', hasattachment=1)
+            s = s.filter('term', hasAttachment=True)
 
         # Sorting
         s = s.sort(

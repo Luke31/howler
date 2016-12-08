@@ -105,8 +105,9 @@
                                 <div class="well">
                                     <p><b>{{ sender }}</b> {{ hit.fromName }} &lt;{{ hit.fromEmail }}&gt;</p>
                                     <p><b>{{ receiver }}</b> {{ hit.toName }} &lt;{{ hit.toEmail }}&gt;</p>
-                                    <p><b>{{ attachments }}</b> {{ hit.attachmentNames }}</p>
-
+                                    {% if hit.attachmentNames %}
+                                        <p><b>{{ attachments }}</b> {{ hit.attachmentNames }}</p>
+                                    {% endif %}
                                     {{ hit.body|linebreaks }}
                                 </div>
                             </div>
