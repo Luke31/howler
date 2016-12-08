@@ -30,9 +30,9 @@ def update(args):
 description = \
     'Update elasticsearch index with one or many new emails.\n\n' \
     'Example usage:\n' \
-    '-All mails in folder to es-server:\n' \
+    '-Update new mails in folder to es-server:\n' \
     'python3 index-cmd.py update data_in 10.0.10.180\n\n' \
-    '-All mails in folder to es-server with force update all (deletes existing indices):\n' \
+    '-Update force all mails in folder to es-server with (deletes existing indices):\n' \
     'python3 index-cmd.py update data_in 10.0.10.180 --force\n\n' \
     '-Single mail file to es-server:\n' \
     'python3 index-cmd.py update data_in/99992 10.0.10.180\n\n'

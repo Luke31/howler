@@ -30,6 +30,9 @@ class Index:
         self._type_name = es_type_name
         self._user_dictionary_file = user_dictionary_file
 
+        self._already_imported_ids = helpers.get_already_imported_ids(es=self._es, es_index_prefix=self._index_prefix,
+                                                                      es_type_name=self._type_name)
+
     def add_mapping_to_index_multi(self, delete_old_indices=False, kuromoji_synonyms=[]):
         for lang_code, lang_analyzer in constants.SUPPORTED_LANG_CODES_ANALYZERS.items():
             self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices, kuromoji_synonyms)
@@ -116,14 +119,20 @@ class Index:
         if reopen_index:
             self._es.indices.open(index=index_name)
 
-    def index_bulk_from_dir(self, dir_data_in):
+    def index_bulk_from_dir(self, dir_data_in, ignore_already_imported=True):
         """
         Index all files from a directory using bulk-mode
 
-        :param dir_data_in: Path to dir in which all files should be indexed
+        :param dir_data_in: ``str`` Path to dir in which all files should be indexed
+        :param ignore_already_imported: ``bool`` Ignore mails which have already been imported to elasticsearch
         :return: Summary of completed bulk import
         """
-        return self.index_bulk_from_files(helpers.get_files_from_dir(dir_data_in))
+        if ignore_already_imported:
+            already_imported_ids = self._already_imported_ids
+        else:
+            already_imported_ids = set()
+        return self.index_bulk_from_files(
+            helpers.get_files_from_dir(dir_data_in, already_imported_ids=already_imported_ids))
 
     def index_bulk_from_files(self, files):
         """
