@@ -179,7 +179,7 @@ class Index:
     def print_chunk_progress(self, actions):
         for action in actions:
             if (self._cur_print % constants.ES_BULK_CHUNK_SIZE == 0) & (self._cur_print > 0):
-                print("{0} emails converted. Ready for bulk import (chunk size: {1})".format(self._cur_print,
+                print("{0} emails converted. Starting bulk import (chunk size: {1})...".format(self._cur_print,
                                                                                              constants.ES_BULK_CHUNK_SIZE))
             self._cur_print += 1
             yield action
