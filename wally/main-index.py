@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
 import os
 from wally.elastic.index import Index
+from elasticsearch import Elasticsearch
 
+#es = Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
 index = Index()
 kuromoji_synonyms = ['京産大, 京都産業大学', '京都大学, 京大']
 index.add_mapping_to_index_multi(delete_old_indices=True, kuromoji_synonyms=kuromoji_synonyms)
