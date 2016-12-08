@@ -17,9 +17,9 @@ def update(args):
 
     print('Existing emails in index: {0}'.format(len(index.already_imported_ids)))
     if args.force:
-        print('Deleting old indices, deleting emails, creating new indices...')
+        print('Deleting old indices, deleting emails, creating new indices with new default synonyms...')
     else:
-        print('Updating indices...')
+        print("Updating existing indices (without deleting existing emails and synonyms)...")
     index.add_mapping_to_index_multi(delete_old_indices=args.force, kuromoji_synonyms=kuromoji_synonyms)
 
     if os.path.isdir(args.src):
