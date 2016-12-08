@@ -85,6 +85,8 @@ class EmailMessageEncoder(json.JSONEncoder):
             lang_detected_code = lang_selected_details.language_code
             lang_percent = lang_selected_details.percent
 
+
+
             return {
                 'fromName': from_tup[0],
                 'fromEmail': from_tup[1],
@@ -98,7 +100,7 @@ class EmailMessageEncoder(json.JSONEncoder):
                 'langCode': lang_detected_code,
                 'langPercent': lang_percent,
                 'spam': 0,  # TODO: Check if spam
-                'hasattachment': 0,  # TODO: Check if has attachment
+                'hasattachment': helpers_mail.has_attachment(obj),
             }
         # Let the base class default method raise the TypeError
         return json.JSONEncoder.default(self, obj)

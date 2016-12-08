@@ -21,6 +21,30 @@ def extract_body_plain_text(msg):
     return None
 
 
+def has_attachment(msg):
+    """
+    Check if the message has an attachment
+    :param msg: email.message.Message
+    :return: True if msg has attachment
+    """
+    body = msg.get_body()
+    attach = False
+    for part in msg.iter_attachments():
+        fn = part.get_filename()
+        print(fn)
+        attach = True
+        # if fn:
+        #     extension = os.path.splitext(part.get_filename())[1]
+        # else:
+        #     extension = mimetypes.guess_extension(part.get_content_type())
+        # with tempfile.NamedTemporaryFile(suffix=extension, delete=False) as f:
+        #     f.write(part.get_content())
+        #     # again strip the <> to go from email form of cid to html form.
+        #     partfiles[part['content-id'][1:-1]] = f.name
+
+    return attach
+
+
 invalid_encoded_words = r"(=\?.*\?=)(?=\S)"
 invalid_encoded_words_bytes = br"(=\?.*\?=)(?=\S)"
 
