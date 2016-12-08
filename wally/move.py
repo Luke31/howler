@@ -18,11 +18,11 @@ def rename(file_name, dst, num=1):
 
 def copy_files(src, dst, file_list):
     for files in file_list:
-        src_file_path = os.path.join(src, files)
+        src_file_path = os.path.realpath(os.path.join(src, files))
         if ~os.path.exists(src_file_path):
             print("{0} doesn't exist".format(src_file_path))
             continue
-        dst_file_path = os.path.join(dst, files)
+        dst_file_path = os.path.realpath(os.path.join(dst, files))
         if os.path.exists(dst_file_path):
             new_file_name = rename(files, dst)
             dst_file_path = os.path.join(dst, new_file_name)
