@@ -71,7 +71,7 @@ def update(args):
 description = \
     'Update elasticsearch index with one or many new emails.\n\n' \
     'Example usage:\n' \
-    '-Update new mails in folder to es-server:\n' \
+    '-Update new mails in folder to es-server (for Cron):\n' \
     'python3 index-cmd.py update data_in 10.0.10.180\n\n' \
     '-Update force all mails in folder to es-server with (deletes existing indices):\n' \
     'python3 index-cmd.py update data_in 10.0.10.180 --force\n\n' \
