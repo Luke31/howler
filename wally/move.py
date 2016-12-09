@@ -25,7 +25,6 @@ def copy_files(src, dst, file_list):
             new_file_name = rename(files, dst)
             dst_file_path = os.path.join(dst, new_file_name)
 
-        #print("Copying: {0}".format(dst_file_path))
         try:
             shutil.copyfile(src_file_path, dst_file_path)
         except IOError:

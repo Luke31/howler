@@ -7,8 +7,7 @@ from . import constants
 
 class Search:
     """Basic Search object.
-
-
+    Search in elasticsearch indices
     """
 
     def __init__(self, es_conn, es_index_prefix, es_type_name=constants.ES_TYPE_NAME):
@@ -41,9 +40,11 @@ class Search:
                 * *include_spam* (``bool``) --
                   True: Include spam in search (Both)
                   False: Spam will be filtered and not respected in search
-                * *hasattachment* (``bool``) --
+                * *only_attachment* (``bool``) --
                   True: Only find emails with attachments
                   False: emails with and without attachments (Both)
+                * *number_results* (``int``) --
+                  Number of total results to return
 
             """
         date_gte = None  # '2010-01-31T22:28:14+0300'  # from
@@ -86,9 +87,6 @@ class Search:
               Match(attachmentNames={'query': qterm, 'boost': 2}) | \
               Match(body=qterm)
 
-        # pos = MultiMatch(query=qterm, type='phrase', boost=2.0, fields=['body']) \
-        #      | MultiMatch(query=qterm, type='most_fields', fields=['body'])
-
         # penalize if spam
         neg = Match(subject={'query': 'spam'})
 
@@ -104,7 +102,7 @@ class Search:
 
         # Filter spam
         if not include_spam:
-            s = s.filter(~Match(subject={'query': 'spam'})) # tags=['search', 'python'])]) #'match', subject={'query': 'spam'})
+            s = s.filter(~Match(subject={'query': 'spam'}))
             s = s.filter(~Term(spam=1))  # TODO: Spam-flag currently not in use, but for use with different spam filter
 
         # Filter attachment

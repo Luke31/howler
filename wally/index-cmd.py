@@ -31,8 +31,6 @@ def update(args):
         files = [args.src]  # Only one file in list
         summary = index.index_bulk_from_files(files)
 
-    print("Successfully indexed {0}/{1} emails. Errors on json-convert: {2}, Errors in indexing: {3}".format(
-        summary.cnt_success, summary.cnt_total, len(summary.errors_convert), len(summary.errors_index)))
     if summary.errors_convert:
         print('Errors during conversion:')
         for err in summary.errors_convert:
@@ -41,6 +39,8 @@ def update(args):
         print('Errors during indexation:')
         for err in summary.errors_index:
             print(err)
+    print("Successfully indexed {0}/{1} emails. Errors on json-convert: {2}, Errors in indexing: {3}".format(
+        summary.cnt_success, summary.cnt_total, len(summary.errors_convert), len(summary.errors_index)))
 
 description = \
     'Update elasticsearch index with one or many new emails.\n\n' \

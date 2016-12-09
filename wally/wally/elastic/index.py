@@ -51,16 +51,7 @@ class Index:
                                              user_dictionary_file=self._user_dictionary_file,
                                              synonyms=kuromoji_synonyms)
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
-                                           filter=[
-                                               # Don't allow searching parts of email
-                                               # analysis.token_filter('email', 'pattern_capture', preserve_original=True,
-                                               #                       patterns=['([^@]+)',
-                                               #                                 '(\\p{L}+)',
-                                               #                                 '(\\d+)',
-                                               #                                 '@(.+)',
-                                               #                                 # '([^-@]+)',  # need?
-                                               #                                 ]),
-                                               'lowercase', 'unique'])
+                                           filter=['lowercase', 'unique'])
 
         m = Mapping(self._type_name)
         reopen_index = False
@@ -105,15 +96,6 @@ class Index:
         m.field('spam', 'boolean')
         m.field('hasAttachmet', 'boolean')
         m.field('attachmentNames', 'text')
-
-        #
-        # reopen_index = False
-        # if self._es.indices.exists(index=index_name):
-        #     if delete_old_index:
-        #         self._es.indices.delete(index=index_name, ignore=[400, 404])
-        #     else:
-        #         self._es.indices.close(index=index_name)
-        #         reopen_index = True
 
         m.save(index_name, using=self._es)  # Insert or update
 
@@ -177,47 +159,27 @@ class Index:
             yield data
 
     def print_chunk_progress(self, actions):
+        """
+        Decorator for counting already converted emails.
+        For every prepared chunk a message is print to console.
+
+        :param actions: ``actions (Generator-Iterable`` actions to decorate
+        :return: actions (Generator-Iterable)
+        """
         for action in actions:
             if (self._cur_print % constants.ES_BULK_CHUNK_SIZE == 0) & (self._cur_print > 0):
                 print("{0} emails converted. Starting bulk import (chunk size: {1})...".format(self._cur_print,
-                                                                                             constants.ES_BULK_CHUNK_SIZE))
+                                                                                               constants.ES_BULK_CHUNK_SIZE))
             self._cur_print += 1
             yield action
 
-            # def index_from_file(self, file):
-            #     """
-            #     Index a single mail from file
-            #
-            #     :param file: Path to file to index
-            #     :return: 0 if success, 1 if failure (will be printed on console)
-            #     """
-            #
-            #
-            #     try:
-            #         jsonstr = self._mailextractor.extract_json(file)
-            #         docid = os.path.basename(file)
-            #         self.index(docid, jsonstr)
-            #         return 0
-            #     except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError, AssertionError) as e:
-            #         ret = 'An exception of type {0} occured, when reading file {1}: {2}'.format(type(e).__name__, file, e)
-            #         print(ret)
-            #         return 1
-
-            # def index(self, docid, docstr):
-            #     """
-            #     Index a json to elasticsearch.
-            #
-            #     :param docid: id of new document to index
-            #     :param docstr: json docstr, must contain property 'langCode'
-            #     :return: elasticsearch index result
-            #     """
-            #     data = json.loads(docstr)
-            #     lang_code = get_lang_code(data['langCode'])
-            #     res = self._es.index(index=self._index_prefix.format(lang_code), doc_type=self._type_name, id=docid, body=docstr)
-            #     return res
-
 
 def get_lang_code(lang_code):
+    """
+    Check if provided lang_code is supported, if not, return fallback
+    :param lang_code: ``str`` langauge code to check
+    :return: ``str`` Supported language code
+    """
     if lang_code not in constants.SUPPORTED_LANG_CODES_ANALYZERS:
         return constants.FALLBACK_LANG_CODE
     return lang_code
