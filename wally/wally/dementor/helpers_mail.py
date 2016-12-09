@@ -32,11 +32,14 @@ def has_attachment(msg):
     """
     body = msg.get_body()
     filenames = []
-    for part in msg.iter_attachments():
-        fn = part.get_filename()
-        if fn is None:
-            fn = constants.NO_FILENAME
-        filenames.append(fn)
+    try:
+        for part in msg.iter_attachments():
+            fn = part.get_filename()
+            if fn is None:
+                fn = constants.NO_FILENAME
+            filenames.append(fn)
+    except AttributeError as exc:
+        return False, ''  # 'str' object has no attribute 'is_attachment'
 
     return len(filenames) > 0, ', '.join(filenames)
 
