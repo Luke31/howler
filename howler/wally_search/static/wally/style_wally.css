@@ -2,11 +2,28 @@
     background: white url("img/wally100.png") no-repeat right bottom;
 }
 
-table.table-emails tbody > tr:last-child > td {
-    padding-bottom: 30px;
-}
+/*table.table-emails tbody > tr:last-child > td {*/
+    /*padding-bottom: 30px;*/
+/*}*/
 
 .js_hit {
     cursor: pointer;
 }
 
+.js_popover_content.popover-content {
+    background: white;
+    width: 500px;
+}
+
+/* ---Result table---*/
+tr.shown + tr>td { border-top: none; }
+.table-striped-custom tr.odd {  background-color: #f9f9f9; }
+.table-striped-custom tr.even {  background-color: white; }
+.table-striped-custom tr.shown.odd + tr {  background-color: #f9f9f9; }
+.table-striped-custom tr.shown.even + tr { background-color: white; }
+
+td.details-control {
+    cursor: pointer;
+}
+tr:not(.shown) td.details-control>span.glyphicon-minus { display:none; } /*Hide close*/
+tr.shown td.details-control>span.glyphicon-plus { display:none; } /*Hide open*/

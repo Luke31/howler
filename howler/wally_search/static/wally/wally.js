@@ -14,6 +14,7 @@ $(function () {
             data: $("#js_searchform").serialize(), // serializes the form's elements.
             success: function (data) {
                 $("#js_result").html(data);
+                set_result_table();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert(errorThrown);
@@ -72,4 +73,28 @@ $(function () {
 });
 
 
+function set_result_table(){
+    var table = $('#js_result_table').DataTable({
+        //responsive: true
+        //  "language": {
+        //         "url": "dataTables.german.lang"
+        //     }
+    });
+    $('#js_result_table tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row( tr );
+
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            var extra_data = tr.find('.js_popover_content').html();
+            row.child(extra_data).show();
+            tr.addClass('shown');
+        }
+    } );
+}
 

@@ -16,10 +16,14 @@
 
     <link rel="stylesheet" href="{% static 'style.css' %}"/>
 
-    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.css' %}"/><!--TODO: USE MIN!-->
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"/>
+
     <link rel="stylesheet" href="{% static 'dashboard.css' %}">
     <link rel="stylesheet"
           href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}"/>
+
+    <link rel="stylesheet" href="{% static 'datatables.net-bs/css/dataTables.bootstrap.min.css' %}"/>
+{#    <link rel="stylesheet" href="{% static 'datatables.net-responsive-bs/css/responsive.bootstrap.min.css' %}"/>#}
 
     <link rel="stylesheet" href="{% static "style.css" %}"/>
     {% block head %}
@@ -122,14 +126,21 @@
 
 <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
 
-<script type="text/javascript" src='{% static 'jquery/dist/jquery.js' %}'></script>
-<script type="text/javascript" src='{% static 'bootstrap/dist/js/bootstrap.js' %}'></script><!--TODO: USE MIN!-->
-<script type="text/javascript" src='{% static 'bootstrap-confirmation2/bootstrap-confirmation.js' %}'></script>
+<script type="text/javascript" src='{% static 'jquery/dist/jquery.min.js' %}'></script>
+<script type="text/javascript" src='{% static 'bootstrap/dist/js/bootstrap.min.js' %}'></script>
+<script type="text/javascript" src='{% static 'bootstrap-confirmation2/bootstrap-confirmation.min.js' %}'></script>
 
 <script type="text/javascript" src="{% static 'moment/min/moment.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'moment/locale/ja.js' %}"></script>
 <script type="text/javascript"
         src="{% static 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+
+{#<script type="text/javascript" src="{% static 'datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>#}
+{#<script type="text/javascript" src="{% static 'datatables.net-responsive-bs/js/responsive.bootstrap.min.js' %}"></script>#}
+
 <script type="text/javascript" src="{% static 'howler.js' %}"></script>
 
 {% block scripts %}
