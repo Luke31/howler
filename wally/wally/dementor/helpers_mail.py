@@ -9,15 +9,18 @@ def extract_body_plain_text(msg):
     :param msg: email.message.Message
     :return: body of message (plain/html)
     """
-    bodyplain = msg.get_body(preferencelist='plain')
-    if bodyplain is not None:
-        return bodyplain.get_content()
+    try:
+        bodyplain = msg.get_body(preferencelist='plain')
+        if bodyplain is not None:
+            return bodyplain.get_content()
 
-    htmlbody = msg.get_body(preferencelist='html')
-    if htmlbody is not None:
-        html = htmlbody.get_content()
-        plain = html  # TODO: Html-Escaping
-        return plain
+        htmlbody = msg.get_body(preferencelist='html')
+        if htmlbody is not None:
+            html = htmlbody.get_content()
+            plain = html  # TODO: Html-Escaping
+            return plain
+    except AttributeError as exc:
+        return msg.get_body()  # 'str' object has no attribute 'is_attachment'
 
     return None
 
@@ -32,14 +35,11 @@ def has_attachment(msg):
     """
     body = msg.get_body()
     filenames = []
-    try:
-        for part in msg.iter_attachments():
-            fn = part.get_filename()
-            if fn is None:
-                fn = constants.NO_FILENAME
-            filenames.append(fn)
-    except AttributeError as exc:
-        return False, ''  # 'str' object has no attribute 'is_attachment'
+    for part in msg.iter_attachments():
+        fn = part.get_filename()
+        if fn is None:
+            fn = constants.NO_FILENAME
+        filenames.append(fn)
 
     return len(filenames) > 0, ', '.join(filenames)
 
