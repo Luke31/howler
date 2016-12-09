@@ -38,7 +38,7 @@ class MailExtractor:
             self.cnt_total += 1
             try:
                 yield (os.path.basename(file), self.extract_json(file))  # id, data
-            except (LookupError, AttributeError, ValueError, TypeError, FileNotFoundError, AssertionError) as exc:
+            except (LookupError, AttributeError, TypeError, FileNotFoundError, AssertionError) as exc: # ValueError
                 errmsg = '{0}: An exception of type {1} occured, when reading file: {2}'.format(
                     file, type(exc).__name__, exc)
                 self.errors_convert.append(errmsg)
@@ -81,9 +81,13 @@ class EmailMessageEncoder(json.JSONEncoder):
             text_combined = ''.join((subject, ' ', body_plain))  # Analyze text of subject and body
 
             # detect language
-            lang_selected_details = language.detect_select_language(text_combined)
-            lang_detected_code = lang_selected_details.language_code
-            lang_percent = lang_selected_details.percent
+            try:
+                lang_selected_details = language.detect_select_language(text_combined)
+                lang_detected_code = lang_selected_details.language_code
+                lang_percent = lang_selected_details.percent
+            except ValueError as exc:
+                lang_detected_code = 'un'  # undefined, error when detecting language
+                lang_percent = 0
 
             (has_attachment, attachment_names) = helpers_mail.has_attachment(obj)
 
