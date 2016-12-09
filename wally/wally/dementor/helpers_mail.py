@@ -42,14 +42,15 @@ def has_attachment(msg):
     attachment_names: Names of attachments as string
     """
     filenames = []
-    for part in msg.iter_attachments():
-        fn = part.get_filename()
-        if fn is None:
-            fn = constants.NO_FILENAME
-        filenames.append(fn)
-
-    return len(filenames) > 0, ', '.join(filenames)
-
+    try:
+        for part in msg.iter_attachments():
+            fn = part.get_filename()
+            if fn is None:
+                fn = constants.NO_FILENAME
+            filenames.append(fn)
+        return len(filenames) > 0, ', '.join(filenames)
+    except AttributeError as exc:  # 'str' object has no attribute 'pop'
+        return False, ''
 
 invalid_encoded_words = r"(=\?.*\?=)(?=\S)"
 invalid_encoded_words_bytes = br"(=\?.*\?=)(?=\S)"
