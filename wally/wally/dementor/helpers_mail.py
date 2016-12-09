@@ -19,8 +19,16 @@ def extract_body_plain_text(msg):
             html = htmlbody.get_content()
             plain = html  # TODO: Html-Escaping
             return plain
-    except AttributeError as exc:
-        return msg.get_body()  # 'str' object has no attribute 'is_attachment'
+    except AttributeError as exc:  # 'str' object has no attribute 'is_attachment'
+        if msg.is_multipart():
+            raise Exception("noooo")
+            for payload in msg.get_payload():
+                # if payload.is_multipart(): ...
+                print
+                payload.get_payload()
+        else:
+            return msg.get_payload()
+        # return msg.get_body()
 
     return None
 
