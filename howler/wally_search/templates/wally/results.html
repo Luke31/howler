@@ -32,11 +32,14 @@
                     <span class="glyphicon glyphicon-minus"></span>
                 </td>
                 <td>
-                    {% if hit.meta.highlight.subject.0 %}
-                        {{ hit.meta.highlight.subject.0|safe }}
-                    {% else %}
-                        {{ hit.subject }}
-                    {% endif %}
+                    <span>
+                        {% if hit.meta.highlight.subject.0 %}
+                            {{ hit.meta.highlight.subject.0|safe }}
+                        {% else %}
+                            {{ hit.subject }}
+                        {% endif %}
+                    </span>
+                    <span style="display: none">{{ hit.meta.id }}</span>
                     <div class="collapse js_popover_content">
                         <div class="panel-group">
                             <div class="panel panel-default">

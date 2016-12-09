@@ -36,6 +36,11 @@ def get_files_from_dir(dir_data_in, already_imported_ids):
     for filename in os.listdir(dir_data_in):
         if os.path.isdir(os.path.join(dir_data_in, filename)):
             continue
+        try:
+            int(filename)
+        except ValueError:
+            continue  # only accept int-files (will be used as id)
+        # ignore if no number
         # ignore if already imported
         if filename in already_imported_ids:
             continue
