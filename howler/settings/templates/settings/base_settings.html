@@ -8,12 +8,18 @@
 {% endblock %}
 
 {% block sidebar %}
-{#    <ul class="nav nav-sidebar">#}
-{#        {% url 'settings:synonym' as url_synonm %}#}
-{#        <li{% if request.path == url_synonm %} class="active"{% endif %}>#}
-{#            <a href="{{ url_synonm }}">{% trans "Synonyms" %}</a>#}
-{#        </li>#}
-{#    </ul>#}
+    <b>{% trans "External maintenance links" %}</b>
+    <ul class="nav nav-sidebar">
+        <li>
+            <a href="{{ http_es_settings }}" target="_blank">{% trans "Elasticsearch index settings" %}</a>
+        </li>
+        <li>
+            <a href="{{ http_es_indices }}" target="_blank">{% trans "Elasticsearch indices" %}</a>
+        </li>
+        <li>
+            <a href="{{ http_kibana }}" target="_blank">{% trans "Elasticsearch Kibana" %}</a>
+        </li>
+    </ul>
 {% endblock %}
 
 {% block main_pre %}

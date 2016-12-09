@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'settings.context_processors.global_settings',
             ],
         },
     },
@@ -170,6 +171,7 @@ LOCALE_PATHS = [
 
 # --- CUSTOM SETTINGS ELASTICSEARCH and SERACH ---
 ES_HOSTS = ['10.0.10.180']
+ES_DEFAULT_PORT = 9200
 ES_TIMEOUT = 30
 ES_MAXSIZE_CON = 25
 ES_INDEX_PREFIX = 'mailing-{0}'

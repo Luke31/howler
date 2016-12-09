@@ -39,7 +39,9 @@
                     <thead>
                     <tr>
                         <th>{% trans "Term A" %}</th>
+                        <th></th>
                         <th>{% trans "Term B" %}</th>
+                        <th></th>
                         <th class="text-right"></th>
                     </tr>
                     </thead>
@@ -48,7 +50,23 @@
                     {% for synonym in synonym_list %}
                         <tr>
                             <td>{{ synonym.synonym_term_a }}</td>
+                            <td>
+                                <a href="{{ http_kuromoji_analyze_test }}&text={{ synonym.synonym_term_a }}" target="_blank">
+                                    <button type="button" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-search"
+                                              aria-hidden="true"></span> {% trans "Test Term A" %}
+                                    </button>
+                                </a>
+                            </td>
                             <td>{{ synonym.synonym_term_b }}</td>
+                            <td>
+                                <a href="{{ http_kuromoji_analyze_test }}&text={{ synonym.synonym_term_b }}" target="_blank">
+                                    <button type="button" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-search"
+                                              aria-hidden="true"></span> {% trans "Test Term B" %}
+                                    </button>
+                                </a>
+                            </td>
                             <td class="text-right">
                                 <a href="{% url "settings:synonym_edit" synonym.pk %}" title="{% trans "Edit" %}">
                                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
