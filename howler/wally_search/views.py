@@ -5,6 +5,7 @@ from datetime import datetime
 from django.utils.translation import ugettext as _
 from elasticsearch import Elasticsearch
 from django.conf import settings as djsettings
+from datetime import datetime
 
 
 def search(request):
@@ -63,6 +64,11 @@ def find(request):
         es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
         response = Search(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME).search(
             query, **kwargs)
+
+        # Convert sent date to nice string
+        for hit in response:
+            hit.date = datetime.strptime(hit.date, djsettings.ES_DATETIME_FORMAT)
+
     except KeyError as exc:
         # Redisplay the search form.
         # Translators: The user didn't submit a correct query, a value is missing

@@ -176,6 +176,7 @@ ES_TIMEOUT = 30
 ES_MAXSIZE_CON = 25
 ES_INDEX_PREFIX = 'mailing-{0}'
 ES_TYPE_NAME = 'email'
+ES_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'  # yyyy-MM-dd'T'HH:mm:ssZZ
 
 SUPPORTED_LANG_CODES_ANALYZERS = {'ja': 'kuromoji',
                                   'en': 'english',

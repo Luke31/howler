@@ -1,6 +1,7 @@
 /**
  * Created by Lukas on 29.11.2016.
  */
+viewformat = 'YYYY/MM/DD HH:mm';
 
 //Search
 $(function () {
@@ -98,3 +99,7 @@ function set_result_table(){
     } );
 }
 
+function parseFormat(dateIn){
+    var date = moment(dateIn);
+    return date.format(viewformat);
+}

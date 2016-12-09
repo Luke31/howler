@@ -16,7 +16,7 @@
         <tr>
             <th></th>
             <th>{% trans "Subject:" %}</th>
-            <th>{% trans "Sent:" %}</th>
+            <th>{% trans "Sent (JST):" %}</th>
             <th>{{ sender }}</th>
             <th>{{ receiver }}</th>
             <th>{% trans "Attachment?" %}</th>
@@ -100,27 +100,29 @@
                         </div>
                     </div>
                 </td>
-                <td>
-                    {{ hit.date }}
+                <td class="text-nowrap">
+                    {{ hit.date|date:"Y/m/d H:i" }}
                 </td>
-                <td>
+                <td class="text-nowrap">
                     {% if hit.meta.highlight.fromEmail.0 %}
                         {{ hit.meta.highlight.fromEmail.0|safe }}
                     {% else %}
                         {{ hit.fromEmail }}
                     {% endif %}
                 </td>
-                <td>
+                <td class="text-nowrap">
                     {% if hit.meta.highlight.toEmail.0 %}
                         {{ hit.meta.highlight.toEmail.0|safe }}
                     {% else %}
                         {{ hit.toEmail }}
                     {% endif %}
                 </td>
-                 <td class="text-right">
-                    {{ hit.hasAttachment }}
+                <td class="text-nowrap text-center">
+                    {% if hit.hasAttachment %}
+                        <span class="glyphicon glyphicon-ok"></span>
+                    {% endif %}
                 </td>
-                <td class="text-right">
+                <td class="text-center" class="text-nowrap">
                     {{ hit.meta.score|floatformat:1 }}
                 </td>
             </tr>
