@@ -21,14 +21,13 @@ def extract_body_plain_text(msg):
             return plain
     except AttributeError as exc:  # 'str' object has no attribute 'is_attachment'
         if msg.is_multipart():
-            raise Exception("noooo")
-            for payload in msg.get_payload():
-                # if payload.is_multipart(): ...
-                print
-                payload.get_payload()
+            parts = []
+            for part in msg.walk():
+                if part.get_content_type() == 'text/plain':
+                    parts.add(part.get_payload(decode=True))
+            return ''.join(parts)
         else:
-            return msg.get_payload()
-        # return msg.get_body()
+            return msg.get_payload(decode=True)
 
     return None
 
