@@ -41,7 +41,6 @@ def has_attachment(msg):
     True if msg has one or more attachment
     attachment_names: Names of attachments as string
     """
-    body = msg.get_body()
     filenames = []
     for part in msg.iter_attachments():
         fn = part.get_filename()
