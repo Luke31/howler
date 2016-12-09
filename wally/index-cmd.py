@@ -6,8 +6,33 @@ from elasticsearch import Elasticsearch
 from wally.elastic import constants
 from argparse import RawTextHelpFormatter
 
+"""Command-line interface to update elasticsearch index with new emails
+--How to install this package for script-usage--
+1. Install pip3:
+sudo apt-get install python3-pip
+
+2. Download this package with its script:
+git clone ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git
+or just copy it to any directory
+
+3. Go to installed directory -> project wally
+cd lukas-sandbox/wally
+
+3. Install the required python modules (You may also create a virtualenv for this):
+pip3 install -r requirements.txt
+
+--How to use this script to get help--
+python3 index-cmd.py -h
+python3 index-cmd.py update -h
+"""
+
 
 def update(args):
+    """
+    Updates elasticsearch index with new emails
+    :param args:
+    :return:
+    """
     es = Elasticsearch([args.estargethost], timeout=args.timeout, maxsize=args.maxcon)
     index = Index(es, es_index_prefix=args.indexprefix, es_type_name=args.doctype)
     if args.force:
@@ -42,6 +67,7 @@ def update(args):
     print("Successfully indexed {0}/{1} emails. Errors on json-convert: {2}, Errors in indexing: {3}".format(
         summary.cnt_success, summary.cnt_total, len(summary.errors_convert), len(summary.errors_index)))
 
+
 description = \
     'Update elasticsearch index with one or many new emails.\n\n' \
     'Example usage:\n' \
@@ -50,12 +76,14 @@ description = \
     '-Update force all mails in folder to es-server with (deletes existing indices):\n' \
     'python3 index-cmd.py update data_in 10.0.10.180 --force\n\n' \
     '-Single mail file to es-server:\n' \
-    'python3 index-cmd.py update data_in/99992 10.0.10.180\n\n'
+    'python3 index-cmd.py update data_in/99992 10.0.10.180\n\n' \
+    'Make sure the required python modules are installed, if not run:\n' \
+    'pip3 install -r requirements.txt\n\n'
 
 parser = argparse.ArgumentParser(
     description=description,
     epilog='epilog', allow_abbrev=True, formatter_class=RawTextHelpFormatter)
-# parser.add_argument('--version', action='version', version='1.0.1')
+parser.add_argument('--version', action='version', version='1.0.2')
 subparsers = parser.add_subparsers()
 update_parser = subparsers.add_parser('update')
 update_parser.add_argument('src', help='src folder of emails OR email filename')
