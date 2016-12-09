@@ -19,6 +19,7 @@
             <th>{% trans "Sent:" %}</th>
             <th>{{ sender }}</th>
             <th>{{ receiver }}</th>
+            <th>{% trans "Attachment?" %}</th>
             <th class="text-right">{% trans "Score:" %}</th>
         </tr>
         </thead>
@@ -112,6 +113,9 @@
                     {% else %}
                         {{ hit.toEmail }}
                     {% endif %}
+                </td>
+                 <td class="text-right">
+                    {{ hit.hasAttachment }}
                 </td>
                 <td class="text-right">
                     {{ hit.meta.score|floatformat:1 }}
