@@ -25,9 +25,9 @@ def extract_body_plain_text(msg):
             for part in msg.walk():
                 if part.get_content_type() == 'text/plain':
                     parts.add(part.get_payload(decode=True))
-            return ''.join(parts)
+            return str(''.join(parts))
         else:
-            return msg.get_payload(decode=True)
+            return str(msg.get_payload(decode=True))
 
     return None
 
