@@ -30,4 +30,4 @@ var settings = (function () {
     return {
         synonymTransfer: synonymTransfer
     }
-});
+})();
