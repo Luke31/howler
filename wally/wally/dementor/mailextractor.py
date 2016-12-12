@@ -73,7 +73,7 @@ class EmailMessageEncoder(json.JSONEncoder):
             sent = email.utils.parsedate_to_datetime(obj['date'])
             cur_year_inc = datetime.datetime.today().year + 1
             if sent.year > cur_year_inc:
-                raise ValueError("Sent year {0} is bigger than current year increased by one {1}", sent.year, cur_year_inc)
+                raise ValueError("Sent year {0} is bigger than current year increased by one {1}".format(sent.year, cur_year_inc))
             date_time_no_millis = ('{:' + constants.JSON_DATETIME_FORMAT + '}').format(sent)
             # (https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html#built-in-date-formats   )
             # date_time_no_millis -> yyyy-MM-dd'T'HH:mm:ssZZ
