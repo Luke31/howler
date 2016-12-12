@@ -1,8 +1,6 @@
 {# {% extends "wally/base_wally.html" %}#}
 
 {#  {% block main %}#}
-{#    <h1 class="page-header">Results</h1>#}
-{#    <h2 class="sub-header">Hits for: {{ query }} <a class="btn btn-default" href="{% url 'wally:search' %}">Back to search</a>  </h2>#}
 {% load i18n %}
 
 {% comment %}Translators: Sender of email{% endcomment %}
@@ -10,17 +8,26 @@
 {% comment %}Translators: Receiver of email{% endcomment %}
 {% trans "Receiver" as receiver %}
 {% trans "Attachments" as attachments %}
+
+{% if error_message %}
+    <div class="row">
+        <div class='col-md-11'>
+            <p><strong>{{ error_message }}</strong></p>
+        </div>
+    </div>
+{% endif %}
+
 {% if hit_list %}
     <table class="table table-striped-custom table-email" id="js_result_table">
         <thead>
         <tr>
             <th></th>
-            <th>{% trans "Subject" %}</th>
-            <th>{% trans "Sent (JST)" %}</th>
-            <th>{{ sender }}</th>
-            <th>{{ receiver }}</th>
-            <th>{% trans "Attachment?" %}</th>
-            <th class="text-right">{% trans "Score" %}</th>
+            <th class="text-nowrap">{% trans "Subject" %}</th>
+            <th class="text-nowrap">{% trans "Sent (JST)" %}</th>
+            <th class="text-nowrap">{{ sender }}</th>
+            <th class="text-nowrap">{{ receiver }}</th>
+            <th class="text-nowrap">{% trans "Attachment?" %}</th>
+            <th class="text-nowrap text-right">{% trans "Score" %}</th>
         </tr>
         </thead>
 
@@ -90,7 +97,7 @@
                                                 {% if hit.attachmentNames %}
                                                     <p><b>{{ attachments }}</b> {{ hit.attachmentNames }}</p>
                                                 {% endif %}
-                                                {{ hit.body|linebreaks }}
+                                                {{ hit.body|linebreaks|truncatechars:EMAIL_SHOW_MAX_CHARS }}
                                             </div>
                                         </div>
                                     </div>

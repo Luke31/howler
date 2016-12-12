@@ -1,105 +1,125 @@
 /**
  * Created by Lukas on 29.11.2016.
  */
-viewformat = 'YYYY/MM/DD HH:mm';
 
-//Search
 $(function () {
-    // ---Submit---
-    $("#js_searchform").submit(function (e) {
-        var url = $(this).attr('action');
-        $(".loading").show();
-        $.ajax({
-            type: "GET",
-            url: url,
-            data: $("#js_searchform").serialize(), // serializes the form's elements.
-            success: function (data) {
-                $("#js_result").html(data);
-                set_result_table();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert(errorThrown);
-            },
-            complete: function (jqXHR, textStatus) {
-                $(".loading").hide();
-            }
-        });
-
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-    });
-
-    // ---Fixed Date input---
-    var viewformat = 'YYYY/MM/DD HH:mm';
-    var viewlocale = 'ja';
-
-    $('#datetimepicker-from').datetimepicker({
-        locale: viewlocale,
-        format: viewformat
-    });
-    $('#datetimepicker-to').datetimepicker({
-        useCurrent: false, //Important! See issue #1075
-        locale: viewlocale,
-        format: viewformat
-    });
-    $("#datetimepicker-from").on("dp.change", function (e) {
-        $('#datetimepicker-to').data("DateTimePicker").minDate(e.date);
-    });
-    $("#datetimepicker-to").on("dp.change", function (e) {
-        $('#datetimepicker-from').data("DateTimePicker").maxDate(e.date);
-    });
-
-    fill_today($('#datetimepicker-to>input'));
-    function fill_today(target) {
-        var now = moment().format(viewformat);
-        target.val(now);
-        target.attr("placeholder", now);
-    }
-
-    // ---Date-filter SWITCHER---
-    $('#use_sliding_value').on('change', function (e) {
-        display_correct_date_type();
-    });
-    display_correct_date_type();
-
-    function display_correct_date_type() {
-        var use_sliding_value = parseInt($('#use_sliding_value').val());
-        if (use_sliding_value) {
-            $('.js_date_fixed').hide();
-            $('.js_date_sliding_value').show();
-        } else {
-            $('.js_date_sliding_value').hide();
-            $('.js_date_fixed').show();
-        }
-    }
+    wally.init(); //Init wally module
 });
 
+var wally = (function () {
+    var viewformat = 'YYYY/MM/DD HH:mm';
 
-function set_result_table(){
-    var table = $('#js_result_table').DataTable({
-        //responsive: true
-        //  "language": {
-        //         "url": "dataTables.german.lang"
-        //     }
-    });
-    $('#js_result_table tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = table.row( tr );
+    var init = function () {
+        initSearchFormSubmit();
+        initFixedDateInput();
+        initDateFilterSwitcher();
+    };
 
-        if ( row.child.isShown() ) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
+    /** Init Serach form submit action*/
+    var initSearchFormSubmit = function () {
+        // ---Submit---
+        $("#js_searchform").submit(function (e) {
+            var url = $(this).attr('action');
+            $(".loading").show();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: $("#js_searchform").serialize(), // serializes the form's elements.
+                success: function (data) {
+                    $("#js_result").html(data);
+                    setResultTable();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                    $(".loading").hide();
+                }
+            });
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+        });
+    };
+
+    /** Init fixed date from-to input fields*/
+    var initFixedDateInput = function () {
+        // ---Fixed Date input---
+        //var viewformat = 'YYYY/MM/DD HH:mm';
+        var viewlocale = howler.getLanguageCode(); //Get user-language from main module howler
+        var fromDateInputSel = '#datetimepicker-from';
+        var toDateInputSel = '#datetimepicker-to';
+        $(fromDateInputSel).datetimepicker({
+            locale: viewlocale,
+            format: viewformat
+        });
+        $(toDateInputSel).datetimepicker({
+            useCurrent: false, //Important! See issue #1075
+            locale: viewlocale,
+            format: viewformat
+        });
+        $(fromDateInputSel).on("dp.change", function (e) {
+            $('#datetimepicker-to').data("DateTimePicker").minDate(e.date);
+        });
+        $(toDateInputSel).on("dp.change", function (e) {
+            $('#datetimepicker-from').data("DateTimePicker").maxDate(e.date);
+        });
+
+        fillToday($('#datetimepicker-to>input'));
+        function fillToday(target) {
+            var now = moment().format(viewformat);
+            target.val(now);
+            target.attr("placeholder", now);
         }
-        else {
-            // Open this row
-            var extra_data = tr.find('.js_popover_content').html();
-            row.child(extra_data).show();
-            tr.addClass('shown');
-        }
-    } );
-}
+    };
 
-function parseFormat(dateIn){
-    var date = moment(dateIn);
-    return date.format(viewformat);
-}
+    /**Init switch for selection between sliding-filter or fixed date filter*/
+    var initDateFilterSwitcher = function () {
+        // ---Date-filter SWITCHER---
+        $('#use_sliding_value').on('change', function (e) {
+            displayCorrectDateType();
+        });
+        displayCorrectDateType();
+
+        function displayCorrectDateType() {
+            var use_sliding_value = parseInt($('#use_sliding_value').val());
+            if (use_sliding_value) {
+                $('.js_date_fixed').hide();
+                $('.js_date_sliding_value').show();
+            } else {
+                $('.js_date_sliding_value').hide();
+                $('.js_date_fixed').show();
+            }
+        }
+    };
+
+    /** Make result-table a DataTable (https://datatables.net/) with collapsed detail informations*/
+    var setResultTable = function setResultTable() {
+        var targetTableSel = '#js_result_table';
+        var table = $(targetTableSel).DataTable({
+            //responsive: true
+            "language": {
+                "url": "static/wally/datatables/"+howler.getLanguageCode()+".json"
+            }
+        });
+        $(targetTableSel).find('tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                var extra_data = tr.find('.js_popover_content').html();
+                row.child(extra_data).show();
+                tr.addClass('shown');
+            }
+        });
+    };
+
+    return {
+        init: init
+    }
+})();

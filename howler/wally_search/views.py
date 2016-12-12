@@ -28,7 +28,7 @@ def find(request):
                 kwargs['date_gte'] = datetime.strptime(request_from, web_datetime_format)
         except ValueError:
             # Translators: The user didn't submit the correct values in the form
-            return render(request, 'wally/search.html', {'error_message': _("Incorrent field format from-date")})
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent field format from-date")})
 
         try:
             request_to = request.GET.get('to', '')
@@ -36,7 +36,7 @@ def find(request):
                 kwargs['date_lte'] = datetime.strptime(request_to, web_datetime_format)
         except ValueError:
             # Translators: The user didn't submit the correct values in the form
-            return render(request, 'wally/search.html', {'error_message': _("Incorrent field format to-date")})
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent field format to-date")})
 
         kwargs['date_sliding_value'] = request.GET.get('date_sliding_value', '')
         kwargs['date_sliding_type'] = request.GET.get('date_sliding_type', '')
@@ -44,22 +44,22 @@ def find(request):
         try:
             kwargs['use_sliding_value'] = bool(int(request.GET.get('use_sliding_value', True)))
         except ValueError:
-            return render(request, 'wally/search.html', {'error_message': _("Incorrent use of date selection")})
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent use of date selection")})
 
         try:
             kwargs['number_results'] = int(request.GET.get('number_results', 10))
         except ValueError:
-            return render(request, 'wally/search.html', {'error_message': _("Incorrent number of results")})
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent number of results")})
 
         try:
             kwargs['include_spam'] = bool(request.GET.get('include_spam'))
         except ValueError:
-            return render(request, 'wally/search.html', {'error_message': _("Incorrent value for include spam")})
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for include spam")})
 
         try:
             kwargs['only_attachment'] = bool(request.GET.get('only_attachment'))
         except ValueError:
-            return render(request, 'wally/search.html', {'error_message': _("Incorrent value for only attachment")})
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for only attachment")})
 
         es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
         response = Search(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME).search(
@@ -72,12 +72,13 @@ def find(request):
     except KeyError as exc:
         # Redisplay the search form.
         # Translators: The user didn't submit a correct query, a value is missing
-        return render(request, 'wally/search.html',
+        return render(request, 'wally/results.html',
                       {'error_message': _("Incorrent query: {exception}").format(exception=exc)})
     else:
         context = {
             'query': query,
             'hit_list': response,
+            'EMAIL_SHOW_MAX_CHARS':djsettings.EMAIL_SHOW_MAX_CHARS
         }
         return render(request, 'wally/results.html', context)
 

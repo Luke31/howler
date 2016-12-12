@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-12 11:27+0900\n"
+"POT-Creation-Date: 2016-12-12 11:37+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: settings/models.py:8
+msgid "Synonym Term A"
+msgstr "同意語単語A"
+
+#: settings/models.py:9
+msgid "Synonym Term B"
+msgstr "同意語単語B"
 
 #: settings/templates/settings/base_settings.html:11
 msgid "External maintenance links"

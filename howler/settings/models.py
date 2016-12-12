@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 
 class Synonym(models.Model):
-    synonym_term_a = models.CharField(max_length=200)
-    synonym_term_b = models.CharField(max_length=200)
+    synonym_term_a = models.CharField(max_length=200, verbose_name=_('Synonym Term A'))
+    synonym_term_b = models.CharField(max_length=200, verbose_name=_('Synonym Term B'))
 
     def synonyms_combo(self):
         return ', '.join((self.synonym_term_a, self.synonym_term_b))

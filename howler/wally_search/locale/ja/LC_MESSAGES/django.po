@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-12 11:27+0900\n"
+"POT-Creation-Date: 2016-12-12 11:37+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,8 +45,6 @@ msgid "Attachment?"
 msgstr "添付?"
 
 #: wally_search/templates/wally/results.html:23
-#, fuzzy
-#| msgid "Score:"
 msgid "Score"
 msgstr "スコア"
 
@@ -92,7 +90,7 @@ msgstr "スパムも検索"
 
 #: wally_search/templates/wally/search.html:43
 msgid "only emails with attachments"
-msgstr "添付ファイル付きのメールのみ"
+msgstr "添付付きのメールのみ"
 
 #: wally_search/templates/wally/search.html:56
 msgid "Date filter mode"
