@@ -15,12 +15,12 @@
         <thead>
         <tr>
             <th></th>
-            <th>{% trans "Subject:" %}</th>
-            <th>{% trans "Sent (JST):" %}</th>
+            <th>{% trans "Subject" %}</th>
+            <th>{% trans "Sent (JST)" %}</th>
             <th>{{ sender }}</th>
             <th>{{ receiver }}</th>
             <th>{% trans "Attachment?" %}</th>
-            <th class="text-right">{% trans "Score:" %}</th>
+            <th class="text-right">{% trans "Score" %}</th>
         </tr>
         </thead>
 
@@ -46,33 +46,32 @@
                                 <div class="panel-body">
                                     {% if hit.meta.highlight.replyToEmail.0 %}
                                         <p class="fragment">
-                                            <b>{% trans "Hit in Reply-To Email/Name:" %}
-                                            </b>
+                                            <b>{% trans "Hit in Reply-To Email/Name" %}:</b>
                                             {{ hit.meta.highlight.replyToEmail.0|safe }} {{ hit.meta.highlight.replyToName.0|safe }}
                                         </p>
                                     {% endif %}
 
                                     {% if hit.meta.highlight.fromName.0 %}
                                         <p class="fragment">
-                                            <b>{% trans "Hit in sender name:" %}</b>
+                                            <b>{% trans "Hit in sender name" %}:</b>
                                             {{ hit.meta.highlight.fromName.0|safe }}
                                         </p>
                                     {% endif %}
 
                                     {% if hit.meta.highlight.toName.0 %}
                                         <p class="fragment">
-                                            <b>{% trans "Hit in receiver name:" %}</b> {{ hit.meta.highlight.toName.0|safe }}
+                                            <b>{% trans "Hit in receiver name" %}:</b> {{ hit.meta.highlight.toName.0|safe }}
                                         </p>
                                     {% endif %}
 
                                     {% if hit.meta.highlight.attachmentNames.0 %}
                                         <p class="fragment">
-                                            <b>{% trans "Hit in attachment names:" %}</b> {{ hit.meta.highlight.attachmentNames.0|safe }}
+                                            <b>{% trans "Hit in attachment names" %}:</b> {{ hit.meta.highlight.attachmentNames.0|safe }}
                                         </p>
                                     {% endif %}
 
                                     {% if hit.meta.highlight.body %}
-                                        <b>{% trans "Hits in body:" %}</b>
+                                        <b>{% trans "Hits in body" %}:</b>
                                         {% for fragment in hit.meta.highlight.body %}
                                             <p class="fragment">
                                                 {{ fragment|safe|linebreaks }}

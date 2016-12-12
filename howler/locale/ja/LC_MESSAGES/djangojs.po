@@ -18,22 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: templates/base.html:15
-msgid "Howler email search"
-msgstr "Howler メール検索"
+#: static/howler.js:15
+msgid "Yes"
+msgstr "はい"
 
-#: templates/base.html:41
-msgid "Toggle navigation"
-msgstr ""
+#: static/howler.js:16
+msgid "No"
+msgstr "いいえ"
 
-#: templates/base.html:59
-msgid "Settings"
-msgstr "設定"
-
-#: templates/base.html:60
-msgid "Admin"
-msgstr "アドミン"
-
-#: templates/base.html:102
-msgid "Email search"
-msgstr "Howler メール検索"
+#: static/howler.js:17
+msgid "Are you sure?"
+msgstr "本気ですか？"

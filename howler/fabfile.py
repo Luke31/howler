@@ -69,10 +69,11 @@ def disable_debug_remote():
     sed(settings_path, "DEBUG = True", "DEBUG = False")
 
 
-def l_genmsg():
-    """[Local] Generate .po file locally (gettext required)"""
+def l_makemsg():
+    """[Local] Generate/Make .po file locally (gettext required)"""
     # local('pyenv shell howler')
     local('django-admin makemessages -l ja --ignore=components')
+    local('django-admin makemessages -d djangojs -l ja --ignore=components --ignore=public')
 
 
 def l_compmsg():
