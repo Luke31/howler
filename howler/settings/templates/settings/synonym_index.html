@@ -21,7 +21,7 @@
                         <span id="js_result" class="label label-success"></span>
                     </span>
                     <span class="btn btn-warning btn-sm js_transfer" data-toggle="confirmation"
-                          data-on-confirm="synonym_transfer" data-url="{% url 'settings:synonym_import' %}"
+                          data-on-confirm="settings.synonymTransfer" data-url="{% url 'settings:synonym_import' %}"
                           title="{% trans "Really update Elasticsearch index? The search will not be available during the update." %}">
                         <span class="glyphicon glyphicon-transfer"
                               aria-hidden="true"></span> {% trans "Update synonyms to elasticsearch index" %}
