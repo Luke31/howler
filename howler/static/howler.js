@@ -24,11 +24,17 @@ var howler = (function () {
     };
 
     var getLanguageCode = function() {
-        return $('#js_language_code').data('language-code');
+        return $('#js_page_settings').data('language-code');
     };
+
+    var getStaticBaseUrl = function() {
+        return $('#js_page_settings').data('static-baseurl');
+    };
+
 
     return {
         getLanguageCode: getLanguageCode,
+        getStaticBaseUrl: getStaticBaseUrl,
         init: init
     }
 })();

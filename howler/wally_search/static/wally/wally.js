@@ -98,7 +98,7 @@ var wally = (function () {
         var table = $(targetTableSel).DataTable({
             //responsive: true
             "language": {
-                "url": "static/wally/datatables/"+howler.getLanguageCode()+".json"
+                "url": howler.getStaticBaseUrl()+"wally/datatables/"+howler.getLanguageCode()+".json"
             }
         });
         $(targetTableSel).find('tbody').on('click', 'td.details-control', function () {
