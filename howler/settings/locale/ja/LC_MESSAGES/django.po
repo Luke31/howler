@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-13 11:40+0900\n"
+"POT-Creation-Date: 2016-12-13 11:55+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,8 +23,8 @@ msgid "Synonym Term A"
 msgstr "同意語単語A"
 
 #: settings/models.py:9
-msgid "Synonym Term B (shortcut)"
-msgstr "同意語単語B (略語)"
+msgid "Synonym Term B - shortcut"
+msgstr "同意語単語B - 略語"
 
 #: settings/models.py:10
 msgid "Synonym Term B Katakana"
@@ -82,25 +82,29 @@ msgid "Term A"
 msgstr "単語A"
 
 #: settings/templates/settings/synonym_index.html:43
-msgid "Term B (shortcut)"
-msgstr "単語B (略語)"
+msgid "Term B - shortcut"
+msgstr "単語B - 略語"
 
-#: settings/templates/settings/synonym_index.html:57
+#: settings/templates/settings/synonym_index.html:44
+msgid "Term B Katakana"
+msgstr "単語Bカタカナ"
+
+#: settings/templates/settings/synonym_index.html:59
 msgid "Test Term A"
 msgstr "単語Aを試す"
 
-#: settings/templates/settings/synonym_index.html:70
+#: settings/templates/settings/synonym_index.html:74
 msgid "Test Term B"
 msgstr "単語Bを試す"
 
-#: settings/templates/settings/synonym_index.html:75
+#: settings/templates/settings/synonym_index.html:79
 msgid "Edit"
 msgstr "編集"
 
-#: settings/templates/settings/synonym_index.html:79
+#: settings/templates/settings/synonym_index.html:83
 msgid "Delete?"
 msgstr "削除?"
 
-#: settings/templates/settings/synonym_index.html:93
+#: settings/templates/settings/synonym_index.html:97
 msgid "No synonyms found"
 msgstr "同意語が見つからなかった"

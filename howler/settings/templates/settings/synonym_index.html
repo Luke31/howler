@@ -40,7 +40,8 @@
                     <tr>
                         <th>{% trans "Term A" %}</th>
                         <th></th>
-                        <th>{% trans "Term B (shortcut)" %}</th>
+                        <th>{% trans "Term B - shortcut" %}</th>
+                        <th>{% trans "Term B Katakana" %}</th>
                         <th></th>
                         <th class="text-right"></th>
                     </tr>
@@ -51,7 +52,8 @@
                         <tr>
                             <td>{{ synonym.synonym_term_a }}</td>
                             <td>
-                                <a href="{{ http_kuromoji_analyze_test }}&text={{ synonym.synonym_term_a }}" target="_blank">
+                                <a href="{{ http_kuromoji_analyze_test }}&text={{ synonym.synonym_term_a }}"
+                                   target="_blank">
                                     <button type="button" class="btn btn-default btn-sm">
                                         <span class="glyphicon glyphicon-search"
                                               aria-hidden="true"></span> {% trans "Test Term A" %}
@@ -59,12 +61,14 @@
                                 </a>
                             </td>
                             <td>{{ synonym.synonym_term_b }}
-                                {% if synonym.synonym_term_b_katakana %}
-                                ({{ synonym.synonym_term_b_katakana }})
-                                {% endif %}
+
                             </td>
                             <td>
-                                <a href="{{ http_kuromoji_analyze_test }}&text={{ synonym.synonym_term_b }}" target="_blank">
+                                {{ synonym.synonym_term_b_katakana }}
+                            </td>
+                            <td>
+                                <a href="{{ http_kuromoji_analyze_test }}&text={{ synonym.synonym_term_b }}"
+                                   target="_blank">
                                     <button type="button" class="btn btn-default btn-sm">
                                         <span class="glyphicon glyphicon-search"
                                               aria-hidden="true"></span> {% trans "Test Term B" %}
