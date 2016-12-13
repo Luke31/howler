@@ -23,7 +23,7 @@ class Userdict:
         :return: 0 if success
         """
         self.delete_term(term)
-        self.update_term_to_userdict(term, katakana, term_type)
+        self.add_term_to_userdict(term, katakana, term_type)
 
     def update_term_split_to_userdict(self, term, term_split, katakana_split,
                                       term_type=constants.JA_USER_DICT_TERM_TYPE):
@@ -36,7 +36,7 @@ class Userdict:
         :return: 0 if success
         """
         self.delete_term(term)
-        self.update_term_split_to_userdict(term, term_split, katakana_split, term_type)
+        self.add_term_split_to_userdict(term, term_split, katakana_split, term_type)
 
     def add_term_to_userdict(self, term, katakana, term_type=constants.JA_USER_DICT_TERM_TYPE):
         """
