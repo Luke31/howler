@@ -25,6 +25,7 @@ pip3 install -r requirements.txt
 python3 index-cmd.py -h
 python3 index-cmd.py update -h
 """
+version = '1.0.3'
 
 
 def update(args):
@@ -36,7 +37,7 @@ def update(args):
     es = Elasticsearch([args.estargethost], timeout=args.timeout, maxsize=args.maxcon)
     index = Index(es, es_index_prefix=args.indexprefix, es_type_name=args.doctype)
     if args.force:
-        kuromoji_synonyms = ['京産大, 京都産業大学', '京都大学, 京大']
+        kuromoji_synonyms = ['京都産業大学, 京産大', '京都大学, 京大']
     else:
         kuromoji_synonyms = []
 
@@ -83,7 +84,7 @@ description = \
 parser = argparse.ArgumentParser(
     description=description,
     epilog='epilog', allow_abbrev=True, formatter_class=RawTextHelpFormatter)
-parser.add_argument('--version', action='version', version='1.0.2')
+parser.add_argument('--version', action='version', version=version)
 subparsers = parser.add_subparsers()
 update_parser = subparsers.add_parser('update')
 update_parser.add_argument('src', help='src folder of emails OR email filename')

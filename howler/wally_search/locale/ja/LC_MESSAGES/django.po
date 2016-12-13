@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-12 11:37+0900\n"
+"POT-Creation-Date: 2016-12-13 10:58+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,126 +19,126 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. Translators: Sender of email
-#: wally_search/templates/wally/results.html:9
+#: wally_search/templates/wally/results.html:7
 msgid "Sender"
 msgstr "差出人"
 
 #. Translators: Receiver of email
-#: wally_search/templates/wally/results.html:11
+#: wally_search/templates/wally/results.html:9
 msgid "Receiver"
 msgstr "宛先"
 
-#: wally_search/templates/wally/results.html:12
+#: wally_search/templates/wally/results.html:10
 msgid "Attachments"
 msgstr "添付"
 
-#: wally_search/templates/wally/results.html:18
+#: wally_search/templates/wally/results.html:25
 msgid "Subject"
 msgstr "件名"
 
-#: wally_search/templates/wally/results.html:19
+#: wally_search/templates/wally/results.html:26
 msgid "Sent (JST)"
 msgstr "送信日時"
 
-#: wally_search/templates/wally/results.html:22
+#: wally_search/templates/wally/results.html:29
 msgid "Attachment?"
 msgstr "添付?"
 
-#: wally_search/templates/wally/results.html:23
+#: wally_search/templates/wally/results.html:30
 msgid "Score"
 msgstr "スコア"
 
-#: wally_search/templates/wally/results.html:49
+#: wally_search/templates/wally/results.html:56
 msgid "Hit in Reply-To Email/Name"
 msgstr "返信アドレス/名前のヒット"
 
-#: wally_search/templates/wally/results.html:56
+#: wally_search/templates/wally/results.html:63
 msgid "Hit in sender name"
 msgstr "差出人の名前のヒット"
 
-#: wally_search/templates/wally/results.html:63
+#: wally_search/templates/wally/results.html:70
 msgid "Hit in receiver name"
 msgstr "差出人の名前のヒット"
 
-#: wally_search/templates/wally/results.html:69
+#: wally_search/templates/wally/results.html:76
 msgid "Hit in attachment names"
 msgstr "差出人の名前のヒット"
 
-#: wally_search/templates/wally/results.html:74
+#: wally_search/templates/wally/results.html:81
 msgid "Hits in body"
 msgstr "本文のヒット"
 
-#: wally_search/templates/wally/results.html:83
+#: wally_search/templates/wally/results.html:90
 msgid "Email content"
 msgstr "メールの文書"
 
-#: wally_search/templates/wally/results.html:135
+#: wally_search/templates/wally/results.html:142
 msgid "No emails found"
 msgstr "メールが見つからなかった"
 
-#: wally_search/templates/wally/search.html:27
+#: wally_search/templates/wally/search.html:16
 msgid "Full-text search"
 msgstr "フルテキスト検索"
 
-#: wally_search/templates/wally/search.html:31
+#: wally_search/templates/wally/search.html:20
 msgid "Search"
 msgstr "検索"
 
-#: wally_search/templates/wally/search.html:37
+#: wally_search/templates/wally/search.html:26
 msgid "search in spam as well"
 msgstr "スパムも検索"
 
-#: wally_search/templates/wally/search.html:43
+#: wally_search/templates/wally/search.html:32
 msgid "only emails with attachments"
 msgstr "添付付きのメールのみ"
 
-#: wally_search/templates/wally/search.html:56
+#: wally_search/templates/wally/search.html:45
 msgid "Date filter mode"
 msgstr "日付フィルタモード"
 
-#: wally_search/templates/wally/search.html:61
+#: wally_search/templates/wally/search.html:50
 msgid "Within past duration"
 msgstr "過去以内期間"
 
-#: wally_search/templates/wally/search.html:62
+#: wally_search/templates/wally/search.html:51
 msgid "Fixed date"
 msgstr "一定期間"
 
-#: wally_search/templates/wally/search.html:70
+#: wally_search/templates/wally/search.html:59
 msgid "Within the past"
 msgstr "過去以内"
 
-#: wally_search/templates/wally/search.html:77
+#: wally_search/templates/wally/search.html:66
 msgid "Duration type"
 msgstr "期間型"
 
-#: wally_search/templates/wally/search.html:81
+#: wally_search/templates/wally/search.html:70
 msgid "Years"
 msgstr "年"
 
-#: wally_search/templates/wally/search.html:82
+#: wally_search/templates/wally/search.html:71
 msgid "Months"
 msgstr "月"
 
-#: wally_search/templates/wally/search.html:83
+#: wally_search/templates/wally/search.html:72
 msgid "Days"
 msgstr "日"
 
-#: wally_search/templates/wally/search.html:89
+#: wally_search/templates/wally/search.html:78
 msgid "JST time"
 msgstr "JSTの時間"
 
-#: wally_search/templates/wally/search.html:93
+#: wally_search/templates/wally/search.html:82
 msgctxt "datetime"
 msgid "From"
 msgstr "から"
 
-#: wally_search/templates/wally/search.html:104
+#: wally_search/templates/wally/search.html:93
 msgctxt "datetime"
 msgid "To"
 msgstr "まで"
 
-#: wally_search/templates/wally/search.html:124
+#: wally_search/templates/wally/search.html:113
 msgid "Number of total results"
 msgstr "合計結果数"
 

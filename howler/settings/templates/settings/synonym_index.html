@@ -40,7 +40,7 @@
                     <tr>
                         <th>{% trans "Term A" %}</th>
                         <th></th>
-                        <th>{% trans "Term B" %}</th>
+                        <th>{% trans "Term B (shortcut)" %}</th>
                         <th></th>
                         <th class="text-right"></th>
                     </tr>
@@ -58,7 +58,11 @@
                                     </button>
                                 </a>
                             </td>
-                            <td>{{ synonym.synonym_term_b }}</td>
+                            <td>{{ synonym.synonym_term_b }}
+                                {% if synonym.synonym_term_b_katakana %}
+                                ({{ synonym.synonym_term_b_katakana }})
+                                {% endif %}
+                            </td>
                             <td>
                                 <a href="{{ http_kuromoji_analyze_test }}&text={{ synonym.synonym_term_b }}" target="_blank">
                                     <button type="button" class="btn btn-default btn-sm">

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-12 11:37+0900\n"
+"POT-Creation-Date: 2016-12-13 10:58+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,8 +23,12 @@ msgid "Synonym Term A"
 msgstr "同意語単語A"
 
 #: settings/models.py:9
-msgid "Synonym Term B"
-msgstr "同意語単語B"
+msgid "Synonym Term B (shortcut)"
+msgstr "同意語単語B (略語)"
+
+#: settings/models.py:10
+msgid "Synonym Term B Katakana"
+msgstr "同意語単語Bカタカナ"
 
 #: settings/templates/settings/base_settings.html:11
 msgid "External maintenance links"
@@ -74,25 +78,25 @@ msgid "Term A"
 msgstr "単語A"
 
 #: settings/templates/settings/synonym_index.html:43
-msgid "Term B"
-msgstr "単語B"
+msgid "Term B (shortcut)"
+msgstr "単語B (略語)"
 
 #: settings/templates/settings/synonym_index.html:57
 msgid "Test Term A"
 msgstr "単語Aを試す"
 
-#: settings/templates/settings/synonym_index.html:66
+#: settings/templates/settings/synonym_index.html:70
 msgid "Test Term B"
 msgstr "単語Bを試す"
 
-#: settings/templates/settings/synonym_index.html:71
+#: settings/templates/settings/synonym_index.html:75
 msgid "Edit"
 msgstr "編集"
 
-#: settings/templates/settings/synonym_index.html:75
+#: settings/templates/settings/synonym_index.html:79
 msgid "Delete?"
 msgstr "削除?"
 
-#: settings/templates/settings/synonym_index.html:89
+#: settings/templates/settings/synonym_index.html:93
 msgid "No synonyms found"
 msgstr "同意語が見つからなかった"

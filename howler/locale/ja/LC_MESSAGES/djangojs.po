@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-12 11:37+0900\n"
+"POT-Creation-Date: 2016-12-13 10:58+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: static/howler.js:15
+#: static/howler.js:19
 msgid "Yes"
 msgstr "はい"
 
-#: static/howler.js:16
+#: static/howler.js:20
 msgid "No"
 msgstr "いいえ"
 
-#: static/howler.js:17
+#: static/howler.js:21
 msgid "Are you sure?"
 msgstr "本気ですか？"
