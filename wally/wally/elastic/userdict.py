@@ -59,7 +59,7 @@ class Userdict:
         """
         if katakana_split:
             term_to_append = '{0},{1},{2},{3}\n'.format(term, term_split, katakana_split, term_type)
-            with open(self._user_dictionary_path, 'a') as fp:
+            with open(self._user_dictionary_path, 'a', encoding='utf-8') as fp:
                 fp.write(term_to_append)
             return 0
         return 1  # No katakana pronunciation provided
@@ -71,7 +71,7 @@ class Userdict:
         :return: 0 if success
         """
         # Read content and search in lines
-        with open(self._user_dictionary_path, 'r') as fp:
+        with open(self._user_dictionary_path, 'r', encoding='utf-8') as fp:
             content = fp.readlines()
             found_idx = [idx for idx, line in enumerate(content) if line.startswith(term)]
 
@@ -79,7 +79,7 @@ class Userdict:
         if len(found_idx) > 0:
             content = [i for j, i in enumerate(content) if j not in found_idx]
             # Rewrite content without lines
-            with open(self._user_dictionary_path, 'w') as fp:
+            with open(self._user_dictionary_path, 'w', encoding='utf-8') as fp:
                 fp.writelines(content)
 
         return 0
