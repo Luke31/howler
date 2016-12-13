@@ -24,6 +24,7 @@ def deploy():
     restart_apache()
 
 
+
 def pip_install():
     with cd(env.project_root):
         run('sudo pip3 install -r requirements.txt')  # apache uses this python3 version 3.4.2 (latest debian available)
@@ -105,6 +106,11 @@ def inform_webserver():
 def restart_apache():
     """trigger an apache service restart using sudo"""
     run("sudo /etc/init.d/apache2 restart")
+
+
+def restart_es():
+    """Restart elasticsearch (Required if userdict has changed)"""
+    run("sudo /etc/init.d/elasticsearch restart")
 
 
 def l_test():
