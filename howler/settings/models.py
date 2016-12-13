@@ -5,12 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Synonym(models.Model):
-    def __init__(self, *args, **kwargs):
-        # first call parent's constructor
-        super(ThatForm, self).__init__(*args, **kwargs)
-        # there's a `fields` property now
-        self.fields['desired_field_name'].required = False
-
     synonym_term_a = models.CharField(max_length=200, verbose_name=_('Synonym Term A'))
     synonym_term_b = models.CharField(max_length=200, verbose_name=_('Synonym Term B - shortcut'))
     synonym_term_b_katakana = models.CharField(max_length=200, verbose_name=_('Synonym Term B Katakana'), default='',
