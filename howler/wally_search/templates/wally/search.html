@@ -27,11 +27,11 @@
                                     </label>
                                 </div>
                                 <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="only_attachment"
-                                                   id="only_attachment"/> {% trans "only emails with attachments" %}
-                                        </label>
-                                    </div>
+                                    <label>
+                                        <input type="checkbox" name="only_attachment"
+                                               id="only_attachment"/> {% trans "only emails with attachments" %}
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -106,11 +106,11 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3 col-lg-3">
+                    <div class="col-md-3 col-lg-2">
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <label for="number_results">{% trans "Number of total results" %}</label>
+                                    <label for="number_results">{% trans "Number tot results" %}</label>
                                     <div class="input-group">
                                         <select class="form-control" id="number_results"
                                                 name="number_results">
@@ -121,6 +121,39 @@
                                             <option value="50">50</option>
                                             <option value="100">100</option>
                                         </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <label for="sort_field">{% trans "Sort" %}</label>
+                                            <div class="input-group">
+                                                <select class="form-control" id="sort_field"
+                                                        name="sort_field">
+                                                    <option value="date">{% trans "Sent (JST)" %}</option>
+                                                    <option value="_score"
+                                                            selected="selected">{% trans "Score" %}</option>
+                                                    <option value="fromEmail.raw">{% trans "Sender" %}</option>
+                                                    <option value="toEmail.raw">{% trans "Receiver" %}</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="sort_dir">{% trans "Direction" %}</label>
+                                            <select class="form-control" id="sort_dir"
+                                                    name="sort_dir">
+                                                <option value="">{% trans "Asc" %}</option>
+                                                <option value="-" selected="selected">{% trans "Desc" %}</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

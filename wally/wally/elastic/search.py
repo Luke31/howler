@@ -45,6 +45,12 @@ class Search:
                   False: emails with and without attachments (Both)
                 * *number_results* (``int``) --
                   Number of total results to return
+                * *sort_field* (``str``) --
+                  By which field should results be sorted e.g. date, _score, fromEmail.raw
+                * *sort_dir* (``str``) --
+                  In Which direction should results be sorted
+                  '+': ascending
+                  '-': descending)
 
             """
         date_gte = None  # '2010-01-31T22:28:14+0300'  # from
@@ -55,6 +61,8 @@ class Search:
         number_results = 10
         include_spam = False
         only_attachment = False
+        sort_field = '_score'
+        sort_dir = '-'
         for key, value in kwargs.items():
             if key == 'date_gte':
                 date_gte = ('{:' + dementor_constants.JSON_DATETIME_FORMAT + '}').format(value)
@@ -72,6 +80,10 @@ class Search:
                 include_spam = value
             if key == 'only_attachment':
                 only_attachment = value
+            if key == 'sort_field':
+                sort_field = value
+            if key == 'sort_dir':
+                sort_dir = value
 
         s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
 
@@ -110,12 +122,13 @@ class Search:
             s = s.filter('term', hasAttachment=True)
 
         # Sorting
-        s = s.sort(
-            #'-date',
-            '-_score',
-            'fromEmail.raw',
-            # Array: {"lines": {"order": "asc", "mode": "avg"}}
-        )
+        # s = s.sort(
+        #     #'-date',
+        #     '-_score',
+        #     'fromEmail.raw',
+        #     # Array: {"lines": {"order": "asc", "mode": "avg"}}
+        # )
+        s = s.sort(''.join((sort_dir,sort_field)))
 
         # Number of results
         s = s[0:number_results]

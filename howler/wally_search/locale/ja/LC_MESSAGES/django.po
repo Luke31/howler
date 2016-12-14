@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-13 11:55+0900\n"
+"POT-Creation-Date: 2016-12-14 10:21+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,11 +20,13 @@ msgstr ""
 
 #. Translators: Sender of email
 #: wally_search/templates/wally/results.html:7
+#: wally_search/templates/wally/search.html:143
 msgid "Sender"
 msgstr "差出人"
 
 #. Translators: Receiver of email
 #: wally_search/templates/wally/results.html:9
+#: wally_search/templates/wally/search.html:144
 msgid "Receiver"
 msgstr "宛先"
 
@@ -37,6 +39,7 @@ msgid "Subject"
 msgstr "件名"
 
 #: wally_search/templates/wally/results.html:26
+#: wally_search/templates/wally/search.html:140
 msgid "Sent (JST)"
 msgstr "送信日時"
 
@@ -45,6 +48,7 @@ msgid "Attachment?"
 msgstr "添付?"
 
 #: wally_search/templates/wally/results.html:30
+#: wally_search/templates/wally/search.html:142
 msgid "Score"
 msgstr "スコア"
 
@@ -139,8 +143,24 @@ msgid "To"
 msgstr "まで"
 
 #: wally_search/templates/wally/search.html:113
-msgid "Number of total results"
+msgid "Number tot results"
 msgstr "合計結果数"
+
+#: wally_search/templates/wally/search.html:136
+msgid "Sort"
+msgstr "並べ替え"
+
+#: wally_search/templates/wally/search.html:150
+msgid "Direction"
+msgstr "方向"
+
+#: wally_search/templates/wally/search.html:153
+msgid "Asc"
+msgstr "昇順"
+
+#: wally_search/templates/wally/search.html:154
+msgid "Desc"
+msgstr "降順"
 
 #. Translators: The user didn't submit the correct values in the form
 #: wally_search/views.py:31
@@ -168,7 +188,15 @@ msgstr "スパムも検索が正しくない入力"
 msgid "Incorrent value for only attachment"
 msgstr "添付ファイル付きのメールのみが正しくない入力"
 
-#: wally_search/views.py:76
+#: wally_search/views.py:67
+msgid "Incorrent value for sort field"
+msgstr "並べ替えが正しくない入力"
+
+#: wally_search/views.py:72
+msgid "Incorrent value for sort direction"
+msgstr "並べ替え方向が正しくない入力: {exception}"
+
+#: wally_search/views.py:86
 #, python-brace-format
 msgid "Incorrent query: {exception}"
 msgstr "検索クエリが正しくない入力: {exception}"

@@ -61,6 +61,16 @@ def find(request):
         except ValueError:
             return render(request, 'wally/results.html', {'error_message': _("Incorrent value for only attachment")})
 
+        try:
+            kwargs['sort_field'] = request.GET.get('sort_field')
+        except ValueError:
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for sort field")})
+
+        try:
+            kwargs['sort_dir'] = request.GET.get('sort_dir')
+        except ValueError:
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for sort direction")})
+
         es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
         response = Search(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME).search(
             query, **kwargs)
