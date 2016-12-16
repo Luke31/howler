@@ -15,6 +15,7 @@ var doc = (function () {
     var initMarkdownRenderer = function () {
         var markdownFile = $('#js_markdown_src').data('content');
         var url = howler.getStaticBaseUrl() + "doc/md/" + markdownFile + ".md";
+        showdown.setOption('tables', true);
         // $(".loading").show();
         $.ajax({
             type: "GET",
