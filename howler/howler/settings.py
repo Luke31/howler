@@ -155,10 +155,7 @@ BOWER_INSTALLED_APPS = (
     'eonasdan-bootstrap-datetimepicker#latest',
     'datatables.net',
     'datatables.net-bs',
-    'showdown',
-    'showdown-table',
-    # 'datatables.net-responsive',
-    # 'datatables.net-responsive-bs',
+    'showdown#^1.5.1',
 )
 
 LANGUAGE_CODE = 'en'  # Default language
