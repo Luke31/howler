@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'djangobower',
     'wally_search',
     'settings',
+    'doc',
 ]
 
 # Middleware-order matters!
@@ -154,6 +155,8 @@ BOWER_INSTALLED_APPS = (
     'eonasdan-bootstrap-datetimepicker#latest',
     'datatables.net',
     'datatables.net-bs',
+    'showdown',
+    'showdown-table',
     # 'datatables.net-responsive',
     # 'datatables.net-responsive-bs',
 )

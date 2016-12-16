@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block head %}
+    {#    <link rel="stylesheet" href="{% static 'showdown/dist/showdown.min.css' %}"/>#}
+{% endblock %}
+
+{% block sidebar_nav %}
+    {% url 'doc:home' as url_doc_home %}
+    <li{% if request.path == url_doc_home %} class="active"{% endif %}>
+        <a href="{{ url_doc_home }}">{% trans "Doc Home" %}</a>
+    </li>
+
+    {% url 'doc:env' as url_doc_env %}
+    <li{% if request.path == url_doc_env %} class="active"{% endif %}>
+        <a href="{{ url_doc_env }}">{% trans "Doc Environment" %}</a>
+    </li>
+
+    {% url 'doc:done' as url_doc_done %}
+    <li{% if request.path == url_doc_done %} class="active"{% endif %}>
+        <a href="{{ url_doc_done }}">{% trans "Doc done" %}</a>
+    </li>
+
+    {% url 'doc:importscript' as url_doc_importscript %}
+    <li{% if request.path == url_doc_importscript %} class="active"{% endif %}>
+        <a href="{{ url_doc_importscript }}">{% trans "Doc Import Script in Wally" %}</a>
+    </li>
+
+    {% url 'doc:initsetup' as url_doc_initsetup %}
+    <li{% if request.path == url_doc_initsetup %} class="active"{% endif %}>
+        <a href="{{ url_doc_initsetup }}">{% trans "Doc initial setup" %}</a>
+    </li>
+{% endblock %}
+
+{% block sidebar %}
+    {#    <b>{% trans "External maintenance links" %}</b>#}
+    {#    <ul class="nav nav-sidebar">#}
+    {#        <li>#}
+    {#            <a href="{{ http_es_settings }}" target="_blank">{% trans "Elasticsearch index settings" %}</a>#}
+    {#        </li>#}
+    {#        <li>#}
+    {#            <a href="{{ http_es_indices }}" target="_blank">{% trans "Elasticsearch indices" %}</a>#}
+    {#        </li>#}
+    {#        <li>#}
+    {#            <a href="{{ http_kibana }}" target="_blank">{% trans "Elasticsearch Kibana" %}</a>#}
+    {#        </li>#}
+    {#    </ul>#}
+{% endblock %}
+
+{% block main %}
+    <div id="js_markdown_target"></div>
+{% endblock %}
+
+{% block header_content %}
+    {#    <img src="{% static "wally_search/img/wally100.png" %}" />#}
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src='{% static 'doc/doc.js' %}'></script>
+    <script type="text/javascript" src="{% static 'showdown/dist/showdown.min.js' %}"></script>
+{% endblock %}
