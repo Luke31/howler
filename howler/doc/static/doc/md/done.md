@@ -132,7 +132,7 @@ To run queries on elasticsearch from the browser or visually analyze your data, 
 
         sudo a2ensite 001-howler
 
-* Deployment, see: [Home - Deployment](/howler/doc/done/)
+* Deployment, see: [Home - Deployment](/howler/doc/home/)
 
 * Create a django superuser. Enables log-in for Admin-area of Django-application
         
