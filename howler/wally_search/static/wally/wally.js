@@ -140,7 +140,9 @@ var wally = (function () {
             var opacity = score / 100;
             //var opacity = (score / max);  // Used to control tr-opacity
             //row.css('opacity', Math.max(opacity, min)); // Used to control tr-opacity
-            row.css('background-color', 'rgba(0, 173, 0, ' + opacity + ')')
+            var green = '0, 173, 0';
+            var red = '184, 82, 81';
+            row.css('background-color', 'rgba(' + red + ',' + opacity + ')')
         });
     };
 
