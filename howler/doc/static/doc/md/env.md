@@ -4,6 +4,7 @@ Following production environment has been set up:
 
 ## Production server
 * Debian 8.6 (Jessie)
+* IP: `10.0.10.180`
 * CPU: 4 Cores
 * Storage: ~990Gb
 * Memory: 16Gb
