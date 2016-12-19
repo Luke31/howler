@@ -128,7 +128,10 @@ class Search:
         #     'fromEmail.raw',
         #     # Array: {"lines": {"order": "asc", "mode": "avg"}}
         # )
-        s = s.sort(''.join((sort_dir,sort_field)))
+        s = s.sort(
+            ''.join((sort_dir,sort_field)),
+            '-_score',
+        )
 
         # Number of results
         s = s[0:number_results]

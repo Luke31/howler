@@ -93,13 +93,16 @@ var wally = (function () {
     };
 
     /** Make result-table a DataTable (https://datatables.net/) with collapsed detail informations*/
-    var setResultTable = function setResultTable() {
+    var setResultTable = function () {
         var targetTableSel = '#js_result_table';
         var table = $(targetTableSel).DataTable({
             //responsive: true
             "language": {
-                "url": howler.getStaticBaseUrl()+"wally/datatables/"+howler.getLanguageCode()+".json"
-            }
+                "url": howler.getStaticBaseUrl() + "wally/datatables/" + howler.getLanguageCode() + ".json"
+            },
+            "pageLength": 15,
+            "lengthMenu": [[10, 15, 25, 50, 100], [10, 15, 25, 50, 100]],
+            "order": [[ 6, "desc" ]]
         });
         $(targetTableSel).find('tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
@@ -116,6 +119,28 @@ var wally = (function () {
                 row.child(extra_data).show();
                 tr.addClass('shown');
             }
+        });
+
+        setRowOpacity(targetTableSel);
+    };
+
+    /*Set row opacity according to score*/
+    var setRowOpacity = function (targetTableSel) {
+        var rows = $(targetTableSel).find('tbody tr');
+        var max = 0;
+        rows.each(function (i) {
+            var score = $(this).find('.js_score').html().trim() * 1;
+            max = (score > max) ? score : max;
+        });
+
+        var min = 0.6;
+        rows.each(function (i) {
+            var row = $(this);
+            var score = row.find('.js_score').html().trim() * 1;
+            var opacity = score / 100;
+            //var opacity = (score / max);  // Used to control tr-opacity
+            //row.css('opacity', Math.max(opacity, min)); // Used to control tr-opacity
+            row.css('background-color', 'rgba(0, 173, 0, ' + opacity + ')')
         });
     };
 
