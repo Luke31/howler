@@ -18,14 +18,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: static/howler.js:19
-msgid "Yes"
-msgstr "はい"
+#: doc/templates/doc/base_doc.html:16
+msgid "Development Documentation"
+msgstr ""
 
-#: static/howler.js:20
-msgid "No"
-msgstr "いいえ"
+#: doc/templates/doc/base_doc.html:20
+msgid "Home"
+msgstr ""
 
-#: static/howler.js:21
-msgid "Are you sure?"
-msgstr "本気ですか？"
+#: doc/templates/doc/base_doc.html:25
+msgid "Production Environment"
+msgstr ""
+
+#: doc/templates/doc/base_doc.html:30
+msgid "Production Environment initial setup"
+msgstr ""
+
+#: doc/templates/doc/base_doc.html:35
+msgid "Email Import Script"
+msgstr ""

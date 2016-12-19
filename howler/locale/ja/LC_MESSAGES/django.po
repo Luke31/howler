@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 10:21+0900\n"
+"POT-Creation-Date: 2016-12-19 12:15+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,13 +27,17 @@ msgid "Toggle navigation"
 msgstr ""
 
 #: templates/base.html:62
+msgid "Dev Doc"
+msgstr ""
+
+#: templates/base.html:63
 msgid "Settings"
 msgstr "設定"
 
-#: templates/base.html:63
+#: templates/base.html:64
 msgid "Admin"
 msgstr "アドミン"
 
-#: templates/base.html:105
+#: templates/base.html:106
 msgid "Email search"
 msgstr "Howler メール検索"

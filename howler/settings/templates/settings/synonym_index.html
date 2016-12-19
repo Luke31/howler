@@ -2,9 +2,11 @@
 {% load i18n %}
 
 {% block main %}
+    {% trans "Update synonyms to elasticsearch index" as update_synonyms_button %}
     <div class="panel panel-default">
         <div class="panel-heading">
-            {% trans "Manage here all synonyms" %}
+            {% trans "Manage here all synonyms." %}
+            {% trans "After that, please push the orange button" %}:「{{ update_synonyms_button }}」
         </div>
         <div class="panel-body">
             <div class="row">
@@ -24,7 +26,7 @@
                           data-on-confirm="settings.synonymTransfer" data-url="{% url 'settings:synonym_import' %}"
                           title="{% trans "Really update Elasticsearch index? The search will not be available during the update." %}">
                         <span class="glyphicon glyphicon-transfer"
-                              aria-hidden="true"></span> {% trans "Update synonyms to elasticsearch index" %}
+                              aria-hidden="true"></span> {{ update_synonyms_button }}
                     </span>
                 </div>
             </div>

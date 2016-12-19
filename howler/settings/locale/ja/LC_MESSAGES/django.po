@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 10:21+0900\n"
+"POT-Creation-Date: 2016-12-19 12:15+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,53 +58,57 @@ msgstr "設定"
 msgid "Save"
 msgstr "保存"
 
-#: settings/templates/settings/synonym_index.html:7
-msgid "Manage here all synonyms"
-msgstr "ここにすべての同意語を管理する"
+#: settings/templates/settings/synonym_index.html:5
+msgid "Update synonyms to elasticsearch index"
+msgstr "同意語をElasticsearchインデックスに更新する"
 
-#: settings/templates/settings/synonym_index.html:15
+#: settings/templates/settings/synonym_index.html:8
+msgid "Manage here all synonyms."
+msgstr "ここにすべての同意語を管理する。"
+
+#: settings/templates/settings/synonym_index.html:9
+msgid "After that, please push the orange button"
+msgstr "それから、オレンジのボタンを押してください"
+
+#: settings/templates/settings/synonym_index.html:17
 msgid "Add new synonym"
 msgstr "新しい同意語を付ける"
 
-#: settings/templates/settings/synonym_index.html:25
+#: settings/templates/settings/synonym_index.html:27
 msgid ""
 "Really update Elasticsearch index? The search will not be available during "
 "the update."
 msgstr ""
 "本当にElasticsearchインデックスを更新しますか？更新中は検索が利用できません"
 
-#: settings/templates/settings/synonym_index.html:27
-msgid "Update synonyms to elasticsearch index"
-msgstr "同意語をElasticsearchインデックスに更新する"
-
-#: settings/templates/settings/synonym_index.html:41
+#: settings/templates/settings/synonym_index.html:43
 msgid "Term A"
 msgstr "単語A"
 
-#: settings/templates/settings/synonym_index.html:43
+#: settings/templates/settings/synonym_index.html:45
 msgid "Term B - shortcut"
 msgstr "単語B - 略語"
 
-#: settings/templates/settings/synonym_index.html:44
+#: settings/templates/settings/synonym_index.html:46
 msgid "Term B Katakana"
 msgstr "単語Bカタカナ"
 
-#: settings/templates/settings/synonym_index.html:59
+#: settings/templates/settings/synonym_index.html:61
 msgid "Test Term A"
 msgstr "単語Aを試す"
 
-#: settings/templates/settings/synonym_index.html:74
+#: settings/templates/settings/synonym_index.html:76
 msgid "Test Term B"
 msgstr "単語Bを試す"
 
-#: settings/templates/settings/synonym_index.html:79
+#: settings/templates/settings/synonym_index.html:81
 msgid "Edit"
 msgstr "編集"
 
-#: settings/templates/settings/synonym_index.html:83
+#: settings/templates/settings/synonym_index.html:85
 msgid "Delete?"
 msgstr "削除?"
 
-#: settings/templates/settings/synonym_index.html:97
+#: settings/templates/settings/synonym_index.html:99
 msgid "No synonyms found"
 msgstr "同意語が見つからなかった"
