@@ -24,7 +24,9 @@ var doc = (function () {
                 var converter = new showdown.Converter(),
                     text = data,
                     html = converter.makeHtml(text);
-                $('#js_markdown_target').html(html);
+                var target_str = '#js_markdown_target';
+                $(target_str).html(html);
+                $(target_str).find('table').addClass('table table-nonfluid');
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert(errorThrown);

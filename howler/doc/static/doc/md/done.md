@@ -1,171 +1,200 @@
-# Done stuff
+# Production Environment initial setup
 
--Java 8
--Elasticsearch (License: Apache-2.0 https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
--pyenv
--pyenv-virtualenv
-3844
--elasticsearch
--elasticsearch-dsl
--kibana (sense/console)
--pip install cld2-cffi
+* Java 8
 
--Java 8:
-/etc/apt/sources.list.d/ debian-jessie-backports.list
+* pyenv
+* pyenv-virtualenv
+* elasticsearch
+* elasticsearch-dsl
+* kibana (sense/console)
+* pip install cld2-cffi
 
-	# jessie-backports main for openjdk-8-jdk
-	deb http://ftp.debian.org/debian jessie-backports main
+##Java 8 Installation:
+Debian 8.6 (Jessie) officially doesn't support Java 8, but a backport is available:
 
-/etc/apt/preferences.d/debian-jessie-backports
+* Add Backport: `nano /etc/apt/sources.list.d/debian-jessie-backports.list`
 
-	Package: *
-	Pin: release o=Debian,a=jessie-backports
-	Pin-Priority: -200
+        # jessie-backports main for openjdk-8-jdk
+        deb http://ftp.debian.org/debian jessie-backports main
+
+* Enable Backport: `nano /etc/apt/preferences.d/debian-jessie-backports`
+
+        Package: *
+        Pin: release o=Debian,a=jessie-backports
+        Pin-Priority: -200
 	
-sudo update-alternatives --config java
+* Select new Java version:
+`sudo update-alternatives --config java`
 
-----------
---Elasticsearch 5.0.1 Port 9200 (https://www.elastic.co/guide/en/elasticsearch/reference/5.0/deb.html)
-----------
+##Elasticsearch 5.0.1 (Port 9200) 
+* Installation tutorial for Debian: [Install elasticsearch with debain ](https://www.elastic.co/guide/en/elasticsearch/reference/5.0/deb.html)
 
---SERVICE
-sudo /bin/systemctl daemon-reload
-sudo /bin/systemctl enable elasticsearch.service
+* Service Start/Stop
 
-sudo systemctl start elasticsearch.service
-sudo systemctl stop elasticsearch.service
+        sudo /bin/systemctl daemon-reload
+        sudo /bin/systemctl enable elasticsearch.service
+ 
+        sudo systemctl start elasticsearch.service
+        sudo systemctl stop elasticsearch.service
 
--journalctl NOT enabled
+**Hint:** journalctl NOT enabled
 
---CONFIG /etc/elasticsearch/elasticsearch.yml:
-cluster.name: wally-prod
-node.name: node-wally-1
-bootstrap.memory_lock: true #no swapping
+* Config `/etc/elasticsearch/elasticsearch.yml:`
 
-Access:
-network.host: 10.0.10.180
-network.port: 9200
+        cluster.name: wally-prod
+        node.name: node-wally-1
+        bootstrap.memory_lock: true # no swapping
+        
+        Access:
+        network.host: 10.0.10.180
+        network.port: 9200
+        
+        # Set virtual memory
+        sysctl -w vm.max_map_count=262144
 
---Set virtual memory
-sysctl -w vm.max_map_count=262144
+* JVM system properties heap size: `/etc/elasticsearch/jvm.options`
 
---CONFIG JVM Set JVM system properties heap size /etc/elasticsearch/jvm.options
--Xms6g 
--Xmx6g 
+        -Xms6g 
+        -Xmx6g 
 
---Set user limits /etc/security/limits.conf
-# allow user 'elasticsearch' mlockall
-elasticsearch   soft    memlock unlimited
-elasticsearch   hard    memlock unlimited
+* Set user limits `/etc/security/limits.conf`
 
---Uncomment in /usr/lib/systemd/system/elasticsearch.service
-LimitMEMLOCK=infinity
+        # allow user 'elasticsearch' mlockall
+        elasticsearch   soft    memlock unlimited
+        elasticsearch   hard    memlock unlimited
 
-----------
---KIBANA 5.0.1 Port 5601 (https://www.elastic.co/guide/en/kibana/current/deb.html)
-----------
+* Uncomment in `/usr/lib/systemd/system/elasticsearch.service`
 
---SERVICE
-sudo /bin/systemctl daemon-reload
-sudo /bin/systemctl enable kibana.service
+        LimitMEMLOCK=infinity
 
-sudo systemctl start kibana.service
-sudo systemctl stop kibana.service
+##Kibana 5.0.1 (Port 5601) 
+To run queries on elasticsearch from the browser or visually analyze your data, Kibana is very helpful.
+* Installation tutorial for Debian: [Install Kibana with Debian Package](https://www.elastic.co/guide/en/kibana/current/deb.html)
 
---CONFIG (/etc/kibana/kibana.yml - no log)
-server.port: 5601
-server.host: 10.0.10.180
-server.name: wally-prod-kibana
-#server.defaultRoute: /app/kibana
-#elasticsearch.url: http://localhost:9200
-elasticsearch.url: "http://10.0.10.180:9200"
+* Service Start/Stop
 
-----------
---KUROMOJI (https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-kuromoji.html)
-----------
---Install in /usr/share/elasticsearch
-sudo bin/elasticsearch-plugin install analysis-kuromoji
+        sudo /bin/systemctl daemon-reload
+        sudo /bin/systemctl enable kibana.service
+        
+        sudo systemctl start kibana.service
+        sudo systemctl stop kibana.service
 
-----------
---Apache 2
-----------
-sudo apt-get install python3-dev
-sudo apt-get install apache2
-sudo apt-get install virtualenv
-sudo apt-get install libapache2-mod-wsgi-py3
+* Config: `/etc/kibana/kibana.yml` - no log
 
---CONFIG /etc/apache2/sites-available/001-howler.conf
-WSGIPythonPath /var/www/howler
+        server.port: 5601
+        server.host: 10.0.10.180
+        server.name: wally-prod-kibana
+        #server.defaultRoute: /app/kibana
+        #elasticsearch.url: http://localhost:9200
+        elasticsearch.url: "http://10.0.10.180:9200"
 
-<VirtualHost *:80>
-    ServerName howler
-    ServerAdmin lukas.m.schmid@gmail.com
-    ErrorLog ${APACHE_LOG_DIR}/djangoserver-errors.log
-    RedirectMatch ^/$ /howler/
+##Kuromoji
+* Elasticsearch plugin website: [Japanese (kuromoji) Analysis Plugin](https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-kuromoji.html)
 
-    Alias /static/ /var/www/howler/public/static/
-    <Directory /var/www/howler/public/static>
-        Order deny,allow
-        Allow from all
-    </Directory>
+* Install in `/usr/share/elasticsearch`
+
+        sudo bin/elasticsearch-plugin install analysis-kuromoji
+
+##Apache 2
+* Install
+
+        sudo apt-get install python3-dev
+        sudo apt-get install apache2
+        sudo apt-get install virtualenv
+        sudo apt-get install libapache2-mod-wsgi-py3
+
+* Disable existing enabled site by renaming it: `/etc/apache2/sites-enabled`
+ 
+        mv 000-default.conf 000-default.conf.disabled
+
+* Config of website: `/etc/apache2/sites-available/001-howler.conf` (Enabled: `/etc/apache2/sites-enabled/001-howler.conf`)
+
+        WSGIPythonPath /var/www/howler
+        
+        <VirtualHost *:80>
+            ServerName howler
+            ServerAdmin lukas.m.schmid@gmail.com
+            ErrorLog ${APACHE_LOG_DIR}/djangoserver-errors.log
+            RedirectMatch ^/$ /howler/
+        
+            Alias /static/ /var/www/howler/public/static/
+            <Directory /var/www/howler/public/static>
+                Order deny,allow
+                Allow from all
+            </Directory>
+        
+            WSGIScriptAlias /howler /var/www/howler/howler/wsgi.py
+            <Directory /var/www/howler/howler/>
+                <Files wsgi.py>
+                    Order deny,allow
+                    Allow from all
+                </Files>
+            </Directory>
+        </VirtualHost>
+
+* in /var/www/howler
+
+        pyenv virtualenv 3.5.2 howler
+        source bin/activate
+        pip3 (3.4.2) install django-bower
+
+* Restart
+
+        sudo a2ensite 001-howler
+
+* Deployment
+
+        cd /var/git/lukas-sandbox
+        git pull
+        cp -r /var/git/lukas-sandbox/howler/ /var/www/
+
+        sudo /etc/init.d/apache2 restart
+
+* Superuser
+        
+        python manage.py createsuperuser
+
+##Postgresql
+* Install
+
+    sudo apt-get install libpq-dev postgresql postgresql-contrib
     
-    WSGIScriptAlias /howler /var/www/howler/howler/wsgi.py
-    <Directory /var/www/howler/howler/>
-        <Files wsgi.py>
-            Order deny,allow
-            Allow from all
-        </Files>
-    </Directory>
-</VirtualHost>
+* Config: `/etc/postgresql/9.4/main/pg_hba.conf`
+    
+    Add user `lukas` and `django` and grant local permission
 
---in /var/www/howler
-pyenv virtualenv 3.5.2 howler
-source bin/activate
-pip3 (3.4.2) install django-bower
+        local   all             all                                     trust
+        local   all             django                                  ident
+        
+* Restart
+    
+        sudo /etc/init.d/postgresql restart
+    
+* Create django role
 
---RESTART
-sudo a2ensite 001-howler
+    * Switch to postgres user
 
---DEPLOYMENT
-cd /var/git/lukas-sandbox
-git pull
-cp -r /var/git/lukas-sandbox/howler/ /var/www/
+            sudo su postgres
+            psql django
+    
+    * Create django role
 
-sudo /etc/init.d/apache2 restart
+            CREATE ROLE django LOGIN
+              ENCRYPTED PASSWORD 'md5f77cf19ca83d94461f3d5797ae873f6b'
+              NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
+              
+            ALTER USER django WITH PASSWORD 'django';
+       
+* Install postgresql python driver
 
---Superuser
-python manage.py createsuperuser
-
-----------
---Postgresql
-----------
-sudo apt-get install libpq-dev postgresql postgresql-contrib
--Added user lukas/django and granted local permission (/etc/postgresql/9.4/main/pg_hba.conf)
-
-local   all             all                                     trust
-local   all             django                                  ident
-
-sudo /etc/init.d/postgresql restart
-
-sudo su postgres
-psql django
-
-CREATE ROLE django LOGIN
-  ENCRYPTED PASSWORD 'md5f77cf19ca83d94461f3d5797ae873f6b'
-  NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
-  
-ALTER USER django WITH PASSWORD 'django';
-
-pip install psycopg2
-pip3 install psycopg2
+        pip install psycopg2
+        pip3 install psycopg2
 
 
-----------
---Fabric3 (https://pypi.python.org/pypi/Fabric3/1.10.2)
-----------
+##Fabric3 for deployment
+Fabric is a simple, Pythonic tool for remote execution and deployment
 
-----------
---Errors
-----------
-Internal server error 500
--Update wally on server for 3.4.2 pip3?
+* Install from pypi: [Fabric3 1.10.2](https://pypi.python.org/pypi/Fabric3/1.10.2)
+    
+        pip install fabric3
+

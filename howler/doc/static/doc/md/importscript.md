@@ -1,3 +1,3 @@
-# Import Script in Wally-Package
+# Email Import Script
 
 
