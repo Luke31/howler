@@ -4,7 +4,13 @@ Following production environment has been set up:
 
 ## Production server
 * Debian 8.6 (Jessie)
+* CPU: 4 Cores
+* Storage: ~990Gb
+* Memory: 16Gb
+    * 6Gb fix allocated to elasticsearch (mainly `htop` green) - See: [Elasticsearch - Heap: Sizing and Swapping](https://www.elastic.co/guide/en/elasticsearch/guide/current/heap-sizing.html)
+    * Rest mainly used by OS cached Lucene-files (mainly `htop` orange) - See: [Elasticsearch - Give (less than) Half Your Memory to Lucene](https://www.elastic.co/guide/en/elasticsearch/guide/current/heap-sizing.html#_give_less_than_half_your_memory_to_lucene)
 * Java 8 (OpenJDK x64 1.8.0_111)
+
 #### Users
 
 |User|Password|
@@ -23,9 +29,10 @@ Following production environment has been set up:
 |9200|`elasticsearch`|
 |5601|`kibana`|
 
-### postgresql (9.4.9) 
-* Service-name: `postgresql` (No password entry)
+### Postgresql (9.4.9) 
+* Service-name: `postgresql`
 * Port:  5432
+* Service-user: `postgresql` (No password entry)
 * Access: `local all trust`
 #### Users
 
@@ -41,11 +48,11 @@ Following production environment has been set up:
 |---|---|
 |django|django|
 
-### elasticsearch (5.0.1)
+### Elasticsearch (5.0.1)
 * Service-name: `elasticsearch`
 * Port: 9200
 * Service-user: elasticsearch
-* Filesystem:
+#### Filesystem
 
 |Purpose|File|
 |---|---|
@@ -54,18 +61,15 @@ Following production environment has been set up:
 |JVM options (Heap size)|`/etc/elasticsearch/jvm.options`|
 |Log properties|`/etc/elasticsearch/log4j2.properties`|
 |User dictionary Kuromoji|`/etc/elasticsearch/userdict_ja.txt`|
-|Shared files (e.g. plugins)|`/usr/share/elasticsearch`|
+|Shared files (e.g. plugins such as Kuromoji)|`/usr/share/elasticsearch/`|
 
 **Elasticsearch indices:** [http://10.0.10.180:9200/_cat/indices?v](http://10.0.10.180:9200/_cat/indices?v)
-### kibana (5.0.1)
+### Kibana (5.0.1)
 * Service-name: `kibana`
 * Port: 5601
 * including Sense/Console
 * Service-user: kibana
-* Filesystem:
-    * `/var/www/howler`
-    * `/var/git/lukas-sandbox`
-    
+#### Filesystem
 |Purpose|File|
 |---|---|
 |Log error|`/var/log/kibana/kibana.stderr`|
@@ -77,26 +81,32 @@ Following production environment has been set up:
 * Service-name: `apache2`
 * Port: 80
 * Service-user: `wwwd-data` (No password entry, Also member of elasticsearch to modify user-dict)
-* Log: 
 * Restart: `sudo /etc/init.d/apache2 restart`
 * Uses system Python 3.4.2 (`python3` and `pip3`)
 * Uses `libapache2-mod-wsgi-py3` to run Django applications
-
+#### Filesystem
 |Purpose|File|
 |---|---|
 |Enabled sites|`/etc/apache2/sites-enabled/`|
 |Log error (rolling)|`/var/log/apache2/error.log`|
 |Website root|`/var/www/`|
 
-### Howler (Django webapplication)
-* Apache2 webapplication
+### Howler (Django application)
+* Running on Apache2
 * Logs to apache-log
 
+#### Django Superusers (May enter Admin-area)
+
+|User|Password|
+|---|---|
+|lukas|hogehoge|
+
+#### Filesystem
 |Purpose|File|
 |---|---|
-|Deployment repository on server (Temp)|``|
-|Howler (Django) apache2 webapplication|`/var/www/howler`|
+|Deployment target dir Howler (Django) apache2 webapplication|`/var/www/howler/`|
 |Howler (Django) settings|`/var/www/howler/howler/settings.py`|
+|Pre-deployment directory git repository|`/var/git/lukas-sandbox/howler/`|
 
 **Hint:** To view django's 500 internal server errors on the clientside, enable debug in Howler's settings:
 

@@ -1,13 +1,5 @@
 # Production Environment initial setup
-
-* Java 8
-
-* pyenv
-* pyenv-virtualenv
-* elasticsearch
-* elasticsearch-dsl
-* kibana (sense/console)
-* pip install cld2-cffi
+Here the initial setup of the production environment (10.0.10.180) is described.
 
 ##Java 8 Installation:
 Debian 8.6 (Jessie) officially doesn't support Java 8, but a backport is available:
@@ -68,7 +60,7 @@ Debian 8.6 (Jessie) officially doesn't support Java 8, but a backport is availab
         LimitMEMLOCK=infinity
 
 ##Kibana 5.0.1 (Port 5601) 
-To run queries on elasticsearch from the browser or visually analyze your data, Kibana is very helpful.
+To run queries on elasticsearch from the browser or visually analyze your data, Kibana is very helpful. (Former known as Sense)
 * Installation tutorial for Debian: [Install Kibana with Debian Package](https://www.elastic.co/guide/en/kibana/current/deb.html)
 
 * Service Start/Stop
@@ -91,7 +83,7 @@ To run queries on elasticsearch from the browser or visually analyze your data, 
 ##Kuromoji
 * Elasticsearch plugin website: [Japanese (kuromoji) Analysis Plugin](https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-kuromoji.html)
 
-* Install in `/usr/share/elasticsearch`
+* Install in `/usr/share/elasticsearch/`
 
         sudo bin/elasticsearch-plugin install analysis-kuromoji
 
@@ -103,7 +95,7 @@ To run queries on elasticsearch from the browser or visually analyze your data, 
         sudo apt-get install virtualenv
         sudo apt-get install libapache2-mod-wsgi-py3
 
-* Disable existing enabled site by renaming it: `/etc/apache2/sites-enabled`
+* Disable existing enabled site by renaming it in: `/etc/apache2/sites-enabled/`
  
         mv 000-default.conf 000-default.conf.disabled
 
@@ -116,48 +108,40 @@ To run queries on elasticsearch from the browser or visually analyze your data, 
             ServerAdmin lukas.m.schmid@gmail.com
             ErrorLog ${APACHE_LOG_DIR}/djangoserver-errors.log
             RedirectMatch ^/$ /howler/
-        
             Alias /static/ /var/www/howler/public/static/
             <Directory /var/www/howler/public/static>
                 Order deny,allow
                 Allow from all
             </Directory>
-        
             WSGIScriptAlias /howler /var/www/howler/howler/wsgi.py
             <Directory /var/www/howler/howler/>
                 <Files wsgi.py>
-                    Order deny,allow
-                    Allow from all
+                Order deny,allow
+                Allow from all
                 </Files>
             </Directory>
         </VirtualHost>
 
-* in /var/www/howler
+* Install `django-bower` in `/var/www/howler/` to manage client-side packages
 
         pyenv virtualenv 3.5.2 howler
         source bin/activate
         pip3 (3.4.2) install django-bower
 
-* Restart
+* Restart site
 
         sudo a2ensite 001-howler
 
-* Deployment
+* Deployment, see: [Home - Deployment](/howler/doc/done/)
 
-        cd /var/git/lukas-sandbox
-        git pull
-        cp -r /var/git/lukas-sandbox/howler/ /var/www/
-
-        sudo /etc/init.d/apache2 restart
-
-* Superuser
+* Create a django superuser. Enables log-in for Admin-area of Django-application
         
         python manage.py createsuperuser
 
 ##Postgresql
 * Install
 
-    sudo apt-get install libpq-dev postgresql postgresql-contrib
+        sudo apt-get install libpq-dev postgresql postgresql-contrib
     
 * Config: `/etc/postgresql/9.4/main/pg_hba.conf`
     

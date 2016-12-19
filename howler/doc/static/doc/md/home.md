@@ -1,4 +1,4 @@
-# Howler and Wally - Development documentation
+# Development documentation - Howler and Wally
 
 This website is driven by a django-server running on Debian. Under [Production Environment](/howler/doc/env/) you can see the whole production system and under [Production Environment initial setup](/howler/doc/done/) you can see how it has been built. The main web django project `howler` (Git-repo: `lukas-sandbox/howler`) consists of following django applications:
 
@@ -12,13 +12,13 @@ For the search a self-developed python3-package `wally` (Git-repo: `lukas-sandbo
 
 If you would like to contribute to either to `howler` or `wally`, follow these steps:
 
-## 1. Get repository
+### 1. Get repository
 * Add your ssh public key to gerrit
 * Replace lukas with your username
 * Check ssh connection: `ssh -p 29418 lukas@gerrit.spicy.co-conv.jp`     
 * Git clone: `git clone ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git`
     
-## 2. Get prereqs for development: Python and Virtualenvs
+### 2. Get prereqs for development: Python and Virtualenvs
 
 * Install python3: `sudo apt-get install python3-dev`
 
@@ -42,10 +42,10 @@ If you would like to contribute to either to `howler` or `wally`, follow these s
     
     The project has initially been created with [PyCharm](https://www.jetbrains.com/pycharm/). But feel free to use any IDE.
 
-## 3. Project Wally - Email parser and JSON converter:
+### 3. Project Wally - Email parser and JSON converter, elasticsearch index client:
 * Python3 package `wally`, subfolder of git repository
 
-To use or develop for `wally`:
+**Develop for this package**
 * Install requirements:
 
     * using the requirements file: `pip install -r requirements.txt`
@@ -58,19 +58,23 @@ To use or develop for `wally`:
             pip install elasticsearch-dsl
 * Edit in your IDE or...
 
-To use `wally` in another project e.g. `howler`, install it 
+**Use this package:** To use `wally` in another project e.g. `howler`, install it 
 * from repo: `pip install -e 'git+ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git#egg=wally&subdirectory=wally'`
 * or using a relative path: `pip install -e ../wally/`
 
-## 4. Project Howler - email-search with elasticsearch
+### 4. Project Howler - email-search with elasticsearch
 
 * Django webapplication `howler`, subfolder of git repository
 
-To use or develop for this package:
+**Develop for this package**
+* Install the required `wally` package using a relative path: `pip install -e ../wally/`. This will ensure that all changes to `wally` are instantly available in your `howler` project.
 * Install python requirements using requirements file: `pip install -r requirements.txt`
 * Edit in your IDE
 
-## 5. Deployment of `howler` Django webapplication
+**Use this package**
+* Install python requirements using requirements file: `pip install -r requirements.txt`
+
+### 5. Deployment of `howler` Django webapplication
 To deploy `howler` fabric3 is used. This uses a deployment-script `fabfile.py` with multiple functions. The strength of fabric3 is 
 that it may connect to the target deployment server and execute commands on them.
 
@@ -88,6 +92,6 @@ that it may connect to the target deployment server and execute commands on them
     * `fab restart_es` - Restart elasticsearch on target server: 
     * `fab restart_apache` - Restart apache2 on target server
 
-##Licensing
+###Licensing
 
 * Elasticsearch: [Apache-2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))

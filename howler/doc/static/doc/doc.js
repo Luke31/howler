@@ -20,6 +20,7 @@ var doc = (function () {
         $.ajax({
             type: "GET",
             url: url,
+            cache: false,
             success: function (data) {
                 var converter = new showdown.Converter(),
                     text = data,
