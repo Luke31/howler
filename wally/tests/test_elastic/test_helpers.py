@@ -7,6 +7,8 @@ import wally.elastic.helpers as helpers
 class TestIndexMethods(unittest.TestCase):
     """
     Testing helper methods
+    Run by executing following statement in the wally-package directory:
+    python -m unittest
     """
 
     def test_get_analyzer_standard(self):
@@ -19,7 +21,7 @@ class TestIndexMethods(unittest.TestCase):
         self.assertIsInstance(analyzer_lang, analysis.BuiltinAnalyzer)
         self.assertEqual(analyzer_lang._name, 'english')
 
-    def test_get_analyzer_english(self):
+    def test_get_analyzer_inexistent(self):
         analyzer_lang = helpers.get_analyzer(lang_analyzer='inexistentanalyzer', delete_old_index=False)
         self.assertIsInstance(analyzer_lang, analysis.BuiltinAnalyzer)
         self.assertEqual(analyzer_lang._name, 'inexistentanalyzer')
