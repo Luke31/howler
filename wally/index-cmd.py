@@ -83,7 +83,7 @@ description = \
 
 parser = argparse.ArgumentParser(
     description=description,
-    epilog='epilog', allow_abbrev=True, formatter_class=RawTextHelpFormatter)
+    epilog='epilog', formatter_class=RawTextHelpFormatter)
 parser.add_argument('--version', action='version', version=version)
 subparsers = parser.add_subparsers()
 update_parser = subparsers.add_parser('update')
