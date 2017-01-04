@@ -50,7 +50,7 @@ def update(args):
 
     if os.path.isdir(args.src):
         print('Import new emails from directory: {0} ...'.format(args.src))
-        srcdir = args.src  # Only one file in list
+        srcdir = args.src
         summary = index.index_bulk_from_dir(srcdir, ignore_already_imported=not args.force)
     else:
         print('Import single new email: {0} ...'.format(args.src))
