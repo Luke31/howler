@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-19 12:15+0900\n"
+"POT-Creation-Date: 2017-01-04 15:22+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,13 +20,13 @@ msgstr ""
 
 #. Translators: Sender of email
 #: wally_search/templates/wally/results.html:7
-#: wally_search/templates/wally/search.html:143
+#: wally_search/templates/wally/search.html:142
 msgid "Sender"
 msgstr "差出人"
 
 #. Translators: Receiver of email
 #: wally_search/templates/wally/results.html:9
-#: wally_search/templates/wally/search.html:144
+#: wally_search/templates/wally/search.html:143
 msgid "Receiver"
 msgstr "宛先"
 
@@ -48,7 +48,7 @@ msgid "Attachment?"
 msgstr "添付?"
 
 #: wally_search/templates/wally/results.html:30
-#: wally_search/templates/wally/search.html:142
+#: wally_search/templates/wally/search.html:141
 msgid "Score"
 msgstr "スコア"
 
@@ -150,15 +150,15 @@ msgstr "合計結果数"
 msgid "Sort"
 msgstr "並べ替え"
 
-#: wally_search/templates/wally/search.html:150
+#: wally_search/templates/wally/search.html:149
 msgid "Direction"
 msgstr "方向"
 
-#: wally_search/templates/wally/search.html:153
+#: wally_search/templates/wally/search.html:152
 msgid "Asc"
 msgstr "昇順"
 
-#: wally_search/templates/wally/search.html:154
+#: wally_search/templates/wally/search.html:153
 msgid "Desc"
 msgstr "降順"
 
