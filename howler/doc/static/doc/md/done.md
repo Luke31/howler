@@ -225,7 +225,7 @@ To analyze logs (IRC, syslog etc.) we use Logstash. This completes the [Elastic 
         # }
         elasticsearch {
             hosts => [ "localhost:9200" ]
-            index => "logstash-irc-%{+YYYY.MM}"
+            index => "logstash-irc"
             # index => "logstash-%{+YYYY.MM.dd}"
         }
 
