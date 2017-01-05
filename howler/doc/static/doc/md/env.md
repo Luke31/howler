@@ -29,6 +29,7 @@ Following production environment has been set up:
 |5432|`postgresql`|
 |9200|`elasticsearch`|
 |5601|`kibana`|
+|5043|`logstash` - `10-irc-log-filter.conf`|
 
 ### Postgresql (9.4.9) 
 * Service-name: `postgresql`
@@ -112,3 +113,19 @@ Following production environment has been set up:
 **Hint:** To view django's 500 internal server errors on the clientside, enable debug in Howler's settings:
 
     DEBUG = True
+
+### Logstash (5.1.1)
+* Service-name: `logstash`
+* Port: 5043 (IRC-Log)
+* Service-user: logstash
+#### Filesystem
+
+|Purpose|File|
+|---|---|
+|Config|`/etc/logstash/logstash.yml`| 
+|Configuration pipeline config-files|`/etc/logstash/conf.d`|
+|Configuration pipeline IRC-Log|`/etc/logstash/conf.d/10-irc-log-filter.conf`|
+|Logs-dir|`/var/log/logstash`|
+|Log-plain|`/var/log/logstash/logstash-plain.log`|
+|JVM options (Heap size)|`/etc/logstash/jvm.options`|
+|Shared files (e.g. plugins such as beats)|`/usr/share/logstash/`|

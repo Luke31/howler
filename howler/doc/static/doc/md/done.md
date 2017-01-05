@@ -38,7 +38,9 @@ Debian 8.6 (Jessie) officially doesn't support Java 8, but a backport is availab
         bootstrap.memory_lock: true # no swapping
         
         Access:
-        network.host: 10.0.10.180
+        # network.host: 10.0.10.180
+        network.bind_host: ["10.0.10.180", "localhost"] # Also enable access EL locally
+        network.publish_host: 10.0.10.180
         network.port: 9200
         
         # Set virtual memory
@@ -174,11 +176,57 @@ To run queries on elasticsearch from the browser or visually analyze your data, 
         pip install psycopg2
         pip3 install psycopg2
 
-
 ##Fabric3 for deployment
 Fabric is a simple, Pythonic tool for remote execution and deployment
 
 * Install from pypi: [Fabric3 1.10.2](https://pypi.python.org/pypi/Fabric3/1.10.2)
     
         pip install fabric3
+
+##Logstash 5.1.1 (Port 5043) 
+To analyze logs (IRC, syslog etc.) we use Logstash. This completes the [Elastic stack](https://www.elastic.co/v5) (Former known as ELK stack) consisting of: **E**lasticsearch, **L**ogstash, **K**ibana (And Filebeats - former known as Logstash-forwarder)
+* Installation tutorial for Debian: [Installing Logstash - Installing from Package Repositories](https://www.elastic.co/guide/en/logstash/current/installing-logstash.html#package-repositories)
+
+* Service Start/Stop
+
+        sudo /bin/systemctl daemon-reload
+        sudo /bin/systemctl enable logstash.service
+        
+        sudo systemctl start logstash.service
+        sudo systemctl stop logstash.service
+        sudo systemctl restart logstash.service
+
+* Config: `/etc/logstash/logstash.yml`
+
+        node.name: node-wally-log-1
+        path.data: /var/lib/logstash
+        pipeline.workers: 2
+        path.config: /etc/logstash/conf.d
+        path.logs: /var/log/logstash
+
+* JVM system properties heap size: `/etc/logstash/jvm.options`
+
+        -Xms256m
+        -Xmx1g
+
+* IRC-Log Pipeline config: `/etc/logstash/conf.d/10-irc-log-filter.conf`
+    
+    
+    
+        input {
+            beats {
+                port => "5043"
+            }
+        }
+        # The filter part of this file is commented out to indicate that it is
+        # optional.
+        # filter {
+        #
+        # }
+        elasticsearch {
+            hosts => [ "localhost:9200" ]
+            index => "logstash-irc-%{+YYYY.MM}"
+            # index => "logstash-%{+YYYY.MM.dd}"
+        }
+
 
