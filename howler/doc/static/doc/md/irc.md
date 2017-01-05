@@ -29,8 +29,10 @@ To read the logs on the client and send them to the logstash server, Filebeat is
         filebeat.prospectors:
         - input_type: log
           paths:
-            - /var/log/*.log
+            - /home/saita/archive/irc/*.txt
+            #- /var/log/*.log
             #- c:\programdata\elasticsearch\logs\*
+          encoding: iso-2022-jp
         
         #- input_type: log
         #  paths:
@@ -44,13 +46,16 @@ To read the logs on the client and send them to the logstash server, Filebeat is
         #----------------------------- Logstash output --------------------------------
         output.logstash:
           # The Logstash hosts
-          hosts: ["10.0.10.180:5043"]
+          hosts: ["localhost:5043"]
+          #hosts: ["10.0.10.180:5043"]
           
 * Starting Filebeat: [Step 5: Starting Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-starting.html)
 
     * deb: `sudo /etc/init.d/filebeat start`
         
     * win: `PS C:\Program Files\Filebeat> Start-Service filebeat`
+    
+* Log: `/var/log/filebeat/filebeat`
     
 * Filebeat remembers the last read position of the log-files in its registry: `/var/lib/filebeat/registry` or `c:\ProgramData\filebeat\registry`
     
