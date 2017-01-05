@@ -2,7 +2,8 @@ ES_TYPE_NAME = 'email'
 
 SUPPORTED_LANG_CODES_ANALYZERS = {'ja': 'kuromoji',
                                   'en': 'english',
-                                  'un': 'standard'}
+                                  'un': 'standard',
+                                  'error': 'standard'}
 FALLBACK_LANG_CODE = 'un'
 JA_USER_DICT = 'userdict_ja.txt'  # /etc/elasticsearch/userdict_ja.txt
 JA_USER_DICT_TERM_TYPE = 'カスタム名詞'
