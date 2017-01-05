@@ -7,6 +7,7 @@ from . import constants
 from . import language
 from . import helpers_mail
 import datetime
+import pytz
 
 
 class MailExtractor:
@@ -36,43 +37,44 @@ class MailExtractor:
         self.errors_convert = []
 
         for file in files:
-            self.cnt_total += 1
-            try:
-                yield (os.path.basename(file), self.extract_json(file))  # id, data
-            except (LookupError, ValueError, TypeError, FileNotFoundError, AssertionError) as exc:
-                errmsg = '{0}: An exception of type {1} occured, when reading file: {2}'.format(
-                    file, type(exc).__name__, exc)
-                self.errors_convert.append(errmsg)
-                data = {
-                    'fromName': '',
-                    'fromEmail': '',
-                    'toName': '',
-                    'toEmail': '',
-                    'replyToName': '',
-                    'replyToEmail': '',
-                    'subject': errmsg,
-                    'date': ('{:' + constants.JSON_DATETIME_FORMAT + '}').format(datetime.datetime.now()),
-                    'body': errmsg,
-                    'langCode': 'error',
-                    'langPercent': 0,
-                    'spam': 0,  # TODO: Check if spam
-                    'hasAttachment': False,
-                    'attachmentNames': '',
-                }
-                yield json.dumps(data, sort_keys=True, indent=4, ensure_ascii=False)
+            yield (os.path.basename(file), self.extract_json(file))  # id, data
 
-    @staticmethod
-    def extract_json(file):
+    def extract_json(self, file):
         """
         Convert mail-file into json
         :param file: Path to a file which can be read (File will be opened here)
         :return: JSON-String
         """
+        self.cnt_total += 1
 
-        with open(file, 'rb') as fp:  # read as byte-string
-            msg = email.message_from_binary_file(fp, policy=policy.default)
+        try:
+            with open(file, 'rb') as fp:  # read as byte-string
+                msg = email.message_from_binary_file(fp, policy=policy.default)
+            jsonstr = json.dumps(msg, sort_keys=True, indent=4, ensure_ascii=False, cls=EmailMessageEncoder)
+        except (LookupError, ValueError, TypeError, FileNotFoundError, AssertionError) as exc:
+            errmsg = '{0}: An exception of type {1} occured, when reading file: {2}'.format(
+                file, type(exc).__name__, exc)
+            self.errors_convert.append(errmsg)
+            date_time_no_millis = datetime.datetime.utcnow()
+            date_time_no_millis = date_time_no_millis.replace(tzinfo=pytz.utc)
+            data_msg = {
+                'fromName': '',
+                'fromEmail': '',
+                'toName': '',
+                'toEmail': '',
+                'replyToName': '',
+                'replyToEmail': '',
+                'subject': errmsg,
+                'date': ('{:' + constants.JSON_DATETIME_FORMAT + '}').format(date_time_no_millis),
+                'body': errmsg,
+                'langCode': 'error',
+                'langPercent': 0,
+                'spam': 0,  # TODO: Check if spam
+                'hasAttachment': False,
+                'attachmentNames': '',
+            }
+            jsonstr = json.dumps(data_msg, sort_keys=True, indent=4, ensure_ascii=False)
 
-        jsonstr = json.dumps(msg, sort_keys=True, indent=4, ensure_ascii=False, cls=EmailMessageEncoder)
         return jsonstr
 
 

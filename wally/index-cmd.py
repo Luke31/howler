@@ -65,7 +65,7 @@ def update(args):
         print('Errors during indexation:')
         for err in summary.errors_index:
             print(err)
-    print("Successfully indexed {0}/{1} emails. Errors on json-convert: {2}, Errors in indexing: {3}".format(
+    print("Indexed {0}/{1} emails. Errors on json-convert: {2}, Errors in indexing: {3}".format(
         summary.cnt_success, summary.cnt_total, len(summary.errors_convert), len(summary.errors_index)))
 
 
