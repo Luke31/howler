@@ -221,8 +221,8 @@ To analyze logs (IRC, syslog etc.) we use Logstash. This completes the [Elastic 
         filter {
             grok {
                 match => {
-                    "message" => [ "%{INT:time} \<\#%{GREEDYDATA:channel}:%{USERNAME:username}\> %{GREEDYDATA:msg}",
-                                   "%{INT:time} \>\#%{GREEDYDATA:channel}\< \*%{GREEDYDATA:username}\* %{GREEDYDATA:msg}"] 
+                    "message" => [ "%{HOUR:hour}%{MINUTE:minute}%{SECOND:second} \<\#%{GREEDYDATA:channel}:%{USERNAME:username}\> %{GREEDYDATA:msg}",
+                                   "%{HOUR:hour}%{MINUTE:minute}%{SECOND:second} \>\#%{GREEDYDATA:channel}\< \*%{GREEDYDATA:username}\* %{GREEDYDATA:msg}"] 
                 }
                 # break_on_match => false
             }
@@ -235,14 +235,14 @@ To analyze logs (IRC, syslog etc.) we use Logstash. This completes the [Elastic 
                 }
             }
             mutate {
-                add_field => { "message_timestamp" => "%{date};%{time}" }
+                add_field => { "message_timestamp" => "%{date};%{hour}%{minute}%{second}" }
             }
             date {
                 match => [ "message_timestamp", "YYYYMMdd;HHmmss" ]
                 target => "@timestamp"
             }
             mutate {
-                remove_field => [ "message_timestamp", "date", "time" ]
+                remove_field => [ "message_timestamp", "date", "hour", "minute", "second" ]
             }
         }
         elasticsearch {
