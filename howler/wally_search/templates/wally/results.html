@@ -86,7 +86,8 @@
                                         {% endfor %}
                                     {% endif %}
 
-
+                                    <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}">{% trans "View mail content" %}</a>
+                                    {% comment %}
                                     <b>{% trans "Email content" %}:</b>
                                     <div id="collapse{{ forloop.counter0 }}" class="panel-collapse "><!--collapse-->
                                         <div class="panel-body">
@@ -97,11 +98,12 @@
                                                 {% if hit.attachmentNames %}
                                                     <p><b>{{ attachments }}</b> {{ hit.attachmentNames }}</p>
                                                 {% endif %}
-                                                <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}">{% trans "View mail content" %}</a>
-                                                {% comment %}{{ hit.body|linebreaks|truncatechars:EMAIL_SHOW_MAX_CHARS }}{% endcomment %}
+
+                                                {{ hit.body|linebreaks|truncatechars:EMAIL_SHOW_MAX_CHARS }}
                                             </div>
                                         </div>
                                     </div>
+                                    {% endcomment %}
                                 </div>
                             </div>
                         </div>

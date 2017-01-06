@@ -102,32 +102,46 @@ var wally = (function () {
             },
             "pageLength": 15,
             "lengthMenu": [[10, 15, 25, 50, 100], [10, 15, 25, 50, 100]],
-            "order": [[ 6, "desc" ]]
+            "order": [[6, "desc"]]
         });
+
         $(targetTableSel).find('tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
-            var row = table.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            else {
-                // Open this row
-                var extra_data = tr.find('.js_popover_content').html();
-                row.child(extra_data).show();
-                tr.addClass('shown');
-            }
+            resultTableToggleChildRows(table, tr);
         });
 
         setRowOpacity(targetTableSel);
+
+        // Show child-rows if desired
+        if ($('#show_hits_body')[0].checked) {
+            table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                var tr = this.nodes().to$();
+                resultTableToggleChildRows(table, tr);
+            });
+        }
+    };
+
+    /** Toogle child rows **/
+    var resultTableToggleChildRows = function (table, tr) {
+        var row = table.row(tr);
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            var extra_data = tr.find('.js_popover_content').html();
+            row.child(extra_data).show();
+            tr.addClass('shown');
+        }
     };
 
     /*Set row opacity according to score*/
     var setRowOpacity = function (targetTableSel) {
         var rows = $(targetTableSel).find('tbody tr');
         var max = 0;
+
         rows.each(function (i) {
             var score = $(this).find('.js_score').html().trim() * 1;
             max = (score > max) ? score : max;

@@ -2,6 +2,7 @@
 {% load i18n %}
 
 {% block main %}
+    {% trans "selected value remembered" as saved_in_session_text %}
     <form id="js_searchform" action="{% url 'wally:find' %}" method="get">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -30,6 +31,13 @@
                                     <label>
                                         <input type="checkbox" name="only_attachment"
                                                id="only_attachment"/> {% trans "only emails with attachments" %}
+                                    </label>
+                                </div>
+                                <div class="checkbox" title="{{ saved_in_session_text }}">
+                                    <label>
+                                        <input type="checkbox" name="show_hits_body"
+                                               id="show_hits_body" {% if show_hits_body %}
+                                               checked="checked"{% endif %}/> {% trans "show hits in body" %}
                                     </label>
                                 </div>
                             </div>
@@ -133,25 +141,24 @@
                             <div class="panel-body">
                                 <div class="form-group">
                                     <div class="form-group row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-6" title="{{ saved_in_session_text }}">
                                             <label for="sort_field">{% trans "Sort" %}</label>
                                             <div class="input-group">
                                                 <select class="form-control" id="sort_field"
                                                         name="sort_field">
-                                                    <option value="date">{% trans "Sent (JST)" %}</option>
-                                                    <option value="_score" selected="selected">{% trans "Score" %}</option>
-                                                    <option value="fromEmail.raw">{% trans "Sender" %}</option>
-                                                    <option value="toEmail.raw">{% trans "Receiver" %}</option>
+                                                    <option value="date" {% if sort_field == 'date' %} selected="selected"{% endif %}>{% trans "Sent (JST)" %}</option>
+                                                    <option value="_score" {% if sort_field == '_score' %} selected="selected"{% endif %}>{% trans "Score" %}</option>
+                                                    <option value="fromEmail.raw" {% if sort_field == 'fromEmail.raw' %} selected="selected"{% endif %}>{% trans "Sender" %}</option>
+                                                    <option value="toEmail.raw" {% if sort_field == 'toEmail.raw' %} selected="selected"{% endif %}>{% trans "Receiver" %}</option>
                                                 </select>
-
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6" title="{{ saved_in_session_text }}">
                                             <label for="sort_dir">{% trans "Direction" %}</label>
                                             <select class="form-control" id="sort_dir"
                                                     name="sort_dir">
-                                                <option value="">{% trans "Asc" %}</option>
-                                                <option value="-" selected="selected">{% trans "Desc" %}</option>
+                                                <option value="" {% if sort_dir == '' %} selected="selected"{% endif %}>{% trans "Asc" %}</option>
+                                                <option value="-" {% if sort_dir == '-' %} selected="selected"{% endif %}>{% trans "Desc" %}</option>
                                             </select>
                                         </div>
                                     </div>

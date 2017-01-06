@@ -12,7 +12,12 @@ def search(request):
     user_language = 'ja'
     # translation.activate(user_language)
     # request.session[translation.LANGUAGE_SESSION_KEY] = user_language
-    return render(request, 'wally/search.html')
+    context = {
+        'sort_field': request.session.get('sort_field', '_score'),
+        'sort_dir': request.session.get('sort_dir', '-'),
+        'show_hits_body': request.session.get('show_hits_body', False),
+    }
+    return render(request, 'wally/search.html', context)
 
 
 web_datetime_format = '%Y/%m/%d %H:%M'
@@ -62,14 +67,24 @@ def find(request):
             return render(request, 'wally/results.html', {'error_message': _("Incorrent value for only attachment")})
 
         try:
-            kwargs['sort_field'] = request.GET.get('sort_field')
+            sort_field = request.GET.get('sort_field')
+            kwargs['sort_field'] = sort_field
+            request.session['sort_field'] = sort_field
         except ValueError:
             return render(request, 'wally/results.html', {'error_message': _("Incorrent value for sort field")})
 
         try:
-            kwargs['sort_dir'] = request.GET.get('sort_dir')
+            sort_dir = request.GET.get('sort_dir')
+            kwargs['sort_dir'] = sort_dir
+            request.session['sort_dir'] = sort_dir
         except ValueError:
             return render(request, 'wally/results.html', {'error_message': _("Incorrent value for sort direction")})
+
+        try:
+            show_hits_body = bool(request.GET.get('show_hits_body', False))
+            request.session['show_hits_body'] = show_hits_body
+        except ValueError:
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for show hits body")})
 
         es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
         response = Search(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME).search(
