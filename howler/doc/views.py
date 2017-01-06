@@ -20,3 +20,7 @@ def importscript(request):
 
 def initsetup(request):
     return render(request, 'doc/initsetup.html')
+
+
+def irc(request):
+    return render(request, 'doc/irc.html')

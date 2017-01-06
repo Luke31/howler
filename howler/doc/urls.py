@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^done/$', views.done, name='done'),
     url(r'^initsetup/$', views.initsetup, name='initsetup'),
     url(r'^importscript/$', views.importscript, name='importscript'),
+    url(r'^irc/$', views.irc, name='irc'),
 ]
