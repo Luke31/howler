@@ -136,13 +136,14 @@ var wally = (function () {
         var min = 0.6;
         rows.each(function (i) {
             var row = $(this);
-            var score = row.find('.js_score').html().trim() * 1;
+            var score_td = row.find('.js_score');
+            var score = score_td.html().trim() * 1;
             var opacity = score / 100;
             //var opacity = (score / max);  // Used to control tr-opacity
             //row.css('opacity', Math.max(opacity, min)); // Used to control tr-opacity
             var green = '0, 173, 0';
             var red = '184, 82, 81';
-            row.css('background-color', 'rgba(' + red + ',' + opacity + ')')
+            score_td.css('background-color', 'rgba(' + red + ',' + opacity + ')')
         });
     };
 
