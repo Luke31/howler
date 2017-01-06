@@ -32,7 +32,11 @@ To read the logs on the client and send them to the logstash server, Filebeat is
             - /home/saita/archive/irc/*.txt
             #- /var/log/*.log
             #- c:\programdata\elasticsearch\logs\*
-          encoding: iso-2022-jp
+          document_type: irclog
+          encoding: euc-jp
+          close_*: 5m
+          harvester_limit: 600 # parallel open file-handles
+          
         
         #- input_type: log
         #  paths:

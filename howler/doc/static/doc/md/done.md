@@ -218,11 +218,33 @@ To analyze logs (IRC, syslog etc.) we use Logstash. This completes the [Elastic 
                 port => "5043"
             }
         }
-        # The filter part of this file is commented out to indicate that it is
-        # optional.
-        # filter {
-        #
-        # }
+        filter {
+            grok {
+                match => {
+                    "message" => [ "%{INT:time} \<\#%{GREEDYDATA:channel}:%{USERNAME:username}\> %{GREEDYDATA:msg}",
+                                   "%{INT:time} \>\#%{GREEDYDATA:channel}\< \*%{GREEDYDATA:username}\* %{GREEDYDATA:msg}"] 
+                }
+                # break_on_match => false
+            }
+            if "_grokparsefailure" in [tags] { # or "_dateparsefailure" in [tags]
+                drop { } # Ignore system logs (e.g. "*** CLIENT No.9143 authorized ***")
+            }
+            grok {
+                match => {
+                    "source" => [ "%{UNIXPATH:location}\/%{POSINT:date}" ]
+                }
+            }
+            mutate {
+                add_field => { "message_timestamp" => "%{date};%{time}" }
+            }
+            date {
+                match => [ "message_timestamp", "YYYYMMdd;HHmmss" ]
+                target => "@timestamp"
+            }
+            mutate {
+                remove_field => [ "message_timestamp", "date", "time" ]
+            }
+        }
         elasticsearch {
             hosts => [ "localhost:9200" ]
             index => "logstash-irc"
