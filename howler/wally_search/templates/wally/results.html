@@ -97,7 +97,8 @@
                                                 {% if hit.attachmentNames %}
                                                     <p><b>{{ attachments }}</b> {{ hit.attachmentNames }}</p>
                                                 {% endif %}
-                                                {{ hit.body|linebreaks|truncatechars:EMAIL_SHOW_MAX_CHARS }}
+                                                <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}">{% trans "View mail content" %}</a>
+                                                {% comment %}{{ hit.body|linebreaks|truncatechars:EMAIL_SHOW_MAX_CHARS }}{% endcomment %}
                                             </div>
                                         </div>
                                     </div>
