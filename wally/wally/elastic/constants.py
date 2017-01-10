@@ -1,4 +1,4 @@
-ES_TYPE_NAME = 'email'
+ES_TYPE_NAME_EMAIL = 'email'
 
 SUPPORTED_LANG_CODES_ANALYZERS = {'ja': 'kuromoji',
                                   'en': 'english',

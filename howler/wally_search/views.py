@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from wally.elastic.search import Search
+from wally.elastic.search import SearchMail
 from datetime import datetime
 from django.utils.translation import ugettext as _
 from elasticsearch import Elasticsearch
@@ -93,7 +93,7 @@ def find(request):
         request.session['show_hits_body'] = show_hits_body
 
         es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
-        response = Search(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME).search(
+        response = SearchMail(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME).search(
             query, **kwargs)
 
         # Convert sent date to nice string

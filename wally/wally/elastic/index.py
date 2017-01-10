@@ -17,7 +17,7 @@ class Index:
     Index multiple files using bulk (iterator or dir)
     """
 
-    def __init__(self, es_conn, es_index_prefix, es_type_name=constants.ES_TYPE_NAME,
+    def __init__(self, es_conn, es_index_prefix, es_type_name=constants.ES_TYPE_NAME_EMAIL,
                  user_dictionary_file=constants.JA_USER_DICT, mailextractor=MailExtractor()):
         """
         :param es_conn: Elasticsearch connection
