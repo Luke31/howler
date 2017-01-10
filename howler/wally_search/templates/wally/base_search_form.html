@@ -1,0 +1,167 @@
+{% extends "wally/base_wally.html" %}
+{% load i18n %}
+
+{% block main %}
+    {% trans "selected value remembered" as saved_in_session_text %}
+    <form id="js_searchform" action="{% url 'wally:find' %}" method="get">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class='col-md-6 col-lg-7'>
+                                <div class="form-group">
+                                    {% comment %}Translators: placeholder of search-box{% endcomment %}
+                                    <input type="text" class="form-control" name="query" class="fulltext" id="query"
+                                           placeholder="{% trans "Full-text search" %}"/>
+                                </div>
+                            </div>
+                            <div class='col-md-2 col-lg-2'>
+                                <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+                            </div>
+                            <div class='col-md-4 col-lg-3'>
+                                {% block search_form_checkboxes %}
+
+                                {% endblock %}
+                                <div class="checkbox" title="{{ saved_in_session_text }}">
+                                    <label>
+                                        <input type="checkbox" name="show_hits_body"
+                                               id="show_hits_body" {% if show_hits_body %}
+                                               checked="checked"{% endif %}/> {% trans "show hits" %}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-lg-7">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class='col-md-5'>
+                                    <div class="form-group">
+                                        <label for="use_sliding_value">{% trans "Date filter mode" %}</label>
+                                        <div class="input-group">
+                                            <select class="form-control" id="use_sliding_value"
+                                                    name="use_sliding_value">
+                                                <option value="1"
+                                                        selected="selected">{% trans "Within past duration" %}</option>
+                                                <option value="0">{% trans "Fixed date" %}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='js_date_sliding_value collapse col-md-7'>
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <label for="date_sliding_value">{% trans "Within the past" %}</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="date_sliding_value"
+                                                       name="date_sliding_value" value="5">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="date_sliding_type">{% trans "Duration type" %}</label>
+                                            <div class="input-group">
+                                                <select class="form-control" id="date_sliding_type"
+                                                        name="date_sliding_type">
+                                                    <option value="y" selected="selected">{% trans "Years" %}</option>
+                                                    <option value="M">{% trans "Months" %}</option>
+                                                    <option value="d">{% trans "Days" %}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% trans "JST time" as jsttime %}
+                                <div class='js_date_fixed collapse col-md-9'>
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <label for="from">{% trans "From" context "datetime" %}</label>
+                                            - {{ jsttime }}
+                                            <div class='input-group date' id='datetimepicker-from'>
+                                                <input type='text' class="form-control" name="from"
+                                                       placeholder="2012/11/01 00:00"/>
+                                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="to">{% trans "To" context "datetime" %}</label> - {{ jsttime }}
+                                            <div class='input-group date' id='datetimepicker-to'>
+                                                <input type='text' class="form-control" name="to"
+                                                       placeholder="2016/10/31 12:18"/>
+                                                <!--type="datetime-local"-->
+                                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-lg-2" style="display: none;">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="number_results">{% trans "Number tot results" %}</label>
+                                    <div class="input-group">
+                                        <select class="form-control" id="number_results"
+                                                name="number_results">
+                                            <option value="10">10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100" selected="selected">100</option>
+                                            <option value="300">300</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="form-group row">
+                                        <div class="col-md-6" title="{{ saved_in_session_text }}">
+                                            <label for="sort_field">{% trans "Sort" %}</label>
+                                            <div class="input-group">
+                                                <select class="form-control" id="sort_field"
+                                                        name="sort_field">
+                                                    {% block search_form_sort_fields_options %}
+
+                                                    {% endblock %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" title="{{ saved_in_session_text }}">
+                                            <label for="sort_dir">{% trans "Direction" %}</label>
+                                            <select class="form-control" id="sort_dir"
+                                                    name="sort_dir">
+                                                <option value="" {% if sort_dir == '' %} selected="selected"{% endif %}>{% trans "Asc" %}</option>
+                                                <option value="-" {% if sort_dir == '-' %} selected="selected"{% endif %}>{% trans "Desc" %}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div id="js_result">
+
+    </div>
+{% endblock %}
