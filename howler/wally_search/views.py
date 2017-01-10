@@ -57,16 +57,6 @@ def find(request):
             return render(request, 'wally/results.html', {'error_message': _("Incorrent number of results")})
 
         try:
-            kwargs['include_spam'] = bool(request.GET.get('include_spam'))
-        except ValueError:
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for include spam")})
-
-        try:
-            kwargs['only_attachment'] = bool(request.GET.get('only_attachment'))
-        except ValueError:
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for only attachment")})
-
-        try:
             sort_field = request.GET.get('sort_field')
             kwargs['sort_field'] = sort_field
         except ValueError:
@@ -82,6 +72,20 @@ def find(request):
             show_hits_body = bool(request.GET.get('show_hits_body', False))
         except ValueError:
             return render(request, 'wally/results.html', {'error_message': _("Incorrent value for show hits body")})
+
+        # E-mail only values
+        try:
+            kwargs['include_spam'] = bool(request.GET.get('include_spam'))
+        except ValueError:
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for include spam")})
+
+        try:
+            kwargs['only_attachment'] = bool(request.GET.get('only_attachment'))
+        except ValueError:
+            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for only attachment")})
+
+        # IRC only values
+        # - none yet -
 
         # Save search-fields in session
         request.session['sort_field'] = sort_field
