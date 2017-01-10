@@ -1,0 +1,16 @@
+{% extends "wally/base_search_form.html" %}
+{% load i18n %}
+
+{% block search_type %}
+    <input type="hidden" name="search_type" id="search_type" value="irc"/>
+{% endblock %}
+{% block search_form_checkboxes %}
+
+{% endblock %}
+
+{% block search_form_sort_fields_options %}
+    <option value="@timestamp" {% if sort_field == 'date' %} selected="selected"{% endif %}>{% trans "Sent (JST)" %}</option>
+    <option value="_score" {% if sort_field == '_score' %} selected="selected"{% endif %}>{% trans "Score" %}</option>
+    <option value="username" {% if sort_field == 'username' %}
+            selected="selected"{% endif %}>{% trans "Sender" %}</option>
+{% endblock %}

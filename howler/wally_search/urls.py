@@ -5,7 +5,7 @@ from . import views
 app_name = 'wally'
 urlpatterns = [
     # ex: /wally/
-    url(r'^$', views.search, name='search'),
+    url(r'^$', views.searchmail, name='search'),
     # ex: /wally/
     url(r'^find/$', views.find, name='find'),
     # ex: /wally/wally/

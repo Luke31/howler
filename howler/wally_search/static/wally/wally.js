@@ -113,7 +113,7 @@ var wally = (function () {
         setRowOpacity(targetTableSel);
 
         // Show child-rows if desired
-        if ($('#show_hits_body')[0].checked) {
+        if ($('#show_hits')[0].checked) {
             table.rows().every(function (rowIdx, tableLoop, rowLoop) {
                 var tr = this.nodes().to$();
                 resultTableToggleChildRows(table, tr);

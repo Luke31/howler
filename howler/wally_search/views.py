@@ -8,16 +8,26 @@ from django.conf import settings as djsettings
 from datetime import datetime
 
 
-def search(request):
-    user_language = 'ja'
-    # translation.activate(user_language)
-    # request.session[translation.LANGUAGE_SESSION_KEY] = user_language
+def _get_search_context(request):
     context = {
         'sort_field': request.session.get('sort_field', '_score'),
         'sort_dir': request.session.get('sort_dir', '-'),
-        'show_hits_body': request.session.get('show_hits_body', False),
+        'show_hits': request.session.get('show_hits', False),
     }
-    return render(request, 'wally/search.html', context)
+    return context
+
+
+def searchmail(request):
+    user_language = 'ja'
+    # translation.activate(user_language)
+    # request.session[translation.LANGUAGE_SESSION_KEY] = user_language
+    context = _get_search_context(request)
+    return render(request, 'wally/searchmail.html', context)
+
+
+def searchirc(request):
+    context = _get_search_context(request)
+    return render(request, 'wally/searchirc.html', context)
 
 
 web_datetime_format = '%Y/%m/%d %H:%M'
@@ -71,7 +81,7 @@ def find(request):
             return render(request, 'wally/results.html', {'error_message': _("Incorrent value for sort direction")})
 
         try:
-            show_hits_body = bool(request.GET.get('show_hits_body', False))
+            show_hits = bool(request.GET.get('show_hits', False))
         except ValueError:
             return render(request, 'wally/results.html', {'error_message': _("Incorrent value for show hits body")})
 
@@ -92,7 +102,7 @@ def find(request):
         # Save search-fields in session
         request.session['sort_field'] = sort_field
         request.session['sort_dir'] = sort_dir
-        request.session['show_hits_body'] = show_hits_body
+        request.session['show_hits'] = show_hits
 
         es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX[search_type]
         es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES[search_type]
@@ -112,7 +122,7 @@ def find(request):
         context = {
             'query': query,
             'hit_list': response,
-            'EMAIL_SHOW_MAX_CHARS':djsettings.EMAIL_SHOW_MAX_CHARS
+            'EMAIL_SHOW_MAX_CHARS': djsettings.EMAIL_SHOW_MAX_CHARS
         }
         return render(request, 'wally/results.html', context)
 
