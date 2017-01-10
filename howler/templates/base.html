@@ -46,7 +46,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'wally:search' %}">
+            <a class="navbar-brand" href="{% url 'wally:searchmail' %}">
                 <!--TODO: Fix relative path to app, use urls instaed-->
                 <div class="content">
                     <img src="{% static "img/howler50text.png" %}"/>
@@ -58,11 +58,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <!--<li><a href="{% url 'wally:search' %}">Search</a></li>-->
                 <li><a href="{% url 'doc:home' %}">{% trans "Dev Doc" %}</a></li>
                 <li><a href="{% url 'settings:synonym' %}">{% trans "Settings" %}</a></li>
                 <li><a href="{% url 'admin:index' %}">{% trans "Admin" %}</a></li>
-                <!--<li><a href="#">Help</a></li>-->
             </ul>
 
 
@@ -101,9 +99,14 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                {% url 'wally:search' as url_wally_search %}
-                <li{% if request.path == url_wally_search %} class="active"{% endif %}>
-                    <a href="{{ url_wally_search }}">{% trans "Email search" %}</a>
+                {% url 'wally:searchmail' as url_wally_search_mail %}
+                <li{% if request.path == url_wally_search_mail %} class="active"{% endif %}>
+                    <a href="{{ url_wally_search_mail }}">{% trans "Email search" %}</a>
+                </li>
+
+                {% url 'wally:searchirc' as url_wally_search_irc %}
+                <li{% if request.path == url_wally_search_irc %} class="active"{% endif %}>
+                    <a href="{{ url_wally_search_irc }}">{% trans "IRC search" %}</a>
                 </li>
                 {% block sidebar_nav %}
 

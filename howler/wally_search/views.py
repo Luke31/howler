@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from wally.elastic.search import SearchMail
+from wally.elastic.search import SearchMail, SearchIrc
 from datetime import datetime
 from django.utils.translation import ugettext as _
 from elasticsearch import Elasticsearch
@@ -37,6 +37,10 @@ def find(request):
     try:
         query = request.GET['query']
         search_type = request.GET['search_type']
+        if search_type == 'email':
+            result_template = 'wally/resultsmail.html'
+        elif search_type == 'irc':
+            result_template = 'wally/resultsirc.html'
 
         kwargs = {}
         try:
@@ -45,7 +49,7 @@ def find(request):
                 kwargs['date_gte'] = datetime.strptime(request_from, web_datetime_format)
         except ValueError:
             # Translators: The user didn't submit the correct values in the form
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent field format from-date")})
+            return render(request, result_template, {'error_message': _("Incorrent field format from-date")})
 
         try:
             request_to = request.GET.get('to', '')
@@ -53,7 +57,7 @@ def find(request):
                 kwargs['date_lte'] = datetime.strptime(request_to, web_datetime_format)
         except ValueError:
             # Translators: The user didn't submit the correct values in the form
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent field format to-date")})
+            return render(request, result_template, {'error_message': _("Incorrent field format to-date")})
 
         kwargs['date_sliding_value'] = request.GET.get('date_sliding_value', '')
         kwargs['date_sliding_type'] = request.GET.get('date_sliding_type', '')
@@ -61,40 +65,40 @@ def find(request):
         try:
             kwargs['use_sliding_value'] = bool(int(request.GET.get('use_sliding_value', True)))
         except ValueError:
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent use of date selection")})
+            return render(request, result_template, {'error_message': _("Incorrent use of date selection")})
 
         try:
             kwargs['number_results'] = int(request.GET.get('number_results', 10))
         except ValueError:
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent number of results")})
+            return render(request, result_template, {'error_message': _("Incorrent number of results")})
 
         try:
             sort_field = request.GET.get('sort_field')
             kwargs['sort_field'] = sort_field
         except ValueError:
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for sort field")})
+            return render(request, result_template, {'error_message': _("Incorrent value for sort field")})
 
         try:
             sort_dir = request.GET.get('sort_dir')
             kwargs['sort_dir'] = sort_dir
         except ValueError:
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for sort direction")})
+            return render(request, result_template, {'error_message': _("Incorrent value for sort direction")})
 
         try:
             show_hits = bool(request.GET.get('show_hits', False))
         except ValueError:
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for show hits body")})
+            return render(request, result_template, {'error_message': _("Incorrent value for show hits body")})
 
         # E-mail only values
         try:
             kwargs['include_spam'] = bool(request.GET.get('include_spam'))
         except ValueError:
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for include spam")})
+            return render(request, result_template, {'error_message': _("Incorrent value for include spam")})
 
         try:
             kwargs['only_attachment'] = bool(request.GET.get('only_attachment'))
         except ValueError:
-            return render(request, 'wally/results.html', {'error_message': _("Incorrent value for only attachment")})
+            return render(request, result_template, {'error_message': _("Incorrent value for only attachment")})
 
         # IRC only values
         # - none yet -
@@ -107,24 +111,31 @@ def find(request):
         es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX[search_type]
         es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES[search_type]
         es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
-        response = SearchMail(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
+        if search_type == 'email':
+            response = SearchMail(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
             query, **kwargs)
 
-        # Convert sent date to nice string
-        for hit in response:
-            hit.date = datetime.strptime(hit.date, djsettings.ES_DATETIME_FORMAT)
+            # Convert sent date to nice string
+            for hit in response:
+                hit.date = datetime.strptime(hit.date, djsettings.ES_DATETIME_FORMAT)
+        elif search_type == 'irc':
+            response = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
+                query, **kwargs)
+            # Convert sent date to nice string
+            for hit in response:
+                hit.sent = hit['@timestamp']
+                #hit.sent = datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT)
 
     except KeyError as exc:
         # Translators: The user didn't submit a correct query, a value is missing
-        return render(request, 'wally/results.html',
+        return render(request, result_template,
                       {'error_message': _("Incorrent query: {exception}").format(exception=exc)})
     else:
         context = {
             'query': query,
             'hit_list': response,
-            'EMAIL_SHOW_MAX_CHARS': djsettings.EMAIL_SHOW_MAX_CHARS
         }
-        return render(request, 'wally/results.html', context)
+        return render(request, result_template, context)
 
 
 def detail(request, email_id):

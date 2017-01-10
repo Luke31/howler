@@ -95,6 +95,8 @@ var wally = (function () {
     /** Make result-table a DataTable (https://datatables.net/) with collapsed detail informations*/
     var setResultTable = function () {
         var targetTableSel = '#js_result_table';
+        var numCol = $(targetTableSel).find('th').length - 1; //Ignore toggle-column
+        var scoreColIdx = numCol - 1;
         var table = $(targetTableSel).DataTable({
             //responsive: true
             "language": {
@@ -102,7 +104,7 @@ var wally = (function () {
             },
             "pageLength": 15,
             "lengthMenu": [[10, 15, 25, 50, 100], [10, 15, 25, 50, 100]],
-            "order": [[6, "desc"]]
+            "order": [[numCol, "desc"]]
         });
 
         $(targetTableSel).find('tbody').on('click', 'td.details-control', function () {

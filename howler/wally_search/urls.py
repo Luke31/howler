@@ -5,7 +5,9 @@ from . import views
 app_name = 'wally'
 urlpatterns = [
     # ex: /wally/
-    url(r'^$', views.searchmail, name='search'),
+    url(r'^$', views.searchmail, name='searchmail'),
+    # ex: /wally/irc
+    url(r'^irc/$', views.searchirc, name='searchirc'),
     # ex: /wally/
     url(r'^find/$', views.find, name='find'),
     # ex: /wally/wally/

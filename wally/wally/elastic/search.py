@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search as DslSearch
-from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term
+from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term, Range
 from ..dementor import constants as dementor_constants
 from . import constants
 
@@ -16,11 +16,12 @@ class Search:
         self._type_name = es_type_name
 
     # noinspection PyIncorrectDocstring
-    def _search(self, qterm, **kwargs):
+    def _search(self, qterm, date_field_name, **kwargs):
         r"""Searches in the elasticsearch index for the mail
             :param qterm:
                 Query-string
             :type qterm: ``str``
+            :param date_field_name: name of datefield in EL
             :param \**kwargs:
                 See below
 
@@ -50,35 +51,13 @@ class Search:
 
         number_results = 10
 
-        sort_field = '_score'
-        sort_dir = '-'
-        for key, value in kwargs.items():
-            if key == 'number_results':
-                number_results = value
-            if key == 'sort_field':
-                sort_field = value
-            if key == 'sort_dir':
-                sort_dir = value
-
-        s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
-
-        s = s.sort(
-            ''.join((sort_dir, sort_field)),
-            '-_score',
-        )
-
-        # Number of results
-        s = s[0:number_results]
-
-        return s
-
-    @staticmethod
-    def get_date_kwargs(**kwargs):
         date_gte = None  # '2010-01-31T22:28:14+0300'  # from
         date_lte = 'now'  # ''2012-09-20T17:41:14+0900' # 'now'  # to
         date_sliding_value = ''
         date_sliding_type = ''
         use_sliding_value = True
+        sort_field = '_score'
+        sort_dir = '-'
         for key, value in kwargs.items():
             if key == 'date_gte':
                 date_gte = ('{:' + dementor_constants.JSON_DATETIME_FORMAT + '}').format(value)
@@ -90,7 +69,34 @@ class Search:
                 date_sliding_value = value
             if key == 'date_sliding_type':
                 date_sliding_type = value
-        return date_gte, date_lte, use_sliding_value, date_sliding_value, date_sliding_type
+            if key == 'number_results':
+                number_results = value
+            if key == 'sort_field':
+                sort_field = value
+            if key == 'sort_dir':
+                sort_dir = value
+
+        s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
+
+        # Filter date
+        if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
+            s = s.query('bool', filter=[
+                Range(**{date_field_name: {'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type)}})])
+            # s = s.filter('range', date={'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type)})
+        elif date_gte is not None:
+            s = s.query('bool', filter=[
+                Range(**{date_field_name: {'lte': date_lte, 'gte': date_gte}})])
+            # s = s.filter('range', date={'lte': date_lte, 'gte': date_gte})
+
+        s = s.sort(
+            ''.join((sort_dir, sort_field)),
+            '-_score',
+        )
+
+        # Number of results
+        s = s[0:number_results]
+
+        return s
 
 
 class SearchMail(Search):
@@ -136,7 +142,7 @@ class SearchMail(Search):
                   '-': descending)
 
             """
-        s = super(SearchMail, self)._search(qterm, **kwargs)
+        s = super(SearchMail, self)._search(qterm, 'date', **kwargs)
 
         # Query
         pos = MatchPhrase(body={'query': qterm, 'boost': 2}) | \
@@ -164,14 +170,6 @@ class SearchMail(Search):
                 include_spam = value
             if key == 'only_attachment':
                 only_attachment = value
-
-        # Filter Date
-        date_gte, date_lte, use_sliding_value, date_sliding_value, date_sliding_type = super(
-            SearchMail, self).get_date_kwargs(**kwargs)
-        if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
-            s = s.filter('range', date={'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type)})
-        elif date_gte is not None:
-            s = s.filter('range', date={'lte': date_lte, 'gte': date_gte})
 
         # Filter spam
         if not include_spam:
@@ -251,7 +249,7 @@ class SearchIrc(Search):
                   '-': descending)
 
             """
-        s = super(SearchIrc, self)._search(qterm, **kwargs)
+        s = super(SearchIrc, self)._search(qterm, '@timestamp', **kwargs)
 
         # Query
         pos = MatchPhrase(msg={'query': qterm, 'boost': 2}) | \
@@ -262,14 +260,6 @@ class SearchIrc(Search):
         # boosting = Boosting(positive=pos, negative=neg, negative_boost=0.2)
 
         s = s.query(pos)
-
-        # Filter Date
-        date_gte, date_lte, use_sliding_value, date_sliding_value, date_sliding_type = super(
-            SearchMail, self).get_date_kwargs(**kwargs)
-        if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
-            s = s.filter('range', date={'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type)})
-        elif date_gte is not None:
-            s = s.filter('range', date={'lte': date_lte, 'gte': date_gte})
 
         # Highlight
         s = s.highlight_options(order='score')

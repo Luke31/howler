@@ -1,0 +1,64 @@
+{% extends "wally/base_results.html" %}
+{% load i18n %}
+
+{% block col_header %}
+    <th></th>
+    <th class="text-nowrap">{% trans "Message" %}</th>
+    <th class="text-nowrap">{% trans "Sent (JST)" %}</th>
+    <th class="text-nowrap">{% trans "Username" %}</th>
+    <th class="text-nowrap text-right">{% trans "Score" %}</th>
+{% endblock %}
+
+{% block col_data %}
+    <td>
+        <a href="" target="_blank">
+                        <span class="glyphicon glyphicon-eye-open"
+                              title="{% trans "View IRC log" %}"></span>
+        </a>
+    </td>
+    <td>
+        <span>
+            {% if hit.meta.highlight.msg.0 %}
+                {{ hit.meta.highlight.msg.0|safe }}
+            {% else %}
+                {{ hit.msg }}
+            {% endif %}
+        </span>
+        <span style="display: none">{{ hit.meta.id }}</span>
+        <div class="collapse js_popover_content">
+            {% if hit.meta.highlight.username.0 %}
+                <p class="fragment">
+                    <b>{% trans "Hit in username" %}:</b>
+                    <span class="search-hit">{{ hit.meta.highlight.username.0|safe }}</span>
+                </p>
+            {% endif %}
+
+            {% if hit.meta.highlight.msg %}
+                <b>{% trans "Hits in message" %}:</b>
+                {% for fragment in hit.meta.highlight.msg %}
+                    <span class="search-hit">
+                        {{ fragment|safe }}
+                    </span>&nbsp;|&nbsp;
+                {% endfor %}
+            {% endif %}
+        </div>
+    </td>
+    <td class="text-nowrap">
+        {{ hit.sent }}
+{#        {{ hit.sent|date:"Y/m/d H:i" }}#}
+    </td>
+    <td class="text-nowrap">
+        {% if hit.meta.highlight.username.0 %}
+            {{ hit.meta.highlight.username.0|safe }}
+        {% else %}
+            {{ hit.username }}
+        {% endif %}
+    </td>
+    <td class="text-center text-nowrap js_score">
+        {{ hit.meta.score|floatformat:1 }}
+    </td>
+{% endblock %}
+
+{% block no_data %}
+    <span class="">{% trans "No emails found" %}</span>
+{% endblock %}

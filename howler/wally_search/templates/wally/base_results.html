@@ -1,0 +1,47 @@
+{% load i18n %}
+
+{% if error_message %}
+    <div class="row">
+        <div class='col-md-11'>
+            <p><strong>{{ error_message }}</strong></p>
+        </div>
+    </div>
+{% endif %}
+
+{% if hit_list %}
+    {% include 'common/dt_childtoggler.html' %}
+
+    <table class="table table-striped-custom table-email" id="js_result_table">
+        <thead>
+        <tr>
+            <th class="w_toggle_col"></th>
+            {% block col_header %}
+
+            {% endblock %}
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for hit in hit_list %}
+            <tr data-toggle="popover">
+                <td class="details-control w_toggle_col">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="glyphicon glyphicon-minus"></span>
+                </td>
+                {% block col_data %}
+
+                {% endblock %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% else %}
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            {% block no_data %}
+
+            {% endblock %}
+        </div>
+    </div>
+{% endif %}

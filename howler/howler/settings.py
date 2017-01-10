@@ -186,5 +186,3 @@ SUPPORTED_LANG_CODES_ANALYZERS = {'ja': 'kuromoji',
                                   'un': 'standard'}
 FALLBACK_LANG_CODE = 'un'
 JA_USER_DICT = 'userdict_ja.txt'  # /etc/elasticsearch/userdict_ja.txt
-
-EMAIL_SHOW_MAX_CHARS = 10000
