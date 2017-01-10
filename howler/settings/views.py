@@ -49,7 +49,7 @@ def synonym_import(request):
     # Update index
     kuromoji_synonyms = [x.synonyms_combo() for x in obj_list]
     es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
-    index = Index(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME,
+    index = Index(es, es_index_prefix=djsettings.ES_SUPPORTED_INDEX_PREFIX['email'], es_type_name=djsettings.ES_SUPPORTED_TYPE_NAMES['email'],
                   user_dictionary_file=djsettings.JA_USER_DICT)
     index.add_mapping_to_index_multi(delete_old_indices=False, kuromoji_synonyms=kuromoji_synonyms)  # Update index
 

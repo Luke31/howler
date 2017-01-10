@@ -26,6 +26,8 @@ web_datetime_format = '%Y/%m/%d %H:%M'
 def find(request):
     try:
         query = request.GET['query']
+        search_type = request.GET['search_type']
+
         kwargs = {}
         try:
             request_from = request.GET.get('from', '')
@@ -92,8 +94,10 @@ def find(request):
         request.session['sort_dir'] = sort_dir
         request.session['show_hits_body'] = show_hits_body
 
+        es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX[search_type]
+        es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES[search_type]
         es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
-        response = SearchMail(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME).search(
+        response = SearchMail(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
             query, **kwargs)
 
         # Convert sent date to nice string

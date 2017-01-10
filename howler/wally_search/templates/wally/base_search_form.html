@@ -4,6 +4,9 @@
 {% block main %}
     {% trans "selected value remembered" as saved_in_session_text %}
     <form id="js_searchform" action="{% url 'wally:find' %}" method="get">
+        {% block search_type %}
+
+        {% endblock %}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="row">
