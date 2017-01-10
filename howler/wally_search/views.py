@@ -69,22 +69,24 @@ def find(request):
         try:
             sort_field = request.GET.get('sort_field')
             kwargs['sort_field'] = sort_field
-            request.session['sort_field'] = sort_field
         except ValueError:
             return render(request, 'wally/results.html', {'error_message': _("Incorrent value for sort field")})
 
         try:
             sort_dir = request.GET.get('sort_dir')
             kwargs['sort_dir'] = sort_dir
-            request.session['sort_dir'] = sort_dir
         except ValueError:
             return render(request, 'wally/results.html', {'error_message': _("Incorrent value for sort direction")})
 
         try:
             show_hits_body = bool(request.GET.get('show_hits_body', False))
-            request.session['show_hits_body'] = show_hits_body
         except ValueError:
             return render(request, 'wally/results.html', {'error_message': _("Incorrent value for show hits body")})
+
+        # Save search-fields in session
+        request.session['sort_field'] = sort_field
+        request.session['sort_dir'] = sort_dir
+        request.session['show_hits_body'] = show_hits_body
 
         es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
         response = Search(es, es_index_prefix=djsettings.ES_INDEX_PREFIX, es_type_name=djsettings.ES_TYPE_NAME).search(
@@ -95,7 +97,6 @@ def find(request):
             hit.date = datetime.strptime(hit.date, djsettings.ES_DATETIME_FORMAT)
 
     except KeyError as exc:
-        # Redisplay the search form.
         # Translators: The user didn't submit a correct query, a value is missing
         return render(request, 'wally/results.html',
                       {'error_message': _("Incorrent query: {exception}").format(exception=exc)})

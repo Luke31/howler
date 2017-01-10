@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-06 16:57+0900\n"
+"POT-Creation-Date: 2017-01-10 11:35+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,66 +19,62 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. Translators: Sender of email
-#: wally_search/templates/wally/results.html:7
+#: wally_search/templates/wally/results.html:4
 #: wally_search/templates/wally/search.html:151
 msgid "Sender"
 msgstr "差出人"
 
 #. Translators: Receiver of email
-#: wally_search/templates/wally/results.html:9
+#: wally_search/templates/wally/results.html:6
 #: wally_search/templates/wally/search.html:152
 msgid "Receiver"
 msgstr "宛先"
 
-#: wally_search/templates/wally/results.html:10
+#: wally_search/templates/wally/results.html:7
 msgid "Attachments"
 msgstr "添付"
 
-#: wally_search/templates/wally/results.html:25
+#: wally_search/templates/wally/results.html:24
 msgid "Subject"
 msgstr "件名"
 
-#: wally_search/templates/wally/results.html:26
+#: wally_search/templates/wally/results.html:25
 #: wally_search/templates/wally/search.html:149
 msgid "Sent (JST)"
 msgstr "送信日時"
 
-#: wally_search/templates/wally/results.html:29
+#: wally_search/templates/wally/results.html:28
 msgid "Attachment?"
 msgstr "添付?"
 
-#: wally_search/templates/wally/results.html:30
+#: wally_search/templates/wally/results.html:29
 #: wally_search/templates/wally/search.html:150
 msgid "Score"
 msgstr "スコア"
 
-#: wally_search/templates/wally/results.html:56
+#: wally_search/templates/wally/results.html:55
 msgid "Hit in Reply-To Email/Name"
 msgstr "返信アドレス/名前のヒット"
 
-#: wally_search/templates/wally/results.html:63
+#: wally_search/templates/wally/results.html:62
 msgid "Hit in sender name"
 msgstr "差出人の名前のヒット"
 
-#: wally_search/templates/wally/results.html:70
+#: wally_search/templates/wally/results.html:69
 msgid "Hit in receiver name"
 msgstr "差出人の名前のヒット"
 
-#: wally_search/templates/wally/results.html:76
+#: wally_search/templates/wally/results.html:75
 msgid "Hit in attachment names"
 msgstr "差出人の名前のヒット"
 
-#: wally_search/templates/wally/results.html:81
+#: wally_search/templates/wally/results.html:80
 msgid "Hits in body"
 msgstr "本文のヒット"
 
 #: wally_search/templates/wally/results.html:89
 msgid "View mail content"
 msgstr "メールの文書を見る"
-
-#: wally_search/templates/wally/results.html:91
-msgid "Email content"
-msgstr "メールの文書"
 
 #: wally_search/templates/wally/results.html:146
 msgid "No emails found"
@@ -105,8 +101,8 @@ msgid "only emails with attachments"
 msgstr "添付付きのメールのみ"
 
 #: wally_search/templates/wally/search.html:40
-msgid "show hits in body"
-msgstr "本文のヒットを見せる"
+msgid "show hits"
+msgstr "ヒットを見せる"
 
 #: wally_search/templates/wally/search.html:53
 msgid "Date filter mode"
@@ -200,19 +196,22 @@ msgstr "スパムも検索が正しくない入力"
 msgid "Incorrent value for only attachment"
 msgstr "添付ファイル付きのメールのみが正しくない入力"
 
-#: wally_search/views.py:74
+#: wally_search/views.py:73
 msgid "Incorrent value for sort field"
 msgstr "並べ替えが正しくない入力"
 
-#: wally_search/views.py:81
+#: wally_search/views.py:79
 msgid "Incorrent value for sort direction"
 msgstr "並べ替え方向が正しくない入力: {exception}"
 
-#: wally_search/views.py:87
+#: wally_search/views.py:84
 msgid "Incorrent value for show hits body"
 msgstr "本文のヒットを見せるが正しくない入力"
 
-#: wally_search/views.py:101
+#: wally_search/views.py:102
 #, python-brace-format
 msgid "Incorrent query: {exception}"
 msgstr "検索クエリが正しくない入力: {exception}"
+
+#~ msgid "Email content"
+#~ msgstr "メールの文書"

@@ -1,6 +1,3 @@
-{# {% extends "wally/base_wally.html" %}#}
-
-{#  {% block main %}#}
 {% load i18n %}
 
 {% comment %}Translators: Sender of email{% endcomment %}
@@ -18,9 +15,12 @@
 {% endif %}
 
 {% if hit_list %}
+    {% include 'common/dt_childtoggler.html' %}
+
     <table class="table table-striped-custom table-email" id="js_result_table">
         <thead>
         <tr>
+            <th class="w_toggle_col"></th>
             <th></th>
             <th class="text-nowrap">{% trans "Subject" %}</th>
             <th class="text-nowrap">{% trans "Sent (JST)" %}</th>
@@ -34,9 +34,15 @@
         <tbody>
         {% for hit in hit_list %}
             <tr data-toggle="popover">
-                <td class="details-control">
+                <td class="details-control w_toggle_col">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span class="glyphicon glyphicon-minus"></span>
+                </td>
+                <td>
+                    <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}" target="_blank">
+                        <span class="glyphicon glyphicon-eye-open"
+                              title="{% trans "View mail content" %}"></span>
+                    </a>
                 </td>
                 <td>
                     <span>
@@ -48,65 +54,63 @@
                     </span>
                     <span style="display: none">{{ hit.meta.id }}</span>
                     <div class="collapse js_popover_content">
-                        <div class="panel-group">
-                            <div class="panel panel-default">
+                        {% if hit.meta.highlight.replyToEmail.0 %}
+                            <p class="fragment">
+                                <b>{% trans "Hit in Reply-To Email/Name" %}:</b>
+                                <span class="search-hit">{{ hit.meta.highlight.replyToEmail.0|safe }} {{ hit.meta.highlight.replyToName.0|safe }}</span>
+                            </p>
+                        {% endif %}
+
+                        {% if hit.meta.highlight.fromName.0 %}
+                            <p class="fragment">
+                                <b>{% trans "Hit in sender name" %}:</b>
+                                <span class="search-hit">{{ hit.meta.highlight.fromName.0|safe }}</span>
+                            </p>
+                        {% endif %}
+
+                        {% if hit.meta.highlight.toName.0 %}
+                            <p class="fragment">
+                                <b>{% trans "Hit in receiver name" %}:</b> <span class="search-hit"> hit.meta.highlight.toName.0|safe }}</span>
+                            </p>
+                        {% endif %}
+
+                        {% if hit.meta.highlight.attachmentNames.0 %}
+                            <p class="fragment">
+                                <b>{% trans "Hit in attachment names" %}:</b> <span
+                                    class="search-hit">{{ hit.meta.highlight.attachmentNames.0|safe }}</span>
+                            </p>
+                        {% endif %}
+
+                        {% if hit.meta.highlight.body %}
+                            <b>{% trans "Hits in body" %}:</b>
+                            {% for fragment in hit.meta.highlight.body %}
+                                {% comment %}<p class="fragment">{% endcomment %}
+                                <span class="search-hit">
+                                                {{ fragment|safe }} {% comment %}|linebreaks{% endcomment %}
+                                            </span>&nbsp;|&nbsp;
+                                {% comment %}</p>{% endcomment %}
+                            {% endfor %}
+                        {% endif %}
+
+                        {% comment %}
+                            <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}" target="_blank">{% trans "View mail content" %}</a>
+
+                            <b>{% trans "Email content" %}:</b>
+                            <div id="collapse{{ forloop.counter0 }}" class="panel-collapse "><!--collapse-->
                                 <div class="panel-body">
-                                    {% if hit.meta.highlight.replyToEmail.0 %}
-                                        <p class="fragment">
-                                            <b>{% trans "Hit in Reply-To Email/Name" %}:</b>
-                                            {{ hit.meta.highlight.replyToEmail.0|safe }} {{ hit.meta.highlight.replyToName.0|safe }}
+                                    <div class="well">
+                                        <p><b>{{ sender }}</b> {{ hit.fromName }} &lt;{{ hit.fromEmail }}&gt;
                                         </p>
-                                    {% endif %}
+                                        <p><b>{{ receiver }}</b> {{ hit.toName }} &lt;{{ hit.toEmail }}&gt;</p>
+                                        {% if hit.attachmentNames %}
+                                            <p><b>{{ attachments }}</b> {{ hit.attachmentNames }}</p>
+                                        {% endif %}
 
-                                    {% if hit.meta.highlight.fromName.0 %}
-                                        <p class="fragment">
-                                            <b>{% trans "Hit in sender name" %}:</b>
-                                            {{ hit.meta.highlight.fromName.0|safe }}
-                                        </p>
-                                    {% endif %}
-
-                                    {% if hit.meta.highlight.toName.0 %}
-                                        <p class="fragment">
-                                            <b>{% trans "Hit in receiver name" %}:</b> {{ hit.meta.highlight.toName.0|safe }}
-                                        </p>
-                                    {% endif %}
-
-                                    {% if hit.meta.highlight.attachmentNames.0 %}
-                                        <p class="fragment">
-                                            <b>{% trans "Hit in attachment names" %}:</b> {{ hit.meta.highlight.attachmentNames.0|safe }}
-                                        </p>
-                                    {% endif %}
-
-                                    {% if hit.meta.highlight.body %}
-                                        <b>{% trans "Hits in body" %}:</b>
-                                        {% for fragment in hit.meta.highlight.body %}
-                                            <p class="fragment">
-                                                {{ fragment|safe|linebreaks }}
-                                            </p>
-                                        {% endfor %}
-                                    {% endif %}
-
-                                    <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}">{% trans "View mail content" %}</a>
-                                    {% comment %}
-                                    <b>{% trans "Email content" %}:</b>
-                                    <div id="collapse{{ forloop.counter0 }}" class="panel-collapse "><!--collapse-->
-                                        <div class="panel-body">
-                                            <div class="well">
-                                                <p><b>{{ sender }}</b> {{ hit.fromName }} &lt;{{ hit.fromEmail }}&gt;
-                                                </p>
-                                                <p><b>{{ receiver }}</b> {{ hit.toName }} &lt;{{ hit.toEmail }}&gt;</p>
-                                                {% if hit.attachmentNames %}
-                                                    <p><b>{{ attachments }}</b> {{ hit.attachmentNames }}</p>
-                                                {% endif %}
-
-                                                {{ hit.body|linebreaks|truncatechars:EMAIL_SHOW_MAX_CHARS }}
-                                            </div>
-                                        </div>
+                                        {{ hit.body|linebreaks|truncatechars:EMAIL_SHOW_MAX_CHARS }}
                                     </div>
-                                    {% endcomment %}
                                 </div>
                             </div>
-                        </div>
+                        {% endcomment %}
                     </div>
                 </td>
                 <td class="text-nowrap">
@@ -146,4 +150,3 @@
         </div>
     </div>
 {% endif %}
-{#{% endblock %}#}

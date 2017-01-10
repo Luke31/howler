@@ -1,0 +1,10 @@
+.dt_absolute_container{
+    position: absolute; left: 50%;
+    z-index:100;
+}
+.dt_absolute_container>.dt_middle{
+    position: relative; left: -50%;
+}
+.dt_absolute_container>.dt_middle>.checkbox{
+    margin-top:5px;
+}

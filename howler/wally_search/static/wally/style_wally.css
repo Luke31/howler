@@ -2,10 +2,6 @@
     background: white url("img/wally100.png") no-repeat right bottom;
 }
 
-/*table.table-emails tbody > tr:last-child > td {*/
-    /*padding-bottom: 30px;*/
-/*}*/
-
 .js_hit {
     cursor: pointer;
 }
@@ -27,3 +23,16 @@ td.details-control {
 }
 tr:not(.shown) td.details-control>span.glyphicon-minus { display:none; } /*Hide close*/
 tr.shown td.details-control>span.glyphicon-plus { display:none; } /*Hide open*/
+
+.search-hit{
+    color:black;
+    background-color: rgba(0, 249, 16, 0.09);
+    -webkit-border-radius: .25em;
+    -moz-border-radius: .25em;
+    border-radius: .25em;
+}
+
+/*Requirement saita 10.01.2017*/
+.w_toggle_col{
+    display:none;
+}
