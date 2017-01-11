@@ -45,7 +45,7 @@ def update(args):
         print('Deleting old indices, deleting irc logs, creating new indices with new default synonyms...')
     else:
         print("Updating existing indices (without deleting existing irc logs and synonyms)...")
-    index.add_mapping_to_index('', constants.SUPPORTED_LANG_CODES_ANALYZERS['ja'], delete_old_indices=args.force,
+    index.add_mapping_to_index('', constants.SUPPORTED_LANG_CODES_ANALYZERS['ja'], delete_old_index=args.force,
                                kuromoji_synonyms=kuromoji_synonyms)
 
     print("Updated mapping for IRC logs index")

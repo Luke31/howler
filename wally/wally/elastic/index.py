@@ -15,21 +15,14 @@ class Index(metaclass=ABCMeta):
     """
 
     def __init__(self, es_conn, es_index_prefix, es_type_name=constants.ES_TYPE_NAME_EMAIL,
-                 user_dictionary_file=constants.JA_USER_DICT, mailextractor=MailExtractor()):
+                 user_dictionary_file=constants.JA_USER_DICT):
         """
         :param es_conn: Elasticsearch connection
-        :param mailextractor: Parser for email-files to json (Default given)
         """
-        # self._es = Elasticsearch()
         self._es = es_conn  # Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
-        self._mailextractor = mailextractor
         self._index_prefix = es_index_prefix
         self._type_name = es_type_name
         self._user_dictionary_file = user_dictionary_file
-
-        self.already_imported_ids = helpers.get_already_imported_ids(es=self._es, es_index_prefix=self._index_prefix,
-                                                                     es_type_name=self._type_name)
-        self._cur_print = 0
 
     def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False, kuromoji_synonyms=None):
         """
@@ -76,6 +69,18 @@ class IndexMail(Index):
     Index multiple files (iterator or dir)
     Index multiple files using bulk (iterator or dir)
     """
+
+    def __init__(self, es_conn, es_index_prefix, es_type_name=constants.ES_TYPE_NAME_EMAIL,
+                 user_dictionary_file=constants.JA_USER_DICT, mailextractor=MailExtractor()):
+        """
+        :param es_conn: Elasticsearch connection
+        :param mailextractor: Parser for email-files to json (Default given)
+        """
+        super().__init__(es_conn, es_index_prefix, es_type_name=es_type_name, user_dictionary_file=user_dictionary_file)
+        self._mailextractor = mailextractor
+        self.already_imported_ids = helpers.get_already_imported_ids(es=self._es, es_index_prefix=self._index_prefix,
+                                                                     es_type_name=self._type_name)
+        self._cur_print = 0
 
     def add_mapping_to_index_multi(self, delete_old_indices=False, kuromoji_synonyms=None):
         if kuromoji_synonyms is None:
@@ -197,7 +202,7 @@ class IndexIrc(Index):
 
     def add_mapping_fields(self, analyzer_lang, mapping):
         # Specific fields irc
-        mapping.field('channel', 'text',
+        mapping.field('msg', 'text', analyzer=analyzer_lang,
                       fields={
                           'keyword': 'keyword',
                       })
@@ -205,12 +210,56 @@ class IndexIrc(Index):
                       fields={
                           'keyword': 'keyword',
                       })
+        mapping.field('@timestamp', 'date')
+        mapping.field('message', 'text', analyzer=analyzer_lang)
+        mapping.field('channel', 'text',
+                      fields={
+                          'keyword': 'keyword',
+                      })
+        mapping.field('tags', 'text',
+                      fields={
+                          'keyword': 'keyword',
+                      })
+
         mapping.field('source', 'text',
                       fields={
-                          'keyword': 'keyword',  # TODO, source-file!
+                          'keyword': 'keyword',
                       })
-        mapping.field('msg', 'text', analyzer=analyzer_lang)
-        mapping.field('@timestamp', 'date')
+        mapping.field('type', 'text',
+                      fields={
+                          'keyword': 'keyword',  # TODO, keyword-file!
+                      })
+        mapping.field('geoip.ip', 'ip')
+        mapping.field('geoip.location', 'geo_point')
+        mapping.field('geoip.longitude', 'float') # half_float
+        mapping.field('geoip.latitude', 'float') # half_float
+
+        mapping.field('beat.hostname', 'text',
+                      fields={
+                          'keyword': 'keyword',
+                      })
+        mapping.field('beat.name', 'text',
+                      fields={
+                          'keyword': 'keyword',
+                      })
+        mapping.field('beat.version', 'text',
+                      fields={
+                          'keyword': 'keyword',
+                      })
+        mapping.field('host', 'text',
+                      fields={
+                          'keyword': 'keyword',
+                      })
+        mapping.field('input_type', 'text',
+                      fields={
+                          'keyword': 'keyword',
+                      })
+        mapping.field('location', 'text',
+                      fields={
+                          'keyword': 'keyword',
+                      })
+        mapping.field('@version', 'keyword')
+        mapping.field('offset', 'long')
 
 
 def get_lang_code(lang_code):
