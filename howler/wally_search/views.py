@@ -7,6 +7,7 @@ from elasticsearch import Elasticsearch
 from django.conf import settings as djsettings
 from datetime import datetime
 import dateutil.parser
+import pytz
 
 
 def searchmail(request):
@@ -61,7 +62,8 @@ def find(request):
         try:
             request_from = request.GET.get('from', '')
             if request_from != '':
-                kwargs['date_gte'] = datetime.strptime(request_from, web_datetime_format)
+                naive_date_input = dateutil.parser.parse(request_from)
+                kwargs['date_gte'] = pytz.timezone(djsettings.TIME_ZONE).localize(naive_date_input, is_dst=None)  # datetime.strptime(request_from, web_datetime_format)
         except ValueError:
             # Translators: The user didn't submit the correct values in the form
             return render(request, result_template, {'error_message': _("Incorrent field format from-date")})
@@ -69,7 +71,8 @@ def find(request):
         try:
             request_to = request.GET.get('to', '')
             if request_to != '':
-                kwargs['date_lte'] = datetime.strptime(request_to, web_datetime_format)
+                naive_date_input = dateutil.parser.parse(request_to)
+                kwargs['date_lte'] = pytz.timezone(djsettings.TIME_ZONE).localize(naive_date_input, is_dst=None)  # datetime.strptime(request_to, web_datetime_format)
         except ValueError:
             # Translators: The user didn't submit the correct values in the form
             return render(request, result_template, {'error_message': _("Incorrent field format to-date")})
