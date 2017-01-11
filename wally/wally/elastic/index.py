@@ -64,6 +64,7 @@ class Index:
                 reopen_index = True
                 m = Mapping.from_es(index_name, self._type_name, using=self._es)  # Get existing index from server
 
+        # Specific fields email
         m.field('fromName', 'text',
                 fields={
                     'raw': 'keyword',
