@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 from elasticsearch import Elasticsearch
 from django.conf import settings as djsettings
 from datetime import datetime
+import dateutil.parser
 
 
 def searchmail(request):
@@ -131,14 +132,13 @@ def find(request):
                 query, **kwargs)
             # Convert sent date to nice string
             for hit in response:
-                hit.date = datetime.strptime(hit.date, djsettings.ES_DATETIME_FORMAT)
+                hit.date = dateutil.parser.parse(hit.date)  # datetime.strptime(hit.date, djsettings.ES_DATETIME_FORMAT_MAIL)  #   #
         elif search_type == 'irc':
             response = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
                 query, **kwargs)
             # Convert sent date to nice string
             for hit in response:
-                hit.sent = hit['@timestamp']
-                # hit.sent = datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT)
+                hit.sent = dateutil.parser.parse(hit['@timestamp'])  # datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT_IRC)
 
     except KeyError as exc:
         # Translators: The user didn't submit a correct query, a value is missing

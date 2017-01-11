@@ -118,9 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'  # JST, was before UTC
 
 USE_I18N = True
 
@@ -178,7 +176,8 @@ ES_SUPPORTED_INDEX_PREFIX = {'email': 'mailing-{0}',
                              'irc': 'irclogs{0}'}
 ES_SUPPORTED_TYPE_NAMES = {'email': 'email',
                            'irc': 'log'}
-ES_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'  # yyyy-MM-dd'T'HH:mm:ssZZ
+ES_DATETIME_FORMAT_MAIL = '%Y-%m-%dT%H:%M:%S%z'  # yyyy-MM-dd'T'HH:mm:ssZZ
+ES_DATETIME_FORMAT_IRC = '%Y-%m-%dT%H:%M:%S%z'  # yyyy-MM-dd'T'HH:mm:ssZZ
 ES_CONFIG_ROOT = '/etc/elasticsearch'
 
 SUPPORTED_LANG_CODES_ANALYZERS = {'ja': 'kuromoji',
