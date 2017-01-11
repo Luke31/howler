@@ -8,16 +8,10 @@ from django.conf import settings as djsettings
 from datetime import datetime
 
 
-def _get_search_context(request):
-    context = {
-        'sort_field': request.session.get('sort_field', '_score'),
-        'sort_dir': request.session.get('sort_dir', '-'),
-        'show_hits': request.session.get('show_hits', False),
-    }
-    return context
-
-
 def searchmail(request):
+    """
+    Get search-form for email search
+    """
     user_language = 'ja'
     # translation.activate(user_language)
     # request.session[translation.LANGUAGE_SESSION_KEY] = user_language
@@ -26,14 +20,34 @@ def searchmail(request):
 
 
 def searchirc(request):
+    """
+    Get search-form for irc search
+    """
     context = _get_search_context(request)
     return render(request, 'wally/searchirc.html', context)
+
+
+def _get_search_context(request):
+    """
+    Generic search-form (Used for IRC and email-search)
+    """
+    context = {
+        'sort_field': request.session.get('sort_field', '_score'),
+        'sort_dir': request.session.get('sort_dir', '-'),
+        'show_hits': request.session.get('show_hits', False),
+    }
+    return context
 
 
 web_datetime_format = '%Y/%m/%d %H:%M'
 
 
 def find(request):
+    """
+    Find email or irc entries by provided search-arguments
+    :param request: Request with all search-arguments (incl query)
+    :return: Result-page (either IRC or email search result)
+    """
     try:
         query = request.GET['query']
         search_type = request.GET['search_type']
@@ -108,13 +122,13 @@ def find(request):
         request.session['sort_dir'] = sort_dir
         request.session['show_hits'] = show_hits
 
+        # Search
         es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX[search_type]
         es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES[search_type]
         es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
         if search_type == 'email':
             response = SearchMail(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
-            query, **kwargs)
-
+                query, **kwargs)
             # Convert sent date to nice string
             for hit in response:
                 hit.date = datetime.strptime(hit.date, djsettings.ES_DATETIME_FORMAT)
@@ -124,7 +138,7 @@ def find(request):
             # Convert sent date to nice string
             for hit in response:
                 hit.sent = hit['@timestamp']
-                #hit.sent = datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT)
+                # hit.sent = datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT)
 
     except KeyError as exc:
         # Translators: The user didn't submit a correct query, a value is missing
