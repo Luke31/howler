@@ -17,4 +17,7 @@ def global_settings(request):
             (http_start, kibana_host, dashboard_main)),
         'http_kuromoji_analyze_test': ''.join(
             (http_start, es_host, '/', settings.ES_SUPPORTED_INDEX_PREFIX['email'].format('ja'), '/_analyze?pretty=true&analyzer=kuromoji_custom')),
+        'http_kuromoji_analyze_test_irc': ''.join(
+            (http_start, es_host, '/', settings.ES_SUPPORTED_INDEX_PREFIX['irc'].format(''),
+             '/_analyze?pretty=true&analyzer=kuromoji_custom')),
     }

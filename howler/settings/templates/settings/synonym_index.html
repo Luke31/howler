@@ -2,10 +2,10 @@
 {% load i18n %}
 
 {% block main %}
-    {% trans "Update synonyms to elasticsearch index" as update_synonyms_button %}
+    {% trans "Update synonyms to elasticsearch indices (mail and IRC)" as update_synonyms_button %}
     <div class="panel panel-default">
         <div class="panel-heading">
-            {% trans "Manage here all synonyms." %}
+            {% trans "Manage here all synonyms for the mail and IRC indices." %}
             {% trans "After that, please push the orange button" %}:「{{ update_synonyms_button }}」
         </div>
         <div class="panel-body">
@@ -58,7 +58,14 @@
                                    target="_blank">
                                     <button type="button" class="btn btn-default btn-sm">
                                         <span class="glyphicon glyphicon-search"
-                                              aria-hidden="true"></span> {% trans "Test Term A" %}
+                                              aria-hidden="true"></span> {% trans "Test A Mail" %}
+                                    </button>
+                                </a>
+                                <a href="{{ http_kuromoji_analyze_test_irc }}&text={{ synonym.synonym_term_a }}"
+                                   target="_blank">
+                                    <button type="button" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-search"
+                                              aria-hidden="true"></span> {% trans "Test A IRC" %}
                                     </button>
                                 </a>
                             </td>
@@ -73,7 +80,14 @@
                                    target="_blank">
                                     <button type="button" class="btn btn-default btn-sm">
                                         <span class="glyphicon glyphicon-search"
-                                              aria-hidden="true"></span> {% trans "Test Term B" %}
+                                              aria-hidden="true"></span> {% trans "Test B Mail" %}
+                                    </button>
+                                </a>
+                                <a href="{{ http_kuromoji_analyze_test_irc }}&text={{ synonym.synonym_term_b }}"
+                                   target="_blank">
+                                    <button type="button" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-search"
+                                              aria-hidden="true"></span> {% trans "Test B IRC" %}
                                     </button>
                                 </a>
                             </td>
