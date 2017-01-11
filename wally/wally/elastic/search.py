@@ -256,7 +256,7 @@ class SearchIrc(Search):
                 * *number_results* (``int``) --
                   Number of total results to return
                 * *sort_field* (``str``) --
-                  By which field should results be sorted e.g. @timestamp, _score, username
+                  By which field should results be sorted e.g. date, _score, username
                 * *sort_dir* (``str``) --
                   In Which direction should results be sorted
                   '+': ascending

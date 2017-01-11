@@ -32,7 +32,7 @@ To read the logs on the client and send them to the logstash server, Filebeat is
             - /home/saita/archive/irc/*.txt
             #- /var/log/*.log
             #- c:\programdata\elasticsearch\logs\*
-          document_type: irclog
+          document_type: log
           encoding: euc-jp
           close_*: 5m
           harvester_limit: 600 # parallel open file-handles
@@ -56,11 +56,37 @@ To read the logs on the client and send them to the logstash server, Filebeat is
 * Starting Filebeat: [Step 5: Starting Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-starting.html)
 
     * deb: `sudo /etc/init.d/filebeat start`
+            
+    * deb service:
+    
+            sudo systemctl start filebeat.service
+            sudo systemctl stop filebeat.service
         
     * win: `PS C:\Program Files\Filebeat> Start-Service filebeat`
+    
     
 * Log: `/var/log/filebeat/filebeat`
     
 * Filebeat remembers the last read position of the log-files in its registry: `/var/lib/filebeat/registry` or `c:\ProgramData\filebeat\registry`
     
-    Delete this file if you would like to reset the position.
+    Delete this file if you would like to reset the position. E.g. `sudo rm /var/lib/filebeat/registry`
+
+# IRC Index creation Script
+To create the index that holds the IRC logs, we don't rely on Logstash. Please use the script `index-cmd-irc.py` to initially create the IRC log index.
+The installation is the same as the [Email Import Script](/howler/doc/importscript/).
+
+**Don't** run the Filebeat service before you haven't created the index using this script.
+
+##How to use the script to get help
+    python3 index-cmd-irc.py -h
+    python3 index-cmd-irc.py update -h
+
+## Basic usage (also visible when calling the help)
+* Update index mapping to es-server `10.0.10.180`:
+
+        python3 index-cmd-irc.py update 10.0.10.180
+        
+* Update force update IRC index mapping to es-server `10.0.10.180` with (deletes existing index):
+
+        python3 index-cmd-irc.py update 10.0.10.180 --force
+        

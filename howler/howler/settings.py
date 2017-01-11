@@ -175,9 +175,9 @@ ES_DEFAULT_PORT = 9200
 ES_TIMEOUT = 30
 ES_MAXSIZE_CON = 25
 ES_SUPPORTED_INDEX_PREFIX = {'email': 'mailing-{0}',
-                             'irc': 'logstash-irc{0}'}
+                             'irc': 'irclogs{0}'}
 ES_SUPPORTED_TYPE_NAMES = {'email': 'email',
-                           'irc': 'irclog'}
+                           'irc': 'log'}
 ES_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'  # yyyy-MM-dd'T'HH:mm:ssZZ
 ES_CONFIG_ROOT = '/etc/elasticsearch'
 

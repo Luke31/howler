@@ -211,7 +211,7 @@ class IndexIrc(Index):
                           'keyword': 'keyword',
                       })
         mapping.field('@timestamp', 'date')
-        mapping.field('message', 'text', analyzer=analyzer_lang)
+
         mapping.field('channel', 'text',
                       fields={
                           'keyword': 'keyword',
@@ -220,7 +220,6 @@ class IndexIrc(Index):
                       fields={
                           'keyword': 'keyword',
                       })
-
         mapping.field('source', 'text',
                       fields={
                           'keyword': 'keyword',
@@ -229,27 +228,29 @@ class IndexIrc(Index):
                       fields={
                           'keyword': 'keyword',  # TODO, keyword-file!
                       })
-        mapping.field('geoip.ip', 'ip')
-        mapping.field('geoip.location', 'geo_point')
-        mapping.field('geoip.longitude', 'float') # half_float
-        mapping.field('geoip.latitude', 'float') # half_float
-
-        mapping.field('beat.hostname', 'text',
-                      fields={
-                          'keyword': 'keyword',
-                      })
-        mapping.field('beat.name', 'text',
-                      fields={
-                          'keyword': 'keyword',
-                      })
-        mapping.field('beat.version', 'text',
-                      fields={
-                          'keyword': 'keyword',
-                      })
-        mapping.field('host', 'text',
-                      fields={
-                          'keyword': 'keyword',
-                      })
+        # mapping.field('message', 'text', analyzer=analyzer_lang)
+        # mapping.field('geoip.ip', 'ip')
+        # mapping.field('geoip.location', 'geo_point')
+        # mapping.field('geoip.longitude', 'float')  # half_float
+        # mapping.field('geoip.latitude', 'float')  # half_float
+        #
+        # mapping.field('beat.hostname', 'text',
+        #               fields={
+        #                   'keyword': 'keyword',
+        #               })
+        # mapping.field('beat.name', 'text',
+        #               fields={
+        #                   'keyword': 'keyword',
+        #               })
+        # mapping.field('beat.version', 'text',
+        #               fields={
+        #                   'keyword': 'keyword',
+        #               })
+        # mapping.field('host', 'text',
+        #               fields={
+        #                   'keyword': 'keyword',
+        #               })
+        mapping.field('@version', 'keyword')
         mapping.field('input_type', 'text',
                       fields={
                           'keyword': 'keyword',
@@ -258,7 +259,7 @@ class IndexIrc(Index):
                       fields={
                           'keyword': 'keyword',
                       })
-        mapping.field('@version', 'keyword')
+
         mapping.field('offset', 'long')
 
 

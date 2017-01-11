@@ -231,23 +231,26 @@ To analyze logs (IRC, syslog etc.) we use Logstash. This completes the [Elastic 
             }
             grok {
                 match => {
-                    "source" => [ "%{UNIXPATH:location}\/%{POSINT:date}" ]
+                    "source" => [ "%{UNIXPATH:location}\/%{POSINT:day}" ]
                 }
             }
             mutate {
-                add_field => { "message_timestamp" => "%{date};%{hour}%{minute}%{second}" }
+                add_field => { "message_timestamp" => "%{day};%{hour}%{minute}%{second}"}
             }
             date {
                 match => [ "message_timestamp", "YYYYMMdd;HHmmss" ]
+                timezone => "+09:00"
                 target => "@timestamp"
             }
             mutate {
-                remove_field => [ "message_timestamp", "date", "hour", "minute", "second" ]
+                remove_field => [ "message_timestamp", "day", "hour", "minute", "second",
+                    "[geoip][ip]", "[geoip][location]", "[geoip][longitude]", "[geoip][latitude]", 
+                    "[beat][hostname]", "[beat][name]", "[beat][version]", "beat", "host"]
             }
         }
         elasticsearch {
             hosts => [ "localhost:9200" ]
-            index => "logstash-irc"
+            index => "irclogs"
             # index => "logstash-%{+YYYY.MM.dd}"
         }
 

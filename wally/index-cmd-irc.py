@@ -56,7 +56,7 @@ description = \
     'Example usage:\n' \
     '-Update index mapping to es-server:\n' \
     'python3 index-cmd-irc.py update 10.0.10.180\n\n' \
-    '-Update force update IRC index mapping to es-server with (deletes existing indices):\n' \
+    '-Update force update IRC index mapping to es-server with (deletes existing index):\n' \
     'python3 index-cmd-irc.py update 10.0.10.180 --force\n\n' \
     'Make sure the required python modules are installed, if not run:\n' \
     'pip3 install -r requirements.txt\n\n'
@@ -73,9 +73,9 @@ update_parser.add_argument('--force', action='store_true',
                            help='Force update IRC index mapping (Deletes existing indices, synonyms must be re-loaded from website)')
 update_parser.add_argument('--maxcon', default=25, help='Elasticsearch max number of connections to node [default: 25]')
 update_parser.add_argument('--timeout', default=30, help='Elasticsearch connection timeout in seconds [default: 30]')
-update_parser.add_argument('--indexprefix', default='logstash-irc{0}',
-                           help='Elasticsearch index-prefix [default: "logstash-irc{0}"], {0} replaced by empty string')
-update_parser.add_argument('--doctype', default='irclog', help='Elasticsearch irc-doctype [default: "irclog"]')
+update_parser.add_argument('--indexprefix', default='irclogs{0}',
+                           help='Elasticsearch index-prefix [default: "irclogs{0}"], {0} replaced by empty string')
+update_parser.add_argument('--doctype', default='log', help='Elasticsearch irc-doctype [default: "log"]')
 update_parser.set_defaults(func=update)
 
 if __name__ == '__main__':
