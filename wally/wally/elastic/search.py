@@ -2,7 +2,6 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search as DslSearch
 from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term, Range
 from ..dementor import constants as dementor_constants
-from . import constants
 
 
 class Search:
@@ -11,7 +10,7 @@ class Search:
     """
 
     def __init__(self, es_conn, es_index_prefix, es_type_name):
-        self._es = es_conn  # Elasticsearch([constants.ES_HOST_IP], timeout=constants.ES_TIMEOUT, maxsize=25)
+        self._es = es_conn
         self._index_prefix = es_index_prefix
         self._type_name = es_type_name
 
@@ -46,11 +45,13 @@ class Search:
                   In Which direction should results be sorted
                   '+': ascending
                   '-': descending)
+            :return: ``DslSearch`` Elasticsearch DSL query
 
             """
 
         number_results = 10
 
+        # Get arguments
         date_gte = None  # '2010-01-31T22:28:14+0300'  # from
         date_lte = 'now'  # ''2012-09-20T17:41:14+0900' # 'now'  # to
         date_sliding_value = ''
@@ -76,6 +77,7 @@ class Search:
             if key == 'sort_dir':
                 sort_dir = value
 
+        # Prepare query
         s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
 
         # Filter date
@@ -140,8 +142,10 @@ class SearchMail(Search):
                   In Which direction should results be sorted
                   '+': ascending
                   '-': descending)
+            :return: ``DslSearch Response``
 
             """
+        # Get base query
         s = super(SearchMail, self)._search(qterm, 'date', **kwargs)
 
         # Query
@@ -155,14 +159,12 @@ class SearchMail(Search):
               Match(subject={'query': qterm, 'boost': 1.5}) | \
               Match(attachmentNames={'query': qterm, 'boost': 2}) | \
               Match(body=qterm)
-
         # penalize if spam
         neg = Match(subject={'query': 'spam'})
-
         boosting = Boosting(positive=pos, negative=neg, negative_boost=0.2)
-
         s = s.query(boosting)
 
+        # Get specific query arguments
         include_spam = False
         only_attachment = False
         for key, value in kwargs.items():
@@ -204,11 +206,6 @@ class SearchMail(Search):
         # Execute
         response = s.execute()
 
-        # Multiple languages: https://www.elastic.co/guide/en/elasticsearch/guide/current/mixed-lang-fields.html
-
-        # Identifying languages:
-        # https://www.elastic.co/guide/en/elasticsearch/guide/current/language-pitfalls.html#identifying-language
-
         return response
 
 
@@ -219,7 +216,7 @@ class SearchIrc(Search):
 
     # noinspection PyIncorrectDocstring
     def search(self, qterm, **kwargs):
-        r"""Searches in the elasticsearch index for the mail
+        r"""Searches in the elasticsearch index for irc messages
             :param qterm:
                 Query-string
             :type qterm: ``str``
@@ -242,13 +239,15 @@ class SearchIrc(Search):
                 * *number_results* (``int``) --
                   Number of total results to return
                 * *sort_field* (``str``) --
-                  By which field should results be sorted e.g. date, _score, fromEmail.raw
+                  By which field should results be sorted e.g. @timestamp, _score, username
                 * *sort_dir* (``str``) --
                   In Which direction should results be sorted
                   '+': ascending
                   '-': descending)
+            :return: ``DslSearch Response``
 
             """
+        # Get base query
         s = super(SearchIrc, self)._search(qterm, '@timestamp', **kwargs)
 
         # Query
@@ -256,9 +255,6 @@ class SearchIrc(Search):
               Match(username={'query': qterm, 'boost': 2}) | \
               Match(channel={'query': qterm, 'boost': 2}) | \
               Match(msg=qterm)
-        # neg = Match(subject={'query': 'spam'})
-        # boosting = Boosting(positive=pos, negative=neg, negative_boost=0.2)
-
         s = s.query(pos)
 
         # Highlight
