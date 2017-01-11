@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-10 11:35+0900\n"
+"POT-Creation-Date: 2017-01-11 17:07+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,20 +55,20 @@ msgid "Kibana Main Dashboard (Last 2 years)"
 msgstr "Kibana Main Dashboard (過去2年間)"
 
 #: settings/templates/settings/base_settings.html:29
-msgid "Settings"
-msgstr "設定"
+msgid "Settings - Mail and IRC search"
+msgstr "設定 - メールとIRCの検索"
 
 #: settings/templates/settings/synonym_form.html:8
 msgid "Save"
 msgstr "保存"
 
 #: settings/templates/settings/synonym_index.html:5
-msgid "Update synonyms to elasticsearch index"
-msgstr "同意語をElasticsearchインデックスに更新する"
+msgid "Update synonyms to elasticsearch indices (Mail and IRC)"
+msgstr "同意語をElasticsearchインデックスに更新する(メールとIRC)"
 
 #: settings/templates/settings/synonym_index.html:8
-msgid "Manage here all synonyms."
-msgstr "ここにすべての同意語を管理する。"
+msgid "Manage here all synonyms for the mail and IRC indices."
+msgstr "ここにメールとIRCのインデックスのためにすべての同意語を管理する。"
 
 #: settings/templates/settings/synonym_index.html:9
 msgid "After that, please push the orange button"
@@ -98,21 +98,30 @@ msgid "Term B Katakana"
 msgstr "単語Bカタカナ"
 
 #: settings/templates/settings/synonym_index.html:61
-msgid "Test Term A"
-msgstr "単語Aを試す"
+msgid "Test A Mail"
+msgstr "Aを試すメール"
 
-#: settings/templates/settings/synonym_index.html:76
-msgid "Test Term B"
-msgstr "単語Bを試す"
+#: settings/templates/settings/synonym_index.html:68
+msgid "Test A IRC"
+msgstr "Aを試すIRC"
 
-#: settings/templates/settings/synonym_index.html:81
+#: settings/templates/settings/synonym_index.html:83
+msgid "Test B Mail"
+msgstr "Bを試すメール"
+
+#: settings/templates/settings/synonym_index.html:90
+msgid "Test B IRC"
+msgstr "Bを試すIRC"
+
+#: settings/templates/settings/synonym_index.html:95
 msgid "Edit"
 msgstr "編集"
 
-#: settings/templates/settings/synonym_index.html:85
+#: settings/templates/settings/synonym_index.html:99
 msgid "Delete?"
 msgstr "削除?"
 
-#: settings/templates/settings/synonym_index.html:99
+#: settings/templates/settings/synonym_index.html:113
 msgid "No synonyms found"
 msgstr "同意語が見つからなかった"
+
