@@ -190,6 +190,29 @@ class IndexMail(Index):
             yield action
 
 
+class IndexIrc(Index):
+    """IRC Index object:
+    Mapping configuration for IRC logs
+    """
+
+    def add_mapping_fields(self, analyzer_lang, mapping):
+        # Specific fields irc
+        mapping.field('channel', 'text',
+                      fields={
+                          'keyword': 'keyword',
+                      })
+        mapping.field('username', 'text',
+                      fields={
+                          'keyword': 'keyword',
+                      })
+        mapping.field('source', 'text',
+                      fields={
+                          'keyword': 'keyword',  # TODO, source-file!
+                      })
+        mapping.field('msg', 'text', analyzer=analyzer_lang)
+        mapping.field('@timestamp', 'date')
+
+
 def get_lang_code(lang_code):
     """
     Check if provided lang_code is supported, if not, return fallback
