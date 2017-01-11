@@ -1,6 +1,6 @@
 import unittest
 import os
-from wally.elastic.index import Index
+from wally.elastic.index import IndexMail
 
 
 class TestIndexMethods(unittest.TestCase):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
 import argparse
-from wally.elastic.index import Index
+from wally.elastic.index import IndexMail
 from elasticsearch import Elasticsearch
 from wally.elastic import constants
 from argparse import RawTextHelpFormatter
@@ -35,7 +35,7 @@ def update(args):
     :return:
     """
     es = Elasticsearch([args.estargethost], timeout=args.timeout, maxsize=args.maxcon)
-    index = Index(es, es_index_prefix=args.indexprefix, es_type_name=args.doctype)
+    index = IndexMail(es, es_index_prefix=args.indexprefix, es_type_name=args.doctype)
     if args.force:
         kuromoji_synonyms = ['京都産業大学, 京産大', '京都大学, 京大']
     else:

@@ -1,20 +1,17 @@
-from elasticsearch import Elasticsearch
+import json
+from abc import abstractmethod, ABCMeta
+
 from elasticsearch import helpers as es_helpers
-from elasticsearch_dsl import Mapping, analysis, Keyword
-from ..dementor.mailextractor import MailExtractor
+from elasticsearch_dsl import Mapping, analysis
+
 from . import constants
 from . import helpers
-
-import os
-import json
+from ..dementor.mailextractor import MailExtractor
 
 
-class Index:
+class Index(metaclass=ABCMeta):
     """Basic Index object:
-    Mapping configuration for emails of each supported language codes
-    Index single file
-    Index multiple files (iterator or dir)
-    Index multiple files using bulk (iterator or dir)
+    Mapping configuration for indices (email/irc)
     """
 
     def __init__(self, es_conn, es_index_prefix, es_type_name=constants.ES_TYPE_NAME_EMAIL,
@@ -34,11 +31,7 @@ class Index:
                                                                      es_type_name=self._type_name)
         self._cur_print = 0
 
-    def add_mapping_to_index_multi(self, delete_old_indices=False, kuromoji_synonyms=[]):
-        for lang_code, lang_analyzer in constants.SUPPORTED_LANG_CODES_ANALYZERS.items():
-            self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices, kuromoji_synonyms)
-
-    def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False, kuromoji_synonyms=[]):
+    def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False, kuromoji_synonyms=None):
         """
         :param lang_code: Language of index
         :param lang_analyzer: Name of analyzer for language
@@ -47,13 +40,13 @@ class Index:
         Keep old synonyms if synonyms list empty and index not deleted
         :return: None
         """
+        if kuromoji_synonyms is None:
+            kuromoji_synonyms = []
         analyzer_lang = helpers.get_analyzer(lang_analyzer, delete_old_index=delete_old_index,
                                              user_dictionary_file=self._user_dictionary_file,
                                              synonyms=kuromoji_synonyms)
-        analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
-                                           filter=['lowercase', 'unique'])
 
-        m = Mapping(self._type_name)
+        mapping = Mapping(self._type_name)
         reopen_index = False
         index_name = self._index_prefix.format(lang_code)
         if self._es.indices.exists(index=index_name):
@@ -62,46 +55,68 @@ class Index:
             else:
                 self._es.indices.close(index=index_name)
                 reopen_index = True
-                m = Mapping.from_es(index_name, self._type_name, using=self._es)  # Get existing index from server
+                mapping = Mapping.from_es(index_name, self._type_name, using=self._es)  # Get existing index from server
 
-        # Specific fields email
-        m.field('fromName', 'text',
-                fields={
-                    'raw': 'keyword',
-                })
-        m.field('fromEmail', 'text', analyzer=analyzer_email,
-                fields={
-                    'raw': 'keyword',
-                })
+        self.add_mapping_fields(analyzer_lang, mapping)
 
-        m.field('toName', 'text',
-                fields={
-                    'raw': 'keyword',
-                })
-        m.field('toEmail', 'text', analyzer=analyzer_email,
-                fields={
-                    'raw': 'keyword',
-                })
-
-        m.field('replyToName', 'text',
-                fields={
-                    'raw': 'keyword',
-                })
-        m.field('replyToEmail', 'text', analyzer=analyzer_email,
-                fields={
-                    'raw': 'keyword',
-                })
-        m.field('subject', 'text', analyzer=analyzer_lang)
-        m.field('date', 'date')
-        m.field('body', 'text', analyzer=analyzer_lang)
-        m.field('spam', 'boolean')
-        m.field('hasAttachmet', 'boolean')
-        m.field('attachmentNames', 'text')
-
-        m.save(index_name, using=self._es)  # Insert or update
+        mapping.save(index_name, using=self._es)  # Insert or update
 
         if reopen_index:
             self._es.indices.open(index=index_name)
+
+    @abstractmethod
+    def add_mapping_fields(self, analyzer_lang, mapping):
+        pass
+
+
+class IndexMail(Index):
+    """Email Index object:
+    Mapping configuration for emails of each supported language codes
+    Index single file
+    Index multiple files (iterator or dir)
+    Index multiple files using bulk (iterator or dir)
+    """
+
+    def add_mapping_to_index_multi(self, delete_old_indices=False, kuromoji_synonyms=None):
+        if kuromoji_synonyms is None:
+            kuromoji_synonyms = []
+        for lang_code, lang_analyzer in constants.SUPPORTED_LANG_CODES_ANALYZERS.items():
+            self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices, kuromoji_synonyms)
+
+    def add_mapping_fields(self, analyzer_lang, mapping):
+        # Specific fields email
+        analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
+                                           filter=['lowercase', 'unique'])
+        mapping.field('fromName', 'text',
+                      fields={
+                          'raw': 'keyword',
+                      })
+        mapping.field('fromEmail', 'text', analyzer=analyzer_email,
+                      fields={
+                          'raw': 'keyword',
+                      })
+        mapping.field('toName', 'text',
+                      fields={
+                          'raw': 'keyword',
+                      })
+        mapping.field('toEmail', 'text', analyzer=analyzer_email,
+                      fields={
+                          'raw': 'keyword',
+                      })
+        mapping.field('replyToName', 'text',
+                      fields={
+                          'raw': 'keyword',
+                      })
+        mapping.field('replyToEmail', 'text', analyzer=analyzer_email,
+                      fields={
+                          'raw': 'keyword',
+                      })
+        mapping.field('subject', 'text', analyzer=analyzer_lang)
+        mapping.field('date', 'date')
+        mapping.field('body', 'text', analyzer=analyzer_lang)
+        mapping.field('spam', 'boolean')
+        mapping.field('hasAttachmet', 'boolean')
+        mapping.field('attachmentNames', 'text')
 
     def index_bulk_from_dir(self, dir_data_in, ignore_already_imported=True):
         """
