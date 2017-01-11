@@ -1,10 +1,10 @@
-from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search as DslSearch
 from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term, Range
 from ..dementor import constants as dementor_constants
+from abc import abstractmethod, ABCMeta
 
 
-class Search:
+class Search(metaclass=ABCMeta):
     """Base Search object - use specific child-class instead
     Search in elasticsearch indices
     """
@@ -15,12 +15,11 @@ class Search:
         self._type_name = es_type_name
 
     # noinspection PyIncorrectDocstring
-    def _search(self, qterm, date_field_name, **kwargs):
+    def search(self, qterm, **kwargs):
         r"""Searches in the elasticsearch index for the mail
             :param qterm:
                 Query-string
             :type qterm: ``str``
-            :param date_field_name: name of datefield in EL
             :param \**kwargs:
                 See below
 
@@ -45,7 +44,7 @@ class Search:
                   In Which direction should results be sorted
                   '+': ascending
                   '-': descending)
-            :return: ``DslSearch`` Elasticsearch DSL query
+            :return: ``DslSearch Response``
 
             """
 
@@ -81,6 +80,7 @@ class Search:
         s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
 
         # Filter date
+        date_field_name = self.get_date_field_name()
         if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
             s = s.query('bool', filter=[
                 Range(**{date_field_name: {'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type)}})])
@@ -90,6 +90,9 @@ class Search:
                 Range(**{date_field_name: {'lte': date_lte, 'gte': date_gte}})])
             # s = s.filter('range', date={'lte': date_lte, 'gte': date_gte})
 
+        # Add query-specific fields
+        s = self.add_query_fields(s, qterm, **kwargs)
+
         s = s.sort(
             ''.join((sort_dir, sort_field)),
             '-_score',
@@ -98,7 +101,18 @@ class Search:
         # Number of results
         s = s[0:number_results]
 
-        return s
+        # Execute
+        response = s.execute()
+
+        return response
+
+    @abstractmethod
+    def add_query_fields(self, s, qterm, **kwargs):
+        pass
+
+    @abstractmethod
+    def get_date_field_name(self):
+        pass
 
 
 class SearchMail(Search):
@@ -107,8 +121,11 @@ class SearchMail(Search):
     """
 
     # noinspection PyIncorrectDocstring
-    def search(self, qterm, **kwargs):
+    def add_query_fields(self, s, qterm, **kwargs):
         r"""Searches in the elasticsearch index for the mail
+            :param s:
+                DSL-Query to modify
+            :type s: ``DslSearch`` Elasticsearch DSL query
             :param qterm:
                 Query-string
             :type qterm: ``str``
@@ -142,12 +159,9 @@ class SearchMail(Search):
                   In Which direction should results be sorted
                   '+': ascending
                   '-': descending)
-            :return: ``DslSearch Response``
+            :return: ``DslSearch`` Elasticsearch DSL query
 
             """
-        # Get base query
-        s = super(SearchMail, self)._search(qterm, 'date', **kwargs)
-
         # Query
         pos = MatchPhrase(body={'query': qterm, 'boost': 2}) | \
               Match(fromEmail={'query': qterm, 'boost': 2}) | \
@@ -203,10 +217,10 @@ class SearchMail(Search):
         s = s.highlight('replyToName')
         s = s.highlight('attachmentNames')
 
-        # Execute
-        response = s.execute()
+        return s
 
-        return response
+    def get_date_field_name(self):
+        return 'date'
 
 
 class SearchIrc(Search):
@@ -215,8 +229,11 @@ class SearchIrc(Search):
     """
 
     # noinspection PyIncorrectDocstring
-    def search(self, qterm, **kwargs):
+    def add_query_fields(self, s, qterm, **kwargs):
         r"""Searches in the elasticsearch index for irc messages
+            :param s:
+                DSL-Query to modify
+            :type s: ``DslSearch`` Elasticsearch DSL query
             :param qterm:
                 Query-string
             :type qterm: ``str``
@@ -244,12 +261,9 @@ class SearchIrc(Search):
                   In Which direction should results be sorted
                   '+': ascending
                   '-': descending)
-            :return: ``DslSearch Response``
+            :return: ``DslSearch`` Elasticsearch DSL query
 
             """
-        # Get base query
-        s = super(SearchIrc, self)._search(qterm, '@timestamp', **kwargs)
-
         # Query
         pos = MatchPhrase(msg={'query': qterm, 'boost': 2}) | \
               Match(username={'query': qterm, 'boost': 2}) | \
@@ -263,7 +277,7 @@ class SearchIrc(Search):
         s = s.highlight('username')
         s = s.highlight('channel')
 
-        # Execute
-        response = s.execute()
+        return s
 
-        return response
+    def get_date_field_name(self):
+        return '@timestamp'
