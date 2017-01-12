@@ -63,7 +63,8 @@ def find(request):
             request_from = request.GET.get('from', '')
             if request_from != '':
                 naive_date_input = dateutil.parser.parse(request_from)
-                kwargs['date_gte'] = pytz.timezone(djsettings.TIME_ZONE).localize(naive_date_input, is_dst=None)  # datetime.strptime(request_from, web_datetime_format)
+                kwargs['date_gte'] = pytz.timezone(djsettings.TIME_ZONE).localize(naive_date_input,
+                                                                                  is_dst=None)  # datetime.strptime(request_from, web_datetime_format)
         except ValueError:
             # Translators: The user didn't submit the correct values in the form
             return render(request, result_template, {'error_message': _("Incorrent field format from-date")})
@@ -72,7 +73,8 @@ def find(request):
             request_to = request.GET.get('to', '')
             if request_to != '':
                 naive_date_input = dateutil.parser.parse(request_to)
-                kwargs['date_lte'] = pytz.timezone(djsettings.TIME_ZONE).localize(naive_date_input, is_dst=None)  # datetime.strptime(request_to, web_datetime_format)
+                kwargs['date_lte'] = pytz.timezone(djsettings.TIME_ZONE).localize(naive_date_input,
+                                                                                  is_dst=None)  # datetime.strptime(request_to, web_datetime_format)
         except ValueError:
             # Translators: The user didn't submit the correct values in the form
             return render(request, result_template, {'error_message': _("Incorrent field format to-date")})
@@ -135,13 +137,16 @@ def find(request):
                 query, **kwargs)
             # Convert sent date to nice string
             for hit in response:
-                hit.date = dateutil.parser.parse(hit.date)  # datetime.strptime(hit.date, djsettings.ES_DATETIME_FORMAT_MAIL)  #   #
+                hit.date = dateutil.parser.parse(
+                    hit.date)  # datetime.strptime(hit.date, djsettings.ES_DATETIME_FORMAT_MAIL)  #   #
         elif search_type == 'irc':
             response = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
                 query, **kwargs)
             # Convert sent date to nice string
             for hit in response:
-                hit.sent = dateutil.parser.parse(hit['@timestamp'])  # datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT_IRC)
+                hit.sent = dateutil.parser.parse(
+                    hit['@timestamp'])  # datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT_IRC)
+                hit.timestamp_raw = hit['@timestamp']
 
     except KeyError as exc:
         # Translators: The user didn't submit a correct query, a value is missing
@@ -155,13 +160,31 @@ def find(request):
         return render(request, result_template, context)
 
 
-def detail(request, email_id):
-    # For further development purposes
-    # try:
-    #     email = Search().wally(query)
-    # except Question.DoesNotExist:
-    #     raise Http404("Question does not exist")
-    # return render(request, 'polls/detail.html', {'question': question})
+def detail_irc(request):
+    result_template = 'wally/resultsircdetail.html'
+    try:
+        origin_timestamp = request.GET.get('origin_timestamp')
+    except ValueError:
+        return render(request, result_template, {'error_message': _("Incorrent value for desired date timestamp")})
+    try:
+        channel = request.GET.get('channel')
+    except ValueError:
+        return render(request, result_template, {'error_message': _("Incorrent value for desired channel")})
 
-    # question = get_object_or_404(Question, pk=question_id)
-    return HttpResponse("You're looking at email %s." % email_id)
+    es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX['irc']
+    es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES['irc']
+    es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
+    response = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search_close(origin_timestamp,
+                                                                                                      channel)
+    # Convert sent date to nice string
+    for hit in response:
+        hit.sent = dateutil.parser.parse(
+            hit['@timestamp'])  # datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT_IRC)
+        hit.is_origin_entry = hit['@timestamp'] == origin_timestamp
+
+    context = {
+        'hit_list': response,
+    }
+
+
+    return render(request, result_template, context)

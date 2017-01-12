@@ -1,5 +1,5 @@
 from elasticsearch_dsl import Search as DslSearch
-from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term, Range
+from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term, Range, Q, SF
 from ..dementor import constants as dementor_constants
 from abc import abstractmethod, ABCMeta
 
@@ -281,3 +281,30 @@ class SearchIrc(Search):
 
     def get_date_field_name(self):
         return '@timestamp'
+
+    def search_close(self, origin_timestamp, channel):
+        # Prepare query
+        s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
+        # Function score
+        #s = s.query("match", channel=channel).query(
+        function_score_query=Q(
+                'function_score',
+                query=Q('match', channel=channel),
+                functions=[
+                    SF('exp', **{'@timestamp':{"origin": origin_timestamp, "scale": "1m", "decay": 0.999}})
+                ]
+            );
+        s = s.query(function_score_query)
+
+        # s = s.sort(
+        #     '-_score',
+        #     '-@timestamp',
+        # )
+
+        # Execute
+        response = s.execute()
+
+        # Sort results
+        response_sorted = sorted(response, key=lambda hit: hit['@timestamp'])
+
+        return response_sorted

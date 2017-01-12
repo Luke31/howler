@@ -1,24 +1,18 @@
 {% extends "wally/base_results.html" %}
 {% load i18n %}
 
+{% block table_element %}
+    <table class="table table-striped-custom js_result_table_detail">
+{% endblock %}
+
 {% block col_header %}
-    <th></th>
     <th class="text-nowrap">{% trans "Channel" %}</th>
     <th class="text-nowrap">{% trans "Sent (JST)" %}</th>
     <th class="text-nowrap">{% trans "Username" %}</th>
     <th class="text-nowrap">{% trans "Message" %}</th>
-    <th class="text-nowrap text-right">{% trans "Score" %}</th>
 {% endblock %}
 
 {% block col_data %}
-    <td class="details-control">
-        <form action="{% url 'wally:detail_irc' %}" method="get">
-            <input type="hidden" name="origin_timestamp" value="{{ hit.timestamp_raw }}"/>
-            <input type="hidden" name="channel" value="{{ hit.channel }}"/>
-        </form>
-        <span class="js_submit-span glyphicon glyphicon-plus" title="{% trans "View IRC log" %}"></span>
-        <span class="glyphicon glyphicon-minus"></span>
-    </td>
     <td class="text-nowrap">
         {% if hit.meta.highlight.channel.0 %}
             {{ hit.meta.highlight.channel.0|safe }}
@@ -27,7 +21,11 @@
         {% endif %}
     </td>
     <td class="text-nowrap">
-        {{ hit.sent|date:"Y/m/d H:i" }}
+        {% if hit.is_origin_entry %}
+            <em>{{ hit.sent|date:"Y/m/d H:i" }}</em>
+        {% else %}
+            {{ hit.sent|date:"Y/m/d H:i" }}
+        {% endif %}
     </td>
     <td class="text-nowrap">
         {% if hit.meta.highlight.username.0 %}
@@ -45,12 +43,6 @@
             {% endif %}
         </span>
         <span style="display: none">{{ hit.meta.id }}</span>
-        <div class="collapse js_popover_content">
-
-        </div>
-    </td>
-    <td class="text-center text-nowrap js_score">
-        {{ hit.meta.score|floatformat:1 }}
     </td>
 {% endblock %}
 

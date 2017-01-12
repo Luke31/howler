@@ -9,12 +9,11 @@
 {% endif %}
 
 {% if hit_list %}
-    {% include 'common/dt_childtoggler.html' %}
-
-    <table class="table table-striped-custom" id="js_result_table">
+    {% block table_element %}
+        <table class="table table-striped-custom" id="js_result_table">
+    {% endblock %}
         <thead>
         <tr>
-            <th class="w_toggle_col"></th>
             {% block col_header %}
 
             {% endblock %}
@@ -24,10 +23,6 @@
         <tbody>
         {% for hit in hit_list %}
             <tr data-toggle="popover">
-                <td class="details-control w_toggle_col">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    <span class="glyphicon glyphicon-minus"></span>
-                </td>
                 {% block col_data %}
 
                 {% endblock %}

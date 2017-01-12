@@ -20,11 +20,12 @@ var wally = (function () {
         // ---Submit---
         $("#js_searchform").submit(function (e) {
             var url = $(this).attr('action');
+            var form = $("#js_searchform")
             $(".loading").show();
             $.ajax({
                 type: "GET",
                 url: url,
-                data: $("#js_searchform").serialize(), // serializes the form's elements.
+                data: form.serialize(), // serializes the form's elements.
                 success: function (data) {
                     $("#js_result").html(data);
                     setResultTable();
@@ -164,6 +165,7 @@ var wally = (function () {
     };
 
     return {
-        init: init
+        init: init,
+        resultTableToggleChildRows: resultTableToggleChildRows
     }
 })();

@@ -10,9 +10,7 @@ urlpatterns = [
     url(r'^irc/$', views.searchirc, name='searchirc'),
     # ex: /wally/
     url(r'^find/$', views.find, name='find'),
-    # ex: /wally/wally/
-    #url(r^/results/$', views.results, name='results'),
-    # ex: /wally/5/
-    url(r'^(?P<email_id>[0-9]+)/$', views.detail, name='detail'),
+    # ex: /wally/detail/
+    url(r'^irc/detail/$', views.detail_irc, name='detail_irc'),
 
 ]
