@@ -221,8 +221,8 @@ To analyze logs (IRC, syslog etc.) we use Logstash. This completes the [Elastic 
         filter {
             grok {
                 match => {
-                    "message" => [ "%{HOUR:hour}%{MINUTE:minute}%{SECOND:second} \<\#%{GREEDYDATA:channel}:%{USERNAME:username}\> %{GREEDYDATA:msg}",
-                                   "%{HOUR:hour}%{MINUTE:minute}%{SECOND:second} \>\#%{GREEDYDATA:channel}\< \*%{GREEDYDATA:username}\* %{GREEDYDATA:msg}"] 
+                    "message" => [ "%{HOUR:hour}%{MINUTE:minute}%{SECOND:second} \<\#%{DATA:channel}:%{USERNAME:username}\> %{GREEDYDATA:msg}",
+                                   "%{HOUR:hour}%{MINUTE:minute}%{SECOND:second} \>\#%{DATA:channel}\< \*%{GREEDYDATA:username}\* %{GREEDYDATA:msg}"] 
                 }
                 # break_on_match => false
             }
