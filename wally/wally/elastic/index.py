@@ -96,27 +96,27 @@ class IndexMail(Index):
                                            filter=['lowercase', 'unique'])
         mapping.field('fromName', 'text',
                       fields={
-                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
+                          'keyword': 'keyword',
                       })
         mapping.field('fromEmail', 'text', analyzer=analyzer_email,
                       fields={
-                          'keyword': Text(analyzer=analyzer_case_insensitive_sort, fielddata=True),
+                          'keyword': 'keyword',
                       })
         mapping.field('toName', 'text',
                       fields={
-                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
+                          'keyword': 'keyword',
                       })
         mapping.field('toEmail', 'text', analyzer=analyzer_email,
                       fields={
-                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
+                          'keyword': 'keyword',
                       })
         mapping.field('replyToName', 'text',
                       fields={
-                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
+                          'keyword': 'keyword',
                       })
         mapping.field('replyToEmail', 'text', analyzer=analyzer_email,
                       fields={
-                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
+                          'keyword': 'keyword',
                       })
         mapping.field('subject', 'text', analyzer=analyzer_lang)
         mapping.field('date', 'date')
@@ -206,17 +206,17 @@ class IndexIrc(Index):
         # Specific fields irc
         mapping.field('msg', 'text', analyzer=analyzer_lang,
                       fields={
-                          'keyword': Text(analyzer=analyzer_case_insensitive_sort)
+                          'keyword': 'keyword'
                       })
         mapping.field('username', 'text',
                       fields={
-                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
+                          'keyword': 'keyword',
                       })
         mapping.field('@timestamp', 'date')
 
         mapping.field('channel', 'text',
                       fields={
-                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
+                          'keyword': 'keyword',
                       })
         mapping.field('tags', 'text',
                       fields={
