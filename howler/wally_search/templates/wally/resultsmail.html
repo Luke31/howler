@@ -1,18 +1,13 @@
 {% extends "wally/base_results.html" %}
 {% load i18n %}
 
-{% comment %}Translators: Sender of email{% endcomment %}
-{% trans "Sender" as sender %}
-{% comment %}Translators: Receiver of email{% endcomment %}
-{% trans "Receiver" as receiver %}
-{% trans "Attachments" as attachments %}
 {% block col_header %}
     <th class="w_toggle_col"></th>
     <th></th>
     <th class="text-nowrap">{% trans "Subject" %}</th>
     <th class="text-nowrap">{% trans "Sent (JST)" %}</th>
-    <th class="text-nowrap">{{ sender }}</th>
-    <th class="text-nowrap">{{ receiver }}</th>
+    <th class="text-nowrap">{% trans "Sender"  %}</th>
+    <th class="text-nowrap">{% trans "Receiver"  %}</th>
     <th class="text-nowrap">{% trans "Attachment?" %}</th>
     <th class="text-nowrap text-right">{% trans "Score" %}</th>
 {% endblock %}

@@ -134,9 +134,28 @@ var wally = (function () {
         }
         else {
             // Open this row
-            var extra_data = tr.find('.js_popover_content').html();
-            row.child(extra_data).show();
-            tr.addClass('shown');
+            loadPopoverContent(tr, row); //Load additional data if required and available (e.g. IRC Log)
+        }
+    };
+
+    /** Parses child-row content and shows child **/
+    var cbFillExtraDataAndShowChild = function (tr, row) {
+        var extra_data = tr.find('.js_popover_content').html();
+        row.child(extra_data).show();
+        tr.addClass('shown');
+    };
+
+    /** Hook to load content for child-row, may be changed from outside **/
+    var loadPopoverContent = function (tr, row) {
+        var form = tr.find('form.js_loadpopoverontent_form');
+
+        //Form available to laod additional content?
+        if (form.length) {
+            var module = form.data('functionModule');
+            window[module]["loadPopoverContent"](form, tr, row, cbFillExtraDataAndShowChild);
+        }else{
+            //Just open childrow
+            cbFillExtraDataAndShowChild(tr, row);
         }
     };
 
@@ -165,7 +184,6 @@ var wally = (function () {
     };
 
     return {
-        init: init,
-        resultTableToggleChildRows: resultTableToggleChildRows
+        init: init
     }
 })();

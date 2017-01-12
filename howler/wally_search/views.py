@@ -17,7 +17,11 @@ def searchmail(request):
     user_language = 'ja'
     # translation.activate(user_language)
     # request.session[translation.LANGUAGE_SESSION_KEY] = user_language
-    context = _get_search_context(request)
+    context = {
+        'sort_field': request.session.get('mail_sort_field', '_score'),
+        'sort_dir': request.session.get('mail_sort_dir', '-'),
+        'show_hits': request.session.get('mail_show_hits', False),
+    }
     return render(request, 'wally/searchmail.html', context)
 
 
@@ -25,21 +29,11 @@ def searchirc(request):
     """
     Get search-form for irc search
     """
-    context = _get_search_context(request)
-    return render(request, 'wally/searchirc.html', context)
-
-
-def _get_search_context(request):
-    """
-    Generic search-form (Used for IRC and email-search)
-    """
     context = {
-        'sort_field': request.session.get('sort_field', '_score'),
-        'sort_dir': request.session.get('sort_dir', '-'),
-        'show_hits': request.session.get('show_hits', False),
+        'sort_field': request.session.get('irc_sort_field', '_score'),
+        'sort_dir': request.session.get('irc_sort_dir', '-'),
     }
-    return context
-
+    return render(request, 'wally/searchirc.html', context)
 
 web_datetime_format = '%Y/%m/%d %H:%M'
 
@@ -123,16 +117,16 @@ def find(request):
         # IRC only values
         # - none yet -
 
-        # Save search-fields in session
-        request.session['sort_field'] = sort_field
-        request.session['sort_dir'] = sort_dir
-        request.session['show_hits'] = show_hits
-
         # Search
         es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX[search_type]
         es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES[search_type]
         es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
         if search_type == 'email':
+            # Save search-fields in session
+            request.session['mail_sort_field'] = sort_field
+            request.session['mail_sort_dir'] = sort_dir
+            request.session['mail_show_hits'] = show_hits
+
             response = SearchMail(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
                 query, **kwargs)
             # Convert sent date to nice string
@@ -140,6 +134,9 @@ def find(request):
                 hit.date = dateutil.parser.parse(
                     hit.date)  # datetime.strptime(hit.date, djsettings.ES_DATETIME_FORMAT_MAIL)  #   #
         elif search_type == 'irc':
+            # Save search-fields in session
+            request.session['irc_sort_field'] = sort_field
+            request.session['irc_sort_dir'] = sort_dir
             response = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
                 query, **kwargs)
             # Convert sent date to nice string

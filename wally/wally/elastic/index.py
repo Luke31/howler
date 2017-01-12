@@ -2,7 +2,7 @@ import json
 from abc import abstractmethod, ABCMeta
 
 from elasticsearch import helpers as es_helpers
-from elasticsearch_dsl import Mapping, analysis
+from elasticsearch_dsl import Mapping, analysis, Text
 
 from . import constants
 from . import helpers
@@ -38,7 +38,9 @@ class Index(metaclass=ABCMeta):
         analyzer_lang = helpers.get_analyzer(lang_analyzer, delete_old_index=delete_old_index,
                                              user_dictionary_file=self._user_dictionary_file,
                                              synonyms=kuromoji_synonyms)
-
+        analyzer_case_insensitive_sort = analysis.analyzer('case_insensitive_sort',
+                                                           tokenizer=analysis.tokenizer('keyword'),
+                                                           filter=['lowercase'])
         mapping = Mapping(self._type_name)
         reopen_index = False
         index_name = self._index_prefix.format(lang_code)
@@ -50,7 +52,7 @@ class Index(metaclass=ABCMeta):
                 reopen_index = True
                 mapping = Mapping.from_es(index_name, self._type_name, using=self._es)  # Get existing index from server
 
-        self.add_mapping_fields(analyzer_lang, mapping)
+        self.add_mapping_fields(mapping, analyzer_lang, analyzer_case_insensitive_sort)
 
         mapping.save(index_name, using=self._es)  # Insert or update
 
@@ -58,7 +60,7 @@ class Index(metaclass=ABCMeta):
             self._es.indices.open(index=index_name)
 
     @abstractmethod
-    def add_mapping_fields(self, analyzer_lang, mapping):
+    def add_mapping_fields(self, mapping, analyzer_lang, analyzer_case_insensitive_sort):
         pass
 
 
@@ -88,33 +90,33 @@ class IndexMail(Index):
         for lang_code, lang_analyzer in constants.SUPPORTED_LANG_CODES_ANALYZERS.items():
             self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices, kuromoji_synonyms)
 
-    def add_mapping_fields(self, analyzer_lang, mapping):
+    def add_mapping_fields(self, mapping, analyzer_lang, analyzer_case_insensitive_sort):
         # Specific fields email
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=['lowercase', 'unique'])
         mapping.field('fromName', 'text',
                       fields={
-                          'raw': 'keyword',
+                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
                       })
         mapping.field('fromEmail', 'text', analyzer=analyzer_email,
                       fields={
-                          'raw': 'keyword',
+                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
                       })
         mapping.field('toName', 'text',
                       fields={
-                          'raw': 'keyword',
+                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
                       })
         mapping.field('toEmail', 'text', analyzer=analyzer_email,
                       fields={
-                          'raw': 'keyword',
+                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
                       })
         mapping.field('replyToName', 'text',
                       fields={
-                          'raw': 'keyword',
+                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
                       })
         mapping.field('replyToEmail', 'text', analyzer=analyzer_email,
                       fields={
-                          'raw': 'keyword',
+                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
                       })
         mapping.field('subject', 'text', analyzer=analyzer_lang)
         mapping.field('date', 'date')
@@ -200,21 +202,21 @@ class IndexIrc(Index):
     Mapping configuration for IRC logs
     """
 
-    def add_mapping_fields(self, analyzer_lang, mapping):
+    def add_mapping_fields(self, mapping, analyzer_lang, analyzer_case_insensitive_sort):
         # Specific fields irc
         mapping.field('msg', 'text', analyzer=analyzer_lang,
                       fields={
-                          'keyword': 'keyword',
+                          'keyword': Text(analyzer=analyzer_case_insensitive_sort)
                       })
         mapping.field('username', 'text',
                       fields={
-                          'keyword': 'keyword',
+                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
                       })
         mapping.field('@timestamp', 'date')
 
         mapping.field('channel', 'text',
                       fields={
-                          'keyword': 'keyword',
+                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
                       })
         mapping.field('tags', 'text',
                       fields={
@@ -226,7 +228,7 @@ class IndexIrc(Index):
                       })
         mapping.field('type', 'text',
                       fields={
-                          'keyword': 'keyword',  # TODO, keyword-file!
+                          'keyword': 'keyword',
                       })
         # mapping.field('message', 'text', analyzer=analyzer_lang)
         # mapping.field('geoip.ip', 'ip')

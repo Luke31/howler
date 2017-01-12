@@ -12,7 +12,7 @@
 
 {% block col_data %}
     <td class="details-control">
-        <form action="{% url 'wally:detail_irc' %}" method="get">
+        <form class="js_loadpopoverontent_form" data-function-module="irc" action="{% url 'wally:detail_irc' %}" method="get">
             <input type="hidden" name="origin_timestamp" value="{{ hit.timestamp_raw }}"/>
             <input type="hidden" name="channel" value="{{ hit.channel }}"/>
         </form>
@@ -35,6 +35,7 @@
         {% else %}
             {{ hit.username }}
         {% endif %}
+        {{ hit.username.keyword }}
     </td>
     <td>
         <span>

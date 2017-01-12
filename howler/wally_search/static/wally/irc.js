@@ -10,51 +10,63 @@ var irc = (function () {
     var viewformat = 'YYYY/MM/DD HH:mm';
 
     var init = function () {
-        initDetailSubmit();
+        //initDetailSubmit();
     };
 
     /** Init Serach form submit action*/
-    var initDetailSubmit = function () {
-        $('#js_result').on('click', '#js_result_table .js_submit-span', function() {
-            var form = $(this).siblings('form');
-            var tr = form.closest('tr');
-            var target = tr.find('.js_popover_content');
+    var loadPopoverContent = function (form, tr, row, cbFillExtraDataAndShowChild) {
+        //var form = tr.find('form.js_loadpopoverontent_form');
+        //var target = tr.find('.js_popover_content');
 
-            // Don't send query if already log cached
-            if(target.html().trim() != "")
-                return;
+        //$('#js_result').on('click', '#js_result_table .js_submit-span', function() {
+        //var form = $(this).siblings('form');
+        //var tr = form.closest('tr');
+        //var target = tr.find('.js_popover_content');
 
-            // Load logs close to entry
-            form.submit(function (e) {
-                var url = $(this).attr('action');
+        // Don't send query if already log cached
+        //if(target.html().trim() != "")
+        //    return;
 
-                $(".loading").show();
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                    data: form.serialize(), // serializes the form's elements.
-                    success: function (data) {
-                        target.html(data);
-                        var table = $('#js_result_table').DataTable();
-                        var row = table.row(tr);
-                        row.child.hide();
-                        wally.resultTableToggleChildRows(table,tr); // Update log-entries to child and open it
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert(errorThrown);
-                    },
-                    complete: function (jqXHR, textStatus) {
-                        $(".loading").hide();
-                    }
-                });
+        var target = tr.find('.js_popover_content');
+        //Content already loaded? => Just open childrow and return
+        if (target.html().trim() != ""){
+            cbFillExtraDataAndShowChild(tr, row);
+            return;
+        }
 
-                e.preventDefault(); // avoid to execute the actual submit of the form.
+        // Load logs close to entry
+        form.submit(function (e) {
+            var url = $(this).attr('action');
+
+            $(".loading").show();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    target.html(data);
+                    cbFillExtraDataAndShowChild(tr, row);
+                    //var table = $('#js_result_table').DataTable();
+                    //var row = table.row(tr);
+                    //row.child.hide();
+                    //wally.resultTableToggleChildRows(table,tr); // Update log-entries to child and open it
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                    $(".loading").hide();
+                }
             });
-            form.submit();
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
         });
+        form.submit();
+        //});
     };
 
     return {
-        init: init
+        init: init,
+        loadPopoverContent: loadPopoverContent
     }
 })();
