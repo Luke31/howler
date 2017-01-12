@@ -12,6 +12,8 @@
     <option value="@timestamp" {% if sort_field == '@timestamp' %}
             selected="selected"{% endif %}>{% trans "Sent (JST)" %}</option>
     <option value="_score" {% if sort_field == '_score' %} selected="selected"{% endif %}>{% trans "Score" %}</option>
+    <option value="channel.keyword" {% if sort_field == 'channel.keyword' %}
+            selected="selected"{% endif %}>{% trans "Channel" %}</option>
     <option value="username.keyword" {% if sort_field == 'username.keyword' %}
             selected="selected"{% endif %}>{% trans "Sender" %}</option>
 {% endblock %}

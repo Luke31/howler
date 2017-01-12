@@ -21,11 +21,7 @@
         {% endif %}
     </td>
     <td class="text-nowrap">
-        {% if hit.is_origin_entry %}
-            <em>{{ hit.sent|date:"Y/m/d H:i" }}</em>
-        {% else %}
             {{ hit.sent|date:"Y/m/d H:i" }}
-        {% endif %}
     </td>
     <td class="text-nowrap">
         {% if hit.meta.highlight.username.0 %}

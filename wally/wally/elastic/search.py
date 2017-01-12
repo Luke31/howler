@@ -301,6 +301,10 @@ class SearchIrc(Search):
         #     '-@timestamp',
         # )
 
+        # Number of results
+        number_results = 30
+        s = s[0:number_results]
+
         # Execute
         response = s.execute()
 

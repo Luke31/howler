@@ -22,7 +22,7 @@
 
         <tbody>
         {% for hit in hit_list %}
-            <tr data-toggle="popover">
+            <tr data-toggle="popover" class="{% if hit.is_origin_entry %}success{% endif %}">
                 {% block col_data %}
 
                 {% endblock %}
