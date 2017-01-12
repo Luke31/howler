@@ -29,8 +29,8 @@
 {% block search_form_sort_fields_options %}
     <option value="date" {% if sort_field == 'date' %} selected="selected"{% endif %}>{% trans "Sent (JST)" %}</option>
     <option value="_score" {% if sort_field == '_score' %} selected="selected"{% endif %}>{% trans "Score" %}</option>
-    <option value="fromEmail.raw" {% if sort_field == 'fromEmail.raw' %}
+    <option value="fromEmail.keyword" {% if sort_field == 'fromEmail.keyword' %}
             selected="selected"{% endif %}>{% trans "Sender" %}</option>
-    <option value="toEmail.raw" {% if sort_field == 'toEmail.raw' %}
+    <option value="toEmail.keyword" {% if sort_field == 'toEmail.keyword' %}
             selected="selected"{% endif %}>{% trans "Receiver" %}</option>
 {% endblock %}

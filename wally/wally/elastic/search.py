@@ -39,7 +39,7 @@ class Search(metaclass=ABCMeta):
                 * *number_results* (``int``) --
                   Number of total results to return
                 * *sort_field* (``str``) --
-                  By which field should results be sorted e.g. date, _score, fromEmail.raw
+                  By which field should results be sorted e.g. date, _score, fromEmail.keyword
                 * *sort_dir* (``str``) --
                   In Which direction should results be sorted
                   '+': ascending
@@ -154,7 +154,7 @@ class SearchMail(Search):
                 * *number_results* (``int``) --
                   Number of total results to return
                 * *sort_field* (``str``) --
-                  By which field should results be sorted e.g. date, _score, fromEmail.raw
+                  By which field should results be sorted e.g. date, _score, fromEmail.keyword
                 * *sort_dir* (``str``) --
                   In Which direction should results be sorted
                   '+': ascending
