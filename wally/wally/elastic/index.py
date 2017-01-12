@@ -100,8 +100,7 @@ class IndexMail(Index):
                       })
         mapping.field('fromEmail', 'text', analyzer=analyzer_email,
                       fields={
-                          'raw': 'keyword',
-                          'keyword': Text(analyzer=analyzer_case_insensitive_sort),
+                          'keyword': Text(analyzer=analyzer_case_insensitive_sort, fielddata=True),
                       })
         mapping.field('toName', 'text',
                       fields={
