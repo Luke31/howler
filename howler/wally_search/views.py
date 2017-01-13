@@ -32,6 +32,7 @@ def searchirc(request):
     context = {
         'sort_field': request.session.get('irc_sort_field', '_score'),
         'sort_dir': request.session.get('irc_sort_dir', '-'),
+        'filter_channel': request.session.get('irc_filter_channel', ''),
     }
     return render(request, 'wally/searchirc.html', context)
 
@@ -115,7 +116,11 @@ def find(request):
             return render(request, result_template, {'error_message': _("Incorrent value for only attachment")})
 
         # IRC only values
-        # - none yet -
+        try:
+            filter_channel = request.GET.get('filter_channel')
+            kwargs['filter_channel'] = filter_channel
+        except ValueError:
+            return render(request, result_template, {'error_message': _("Incorrent value for filter channel field")})
 
         # Search
         es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX[search_type]
@@ -137,6 +142,7 @@ def find(request):
             # Save search-fields in session
             request.session['irc_sort_field'] = sort_field
             request.session['irc_sort_dir'] = sort_dir
+            request.session['irc_filter_channel'] = filter_channel
             response = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
                 query, **kwargs)
             # Convert sent date to nice string

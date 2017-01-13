@@ -271,6 +271,16 @@ class SearchIrc(Search):
               Match(msg=qterm)
         s = s.query(pos)
 
+        # Get specific query arguments
+        filter_channel = ''
+        for key, value in kwargs.items():
+            if key == 'filter_channel':
+                filter_channel = value
+
+        # Filter channel if provided
+        if filter_channel != '':
+            s = s.filter('term', **{'channel.keyword': filter_channel})
+
         # Highlight
         s = s.highlight_options(order='score')
         s = s.highlight('msg', number_of_fragments=0)
@@ -286,14 +296,14 @@ class SearchIrc(Search):
         # Prepare query
         s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
         # Function score
-        #s = s.query("match", channel=channel).query(
-        function_score_query=Q(
-                'function_score',
-                query=Q('match', channel=channel),
-                functions=[
-                    SF('exp', **{'@timestamp':{"origin": origin_timestamp, "scale": "1m", "decay": 0.999}})
-                ]
-            );
+        # s = s.query("match", channel=channel).query(
+        function_score_query = Q(
+            'function_score',
+            query=Q('match', channel=channel),
+            functions=[
+                SF('exp', **{'@timestamp': {"origin": origin_timestamp, "scale": "1m", "decay": 0.999}})
+            ]
+        );
         s = s.query(function_score_query)
 
         # s = s.sort(

@@ -1,5 +1,6 @@
 {% extends "wally/base_search_form.html" %}
 {% load i18n %}
+{% load search_form %}
 
 {% block search_type %}
     <input type="hidden" name="search_type" id="search_type" value="irc"/>
@@ -16,4 +17,33 @@
             selected="selected"{% endif %}>{% trans "Channel" %}</option>
     <option value="username.keyword" {% if sort_field == 'username.keyword' %}
             selected="selected"{% endif %}>{% trans "Sender" %}</option>
+{% endblock %}
+
+{% block search_form_additional %}
+    <div class="col-md-3 col-lg-2">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="number_results">{% trans "Filter channel" %}</label>
+                    <div class="input-group">
+                        <select class="form-control" id="filter_channel"
+                                name="filter_channel">
+                            <option value=""{% if filter_channel == '' %} selected="selected"{% endif %}>{% trans "(All)" %}</option>
+                            <option value="co-conv"{% if filter_channel == 'co-conv' %} selected="selected"{% endif %}>co-conv</option>
+                            <option value="co-conv_神"{% if filter_channel == 'co-conv_神' %} selected="selected"{% endif %}>co-conv_神</option>
+                            <option value="co-conv_事務室"{% if filter_channel == 'co-conv_事務室' %} selected="selected"{% endif %}>co-conv_事務室</option>
+                            <option value="co-conv_休憩室"{% if filter_channel == 'co-conv_休憩室' %} selected="selected"{% endif %}>co-conv_休憩室</option>
+                            {% for i in "xxxxxxxxxx" %}
+                                {% with "co-conv_会議室"|addstr:forloop.counter as channel_cnt %}
+                                    <option value="{{ channel_cnt }}"{% if filter_channel == channel_cnt %} selected="selected"{% endif %}>{{ channel_cnt }}</option>
+                                {% endwith %}
+                            {% endfor %}
+                            <option value="co-conv_神"{% if filter_channel == 'co-conv_神' %} selected="selected"{% endif %}>co-conv_神</option>
+{#                            <option value="co-dare"{% if filter_channel == 'co-dare' %} selected="selected"{% endif %}>co-dare</option>#}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
