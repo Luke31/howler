@@ -18,9 +18,5 @@ def importscript(request):
     return render(request, 'doc/importscript.html')
 
 
-def initsetup(request):
-    return render(request, 'doc/initsetup.html')
-
-
 def irc(request):
     return render(request, 'doc/irc.html')
