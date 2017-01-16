@@ -196,7 +196,7 @@ var wally = (function () {
 
     /**
      * Set row color according to score
-     * @param {string} targetTableSel - string selector for table to set row color
+     * @param {string} targetTableSel - string as jquery-selector for table to set row color
      */
     var setRowColor = function (targetTableSel) {
         var rows = $(targetTableSel).find('tbody tr');
