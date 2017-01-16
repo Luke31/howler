@@ -175,7 +175,7 @@ var wally = (function () {
      * Load content for child-row
      * Searches for form in row to load external content for child-row:
      * If found, call of this form is delegated to the specific functionModule. The functionModule.loadPopoverContent
-     *  also calls the display-child-method which is passed as a function-pointer.
+     *  also calls the display-child-method which is passed as a callback-function.
      * If not found, existing child-content is shown.
      * @param {jQuery} tr - tr-row for which to get child-content
      * @param row - DataTables row for which to get child-content
