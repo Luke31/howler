@@ -55,9 +55,16 @@ If you would like to contribute to either to `howler` or `wally`, follow these s
     * or one-by-one:
 
             pip install --upgrade pip
+            pip install cffi
             pip install cld2-cffi
             pip install elasticsearch
             pip install elasticsearch-dsl
+            pip install pycparser
+            pip install python-dateutil
+            pip install six
+            pip install urllib3
+            pip install pytz
+
 * Edit in your IDE or...
 
 **Use this package:** To use `wally` in another project e.g. `howler`, install it 
