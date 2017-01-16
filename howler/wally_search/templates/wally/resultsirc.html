@@ -15,6 +15,7 @@
         <form class="js_loadpopoverontent_form" data-function-module="irc" action="{% url 'wally:detail_irc' %}" method="get">
             <input type="hidden" name="origin_timestamp" value="{{ hit.timestamp_raw }}"/>
             <input type="hidden" name="channel" value="{{ hit.channel }}"/>
+            <input type="hidden" name="query" value="{{ query }}"/>
         </form>
         <span class="js_submit-span glyphicon glyphicon-plus" title="{% trans "View IRC log" %}"></span>
         <span class="glyphicon glyphicon-minus"></span>

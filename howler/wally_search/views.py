@@ -165,6 +165,8 @@ def find(request):
 
 def detail_irc(request):
     result_template = 'wally/resultsircdetail.html'
+
+    query = request.GET['query']
     try:
         origin_timestamp = request.GET.get('origin_timestamp')
     except ValueError:
@@ -178,7 +180,7 @@ def detail_irc(request):
     es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES['irc']
     es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
     response = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search_close(origin_timestamp,
-                                                                                                      channel)
+                                                                                                      channel, query)
     # Convert sent date to nice string
     for hit in response:
         hit.sent = dateutil.parser.parse(
@@ -188,6 +190,5 @@ def detail_irc(request):
     context = {
         'hit_list': response,
     }
-
 
     return render(request, result_template, context)

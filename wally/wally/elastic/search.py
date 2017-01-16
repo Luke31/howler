@@ -292,19 +292,30 @@ class SearchIrc(Search):
     def get_date_field_name(self):
         return '@timestamp'
 
-    def search_close(self, origin_timestamp, channel):
+    def search_close(self, origin_timestamp, channel, qterm):
         # Prepare query
         s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
+
         # Function score
-        # s = s.query("match", channel=channel).query(
+        main_query_boosting = 1e-15  # only used for highlighting, not for scoring -> give very low signifance
+        pos = MatchPhrase(msg={'query': qterm, 'boost': main_query_boosting}) | \
+              Match(username={'query': qterm, 'boost': main_query_boosting}) | \
+              Match(channel={'query': qterm, 'boost': main_query_boosting}) | \
+              Match(msg={'query': qterm, 'boost': main_query_boosting})
+        main_query = (pos | Q('match_all'))
+
         function_score_query = Q(
             'function_score',
-            query=Q('match', channel=channel),
+            query=main_query,
             functions=[
                 SF('exp', **{'@timestamp': {"origin": origin_timestamp, "scale": "1m", "decay": 0.999}})
             ]
-        );
+        )
+
         s = s.query(function_score_query)
+
+        # filter channel
+        s = s.filter('term', **{'channel.keyword': channel})
 
         # s = s.sort(
         #     '-_score',
@@ -314,6 +325,12 @@ class SearchIrc(Search):
         # Number of results
         number_results = 30
         s = s[0:number_results]
+
+        # Highlight
+        s = s.highlight_options(order='score')
+        s = s.highlight('msg', number_of_fragments=0)
+        s = s.highlight('username')
+        s = s.highlight('channel')
 
         # Execute
         response = s.execute()
