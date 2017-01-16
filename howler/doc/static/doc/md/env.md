@@ -34,7 +34,7 @@ Following production environment has been set up:
 #### Files
 |Files|location|
 |---|---|
-|Emails (manual update using [Email Import Script](/howler/doc/importscript/)|`/home/saita/archive/info/`|
+|Emails (manual update using [Email Import Script](/howler/doc/importscript/))|`/home/saita/archive/info/`|
 |IRC logs (queried by Filebeat service, see: [IRC Logstash](/howler/doc/irc/))|`/home/saita/archive/irc/`|
 
 ### Postgresql (9.4.9) 
@@ -139,6 +139,7 @@ Following production environment has been set up:
 ### Filebeat (5.1)
 * Service-name: `logstash`
 * Service-user: root
+* Further info: [IRC Logstash](/howler/doc/irc/)
 #### Filesystem
 
 |Purpose|File|
