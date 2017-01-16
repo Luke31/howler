@@ -54,6 +54,8 @@ To read the logs on the client and send them to the logstash server, Filebeat is
           #hosts: ["10.0.10.180:5043"]
           
 * Starting Filebeat: [Step 5: Starting Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-starting.html)
+    
+    ##### Don't run the Filebeat service before you haven't created the index using the "IRC Index creation Script" described below.
 
     * deb: `sudo /etc/init.d/filebeat start`
             
