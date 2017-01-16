@@ -28,7 +28,7 @@ var wally = (function () {
         // ---Submit---
         $("#js_searchform").submit(function (e) {
             var url = $(this).attr('action');
-            var form = $("#js_searchform")
+            var form = $("#js_searchform");
             $(".loading").show();
             $.ajax({
                 type: "GET",
