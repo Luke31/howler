@@ -55,7 +55,9 @@ To read the logs on the client and send them to the logstash server, Filebeat is
           
 * Starting Filebeat: [Step 5: Starting Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-starting.html)
     
-    ##### Don't run the Filebeat service before you haven't created the index using the "IRC Index creation Script" described below.
+    ##### Don't run the Filebeat service before you haven't created the index using the "IRC Index creation Script" described below. 
+    
+    ##### Alternatively, you may use the [Update synonyms to elasticsearch indices (Mail and IRC)]-button in the [Settings](/howler/settings/synonym/) page to create/update the index.
 
     * deb: `sudo /etc/init.d/filebeat start`
             
