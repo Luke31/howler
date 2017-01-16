@@ -39,11 +39,6 @@
         <li{% if request.path == url_doc_irc %} class="active"{% endif %}>
             <a href="{{ url_doc_irc }}">{% trans "IRC" %}</a>
         </li>
-
-{#        {% url 'doc:initsetup' as url_doc_initsetup %}#}
-{#        <li{% if request.path == url_doc_initsetup %} class="active"{% endif %}>#}
-{#            <a href="{{ url_doc_initsetup }}">{% trans "Initial setup" %}</a>#}
-{#        </li>#}
     </ul>
 {% endblock %}
 

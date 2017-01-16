@@ -2,13 +2,15 @@
 
 This website is driven by a django-server running on Debian. Under [Production Environment](/howler/doc/env/) you can see the whole production system and under [Production Environment initial setup](/howler/doc/done/) you can see how it has been built. The main web django project `howler` (Git-repo: `lukas-sandbox/howler`) consists of following django applications:
 
-* **wally_search** - Main search application for finding emails 
-* **settings** - Various settings for this search stored in a postgresql database
+* **wally_search** - Main search application for finding emails and IRC logs
+* **settings** - Various settings for this search stored in a postgresql database - mainly managing synonyms
 * **doc** - This documentation
 
 For the search a self-developed python3-package `wally` (Git-repo: `lukas-sandbox/wally`) is used. It is used to search in text using elasticsearch and kuromoji. 
 
 `wally` is also responsible for converting and sending raw emails to elasticsearch. To keep the indexed emails up-to-date an import script is used. For its usage see: [Email Import Script](/howler/doc/importscript/)
+
+The IRC search uses the Elastic Stack. The search code is included in the `wally` package. For the indexation of the logs, logstash with Filebeat is used and the index is created using a python-script in the `wally` package. For further information see: [IRC Logstash](/howler/doc/irc/).   
 
 If you would like to contribute to either to `howler` or `wally`, follow these steps:
 
@@ -42,7 +44,7 @@ If you would like to contribute to either to `howler` or `wally`, follow these s
     
     The project has initially been created with [PyCharm](https://www.jetbrains.com/pycharm/). But feel free to use any IDE.
 
-### 3. Project Wally - Email parser and JSON converter, elasticsearch index client:
+### 3. Project Wally - Email parser, JSON converter, elasticsearch index client and IRC search and index creation:
 * Python3 package `wally`, subfolder of git repository
 
 **Develop for this package**
@@ -62,7 +64,7 @@ If you would like to contribute to either to `howler` or `wally`, follow these s
 * from repo: `pip install -e 'git+ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git#egg=wally&subdirectory=wally'`
 * or using a relative path: `pip install -e ../wally/`
 
-### 4. Project Howler - email-search with elasticsearch
+### 4. Project Howler - email and IRC-search with elasticsearch
 
 * Django webapplication `howler`, subfolder of git repository
 
