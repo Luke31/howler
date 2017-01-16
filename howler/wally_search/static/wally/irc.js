@@ -1,4 +1,7 @@
 /**
+ * IRC-module to load IRC log history close to a given log-entry.
+ * -Provide function to get child-content for results.
+ *  This function is called from wally.js (loadPopoverContent) to load child-content.
  * Created by Lukas on 29.11.2016.
  */
 
@@ -10,23 +13,24 @@ var irc = (function () {
     var viewformat = 'YYYY/MM/DD HH:mm';
 
     var init = function () {
-        //initDetailSubmit();
     };
 
-    /** Init Serach form submit action*/
+    /**
+     * This callback type is called `loadingFinishedCallback` and is displayed as a global symbol.
+     *
+     * @callback loadingFinishedCallback
+     * @param {jQuery} tr - tr-row for which to show child-content
+     * @param row - DataTables row for which to show child-content
+     */
+
+    /**
+     * Load IRC-logs history as child-content for IRC resulttable. Eventually executes callback when loading finished
+     * @param {jQuery} form - form to use for loading child content
+     * @param {jQuery} tr - tr-row for which to get child-content
+     * @param row - DataTables row for which to get child-content
+     * @param {loadingFinishedCallback} cbFillExtraDataAndShowChild - Callback called when loading finished
+     */
     var loadPopoverContent = function (form, tr, row, cbFillExtraDataAndShowChild) {
-        //var form = tr.find('form.js_loadpopoverontent_form');
-        //var target = tr.find('.js_popover_content');
-
-        //$('#js_result').on('click', '#js_result_table .js_submit-span', function() {
-        //var form = $(this).siblings('form');
-        //var tr = form.closest('tr');
-        //var target = tr.find('.js_popover_content');
-
-        // Don't send query if already log cached
-        //if(target.html().trim() != "")
-        //    return;
-
         var target = tr.find('.js_popover_content');
         //Content already loaded? => Just open childrow and return
         if (target.html().trim() != ""){
@@ -46,10 +50,6 @@ var irc = (function () {
                 success: function (data) {
                     target.html(data);
                     cbFillExtraDataAndShowChild(tr, row);
-                    //var table = $('#js_result_table').DataTable();
-                    //var row = table.row(tr);
-                    //row.child.hide();
-                    //wally.resultTableToggleChildRows(table,tr); // Update log-entries to child and open it
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert(errorThrown);
@@ -62,11 +62,10 @@ var irc = (function () {
             e.preventDefault(); // avoid to execute the actual submit of the form.
         });
         form.submit();
-        //});
     };
 
     return {
         init: init,
-        loadPopoverContent: loadPopoverContent
+        loadPopoverContent: loadPopoverContent //Called from wally.js to load child-content
     }
 })();

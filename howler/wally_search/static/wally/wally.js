@@ -1,4 +1,10 @@
 /**
+ * Wally-module
+ * -Prepare search form for Email and IRC-search (init form submit action, date fields)
+ * -Render result-table as Javascript Datatable (https://datatables.net)
+ * -Set result row-color by its score
+ * -Result-table has collapsed detail-infos, these may be provided already in the result or
+ *  lazy-loaded using the hook-function
  * Created by Lukas on 29.11.2016.
  */
 
@@ -15,7 +21,9 @@ var wally = (function () {
         initDateFilterSwitcher();
     };
 
-    /** Init Serach form submit action*/
+    /**
+     * Init Serach form submit action
+     */
     var initSearchFormSubmit = function () {
         // ---Submit---
         $("#js_searchform").submit(function (e) {
@@ -42,7 +50,9 @@ var wally = (function () {
         });
     };
 
-    /** Init fixed date from-to input fields*/
+    /**
+     * Init fixed date from-to input fields
+     */
     var initFixedDateInput = function () {
         // ---Fixed Date input---
         //var viewformat = 'YYYY/MM/DD HH:mm';
@@ -73,7 +83,9 @@ var wally = (function () {
         }
     };
 
-    /**Init switch for selection between sliding-filter or fixed date filter*/
+    /**
+     * Init switch for selection between sliding-filter or fixed date filter
+     */
     var initDateFilterSwitcher = function () {
         // ---Date-filter SWITCHER---
         $('#use_sliding_value').on('change', function (e) {
@@ -93,7 +105,9 @@ var wally = (function () {
         }
     };
 
-    /** Make result-table a DataTable (https://datatables.net/) with collapsed detail informations*/
+    /**
+     * Make result-table a DataTable (https://datatables.net/) with collapsed detail informations
+     */
     var setResultTable = function () {
         var targetTableSel = '#js_result_table';
 
@@ -118,7 +132,7 @@ var wally = (function () {
             resultTableToggleChildRows(table, tr);
         });
 
-        setRowOpacity(targetTableSel);
+        setRowColor(targetTableSel);
 
         // Show child-rows if desired
         if ($('#show_hits')[0].checked) {
@@ -129,7 +143,11 @@ var wally = (function () {
         }
     };
 
-    /** Toogle child rows **/
+    /**
+     * Toogle child row
+     * @param table - DataTables-table for which to toggle child-row
+     * @param {jQuery} tr - tr-row to toggle
+     */
     var resultTableToggleChildRows = function (table, tr) {
         var row = table.row(tr);
         if (row.child.isShown()) {
@@ -143,29 +161,44 @@ var wally = (function () {
         }
     };
 
-    /** Parses child-row content and shows child **/
+    /** Parses child-row content and shows child
+     * @param {jQuery} tr - tr-row for which to show child-content
+     * @param row - DataTables row for which to show child-content
+     */
     var cbFillExtraDataAndShowChild = function (tr, row) {
         var extra_data = tr.find('.js_popover_content').html();
         row.child(extra_data).show();
         tr.addClass('shown');
     };
 
-    /** Hook to load content for child-row, may be changed from outside **/
+    /**
+     * Load content for child-row
+     * Searches for form in row to load external content for child-row:
+     * If found, call of this form is delegated to the specific functionModule. The functionModule.loadPopoverContent
+     *  also calls the display-child-method which is passed as a function-pointer.
+     * If not found, existing child-content is shown.
+     * @param {jQuery} tr - tr-row for which to get child-content
+     * @param row - DataTables row for which to get child-content
+     */
     var loadPopoverContent = function (tr, row) {
         var form = tr.find('form.js_loadpopoverontent_form');
 
-        //Form available to laod additional content?
+        //Form available to load additional content?
         if (form.length) {
             var module = form.data('functionModule');
+            //Load content, provide function-hook to call when load finished (shows child-row)
             window[module]["loadPopoverContent"](form, tr, row, cbFillExtraDataAndShowChild);
-        }else{
-            //Just open childrow
+        } else {
+            //Just open childrow (child-content already in result)
             cbFillExtraDataAndShowChild(tr, row);
         }
     };
 
-    /*Set row opacity according to score*/
-    var setRowOpacity = function (targetTableSel) {
+    /**
+     * Set row color according to score
+     * @param {string} targetTableSel - string selector for table to set row color
+     */
+    var setRowColor = function (targetTableSel) {
         var rows = $(targetTableSel).find('tbody tr');
         var max = 0;
 

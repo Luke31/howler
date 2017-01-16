@@ -1,4 +1,6 @@
 /**
+ * Documentation module
+ * -Load markdown file and render them in the page
  * Created by Lukas on 07.12.2016.
  */
 
@@ -11,12 +13,13 @@ var doc = (function () {
         initMarkdownRenderer();
     };
 
-    /**Prepare markdown javascript renderer*/
+    /**
+     * Prepare markdown javascript renderer and load markdown
+     */
     var initMarkdownRenderer = function () {
         var markdownFile = $('#js_markdown_src').data('content');
         var url = howler.getStaticBaseUrl() + "doc/md/" + markdownFile + ".md";
         showdown.setOption('tables', true);
-        // $(".loading").show();
         $.ajax({
             type: "GET",
             url: url,
@@ -33,7 +36,6 @@ var doc = (function () {
                 alert(errorThrown);
             },
             complete: function (jqXHR, textStatus) {
-                // $(".loading").hide();
             }
         });
     };

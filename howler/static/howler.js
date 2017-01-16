@@ -1,4 +1,5 @@
 /**
+ * Howler main module
  * Created by Lukas on 02.12.2016.
  */
 
@@ -7,6 +8,9 @@ $(function () {
 });
 
 var howler = (function () {
+    /**
+     * General Javascript initialization function for whole howler-application
+     */
     var init = function() {
         // Enable auto-language switcher
         $('#js_lang_select').on('change', function (e) {
@@ -23,14 +27,21 @@ var howler = (function () {
         });
     };
 
+    /**
+     * Get current langauge code
+     * @returns {*|jQuery} language code "en"/"ja"
+     */
     var getLanguageCode = function() {
         return $('#js_page_settings').data('language-code');
     };
 
+    /**
+     * Get base-url of static files
+     * @returns {*|jQuery} Base-url of static files
+     */
     var getStaticBaseUrl = function() {
         return $('#js_page_settings').data('static-baseurl');
     };
-
 
     return {
         getLanguageCode: getLanguageCode,
