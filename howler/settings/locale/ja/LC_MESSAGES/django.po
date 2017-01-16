@@ -56,7 +56,7 @@ msgstr "Kibana Email Dashboard (過去2年間)"
 
 #: settings/templates/settings/base_settings.html:26
 msgid "Kibana IRC Dashboard (Last 5 years)"
-msgstr "Kibana IRC Dashboard (過去2年間)"
+msgstr "Kibana IRC Dashboard (過去5年間)"
 
 #: settings/templates/settings/base_settings.html:32
 msgid "Settings - Mail and IRC search"
