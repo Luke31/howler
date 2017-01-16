@@ -137,7 +137,7 @@ Following production environment has been set up:
 |Shared files (e.g. plugins such as beats)|`/usr/share/logstash/`|
 
 ### Filebeat (5.1)
-* Service-name: `logstash`
+* Service-name: `filebeat`
 * Service-user: root
 * Further info: [IRC Logstash](/howler/doc/irc/)
 #### Filesystem
