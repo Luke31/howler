@@ -4,7 +4,7 @@ For the IRC and syslog analysis, the Elastic stack (former known as ELK Stack) i
 
 Following pipeline is used:
 
-    [Server with logs (IRC/syslog etc.] 
+    [Server with logs (IRC/syslog etc.)] (currently same as production server 10.0.10.180) 
         Filebeat - read logs and sends to logstash-server
           v
     [Production server 10.0.10.180]
