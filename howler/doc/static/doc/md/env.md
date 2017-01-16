@@ -31,6 +31,12 @@ Following production environment has been set up:
 |5601|`kibana`|
 |5043|`logstash` - `10-irc-log-filter.conf`|
 
+#### Files
+|Files|location|
+|---|---|
+|Emails (manual update using [Email Import Script](/howler/doc/importscript/)|`/home/saita/archive/info/`|
+|IRC logs (queried by Filebeat service, see: [IRC Logstash](/howler/doc/irc/))|`/home/saita/archive/irc/`|
+
 ### Postgresql (9.4.9) 
 * Service-name: `postgresql`
 * Port:  5432
@@ -129,3 +135,15 @@ Following production environment has been set up:
 |Log-plain|`/var/log/logstash/logstash-plain.log`|
 |JVM options (Heap size)|`/etc/logstash/jvm.options`|
 |Shared files (e.g. plugins such as beats)|`/usr/share/logstash/`|
+
+### Filebeat (5.1)
+* Service-name: `logstash`
+* Service-user: root
+#### Filesystem
+
+|Purpose|File|
+|---|---|
+|Config|`/etc/filebeat/filebeat.yml`|
+|Log|`/var/log/filebeat/filebeat`|
+|Registry|`/var/lib/filebeat/registry`|
+|Reads IRC logs from|`/home/saita/archive/irc/*.txt`|
