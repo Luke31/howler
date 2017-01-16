@@ -103,4 +103,6 @@ that it may connect to the target deployment server and execute commands on them
 
 ###Licensing
 
-* Elasticsearch: [Apache-2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
+* Elasticsearch, Elasticsearch-DSL, Kuromoji, Logstash, Filebeat, cld2-cffi (Language detection), Fabric3 (Deployment): [Apache-2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
+* Django: [BSD 3-clause license](https://tldrlegal.com/license/bsd-3-clause-license-(revised))
+* pytz (Python timezone library): [MIT license](https://tldrlegal.com/license/mit-license#summary)
