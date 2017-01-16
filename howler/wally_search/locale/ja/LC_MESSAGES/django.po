@@ -108,7 +108,7 @@ msgstr "チャンネル"
 #: wally_search/templates/wally/searchirc.html:14
 #: wally_search/templates/wally/searchmail.html:30
 msgid "Sent (JST)"
-msgstr "送信日時"
+msgstr "送信日時 (JST)"
 
 #: wally_search/templates/wally/resultsirc.html:8
 #: wally_search/templates/wally/resultsircdetail.html:11
