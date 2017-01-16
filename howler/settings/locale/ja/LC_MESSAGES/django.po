@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-13 12:47+0900\n"
+"POT-Creation-Date: 2017-01-16 10:03+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,10 +51,14 @@ msgid "Elasticsearch Kibana"
 msgstr "Elasticsearch Kibana"
 
 #: settings/templates/settings/base_settings.html:23
-msgid "Kibana Main Dashboard (Last 2 years)"
-msgstr "Kibana Main Dashboard (過去2年間)"
+msgid "Kibana Email Dashboard (Last 2 years)"
+msgstr "Kibana Email Dashboard (過去2年間)"
 
-#: settings/templates/settings/base_settings.html:29
+#: settings/templates/settings/base_settings.html:26
+msgid "Kibana IRC Dashboard (Last 5 years)"
+msgstr "Kibana IRC Dashboard (過去2年間)"
+
+#: settings/templates/settings/base_settings.html:32
 msgid "Settings - Mail and IRC search"
 msgstr "設定 - メールとIRCの検索"
 
