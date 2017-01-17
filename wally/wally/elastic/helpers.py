@@ -8,6 +8,8 @@ from elasticsearch_dsl import Search
 
 def get_already_imported_ids(es, es_index_prefix, es_type_name):
     """
+    Returns existing EL-ids of provided index and type.
+
     :param es: es-connection instance
     :param es_index_prefix: ``str`` Index prefix
     :param es_type_name: ``str`` ES document type name
@@ -24,7 +26,7 @@ def get_already_imported_ids(es, es_index_prefix, es_type_name):
 
 def get_files_from_dir(dir_data_in, already_imported_ids):
     """
-    Generator: Returns all files in a dir (without dirs)
+    Generator: Return all files in a dir (without dirs)
 
     :param dir_data_in: ``str`` Path of input dir
     :param already_imported_ids: ``set`` Ignore file if already in imported set
@@ -47,19 +49,25 @@ def get_files_from_dir(dir_data_in, already_imported_ids):
         yield os.path.join(dir_data_in, filename).replace('\\', '/')
 
 
-def get_analyzer(lang_analyzer, delete_old_index, user_dictionary_file='', synonyms=[]):
+def get_analyzer(lang_analyzer, delete_old_index, user_dictionary_file='', synonyms=None):
     """
-    Get analyzer for specific language
+    Return analyzer for specific language.
+
+    If Japanese (``lang_analyzer == ja``) and the index doesn't need to be recreated (no delete required and
+    no new synonyms) then return only the name of the analyzer.
+
     :param lang_analyzer: ``str`` which analyzer to get e.g. 'standard','kuromoji','english'
     :param delete_old_index: (only Japanese) ``bool`` if list is empty and index is not deleted, keep previous analyzer
-    with synonyms
+        with synonyms
     :param user_dictionary_file: (only Japanese) ``str`` user-dictionary file with custom terms in the form of
-    東京スカイツリー,東京 スカイツリー,トウキョウ スカイツリー,カスタム名詞
-    See: https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-kuromoji-tokenizer.html
+        東京スカイツリー,東京 スカイツリー,トウキョウ スカイツリー,カスタム名詞
+        See: https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis-kuromoji-tokenizer.html
     :param synonyms: (only Japanese) ``list`` of synonyms to be used in the form of ['京産大, 京都産業大学','a, b']
-    if list is empty and index is not deleted, keep previous analyzer with synonyms
+        if list is empty and index is not deleted, keep previous analyzer with synonyms
     :return: ``analyzer`` or ``str`` of analyzer to be used
     """
+    if synonyms is None:
+        synonyms = []
     if lang_analyzer == constants.SUPPORTED_LANG_CODES_ANALYZERS['ja']:
         # Use existing analyzer (with synonyms) if new synonyms list is empty. (Only if index is not re-built)
         if (not delete_old_index) & (len(synonyms) == 0):

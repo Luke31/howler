@@ -7,12 +7,12 @@ def detect_select_language(text):
     Detects language of input text. If determined langauge is preferred language (ja), return this.
     If not return language with highest score.
 
-    :param text: Text to analyze langauge of
+    :param text: ``str`` Text to analyze langauge of
     :return: (tuple of Detection) – A namedtuple of (language_name, language_code, percent, score).
-    language_name is the internal CLD2 name for the language.
-    language_code is a ISO 639-1 lanuguage code.
-    percent is what percentage of the original text was detected as.
-    score is the confidence score for that language.
+        language_name is the internal CLD2 name for the language.
+        language_code is a ISO 639-1 lanuguage code.
+        percent is what percentage of the original text was detected as.
+        score is the confidence score for that language.
     """
     lang_is_reliable, text_bytes_found, lang_details_list = cld2.detect(text)
 

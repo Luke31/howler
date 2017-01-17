@@ -26,11 +26,13 @@ class Index(metaclass=ABCMeta):
 
     def add_mapping_to_index(self, lang_code, lang_analyzer, delete_old_index=False, kuromoji_synonyms=None):
         """
-        :param lang_code: Language of index
-        :param lang_analyzer: Name of analyzer for language
-        :param delete_old_index: Delete index if existing? Default: False = Update existing index (Close, Update, Open)
-        :param kuromoji_synonyms: Synonyms for kuromoji Japanese analyzer.
-        Keep old synonyms if synonyms list empty and index not deleted
+        Add or update mail/irc-mapping to EL-index, create/update required analyzers and add fields.
+
+        :param lang_code: ``str`` Language of index e.g. 'ja'
+        :param lang_analyzer: ``str`` Name of analyzer for language e.g. 'kuromoji', 'standard' etc.
+        :param delete_old_index: ``bool`` Delete index if existing? Default: False = Update existing index (Close, Update, Open)
+        :param kuromoji_synonyms: ``dict`` Synonyms for kuromoji Japanese analyzer.
+            Keep old synonyms if synonyms list empty and index not deleted
         :return: None
         """
         if kuromoji_synonyms is None:
@@ -67,9 +69,10 @@ class Index(metaclass=ABCMeta):
 class IndexMail(Index):
     """Email Index object:
     Mapping configuration for emails of each supported language codes
-    Index single file
-    Index multiple files (iterator or dir)
-    Index multiple files using bulk (iterator or dir)
+
+    - Index single file
+    - Index multiple files (iterator or dir)
+    - Index multiple files using bulk (iterator or dir)
     """
 
     def __init__(self, es_conn, es_index_prefix, es_type_name=constants.ES_TYPE_NAME_EMAIL,
@@ -91,6 +94,14 @@ class IndexMail(Index):
             self.add_mapping_to_index(lang_code, lang_analyzer, delete_old_indices, kuromoji_synonyms)
 
     def add_mapping_fields(self, mapping, analyzer_lang, analyzer_case_insensitive_sort):
+        """
+        Add custom fields for Mails to the passed Index-mapping.
+
+        :param mapping: ``Mapping`` Elastic-search DSL mapping to add fields to
+        :param analyzer_lang: ``analyzer`` or ``str`` of analyzer to be used for language-specific fields
+        :param analyzer_case_insensitive_sort: ``analyzer`` of analyzer to be used
+        :return: None (Mapping is modified!)
+        """
         # Specific fields email
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=['lowercase', 'unique'])
@@ -203,6 +214,14 @@ class IndexIrc(Index):
     """
 
     def add_mapping_fields(self, mapping, analyzer_lang, analyzer_case_insensitive_sort):
+        """
+        Add custom fields for IRC-logs to the passed Index-mapping.
+
+        :param mapping: ``Mapping`` Elastic-search DSL mapping to add fields to
+        :param analyzer_lang: ``analyzer`` or ``str`` of analyzer to be used for language-specific fields
+        :param analyzer_case_insensitive_sort: ``analyzer`` of analyzer to be used
+        :return: None (Mapping is modified!)
+        """
         # Specific fields irc
         mapping.field('msg', 'text', analyzer=analyzer_lang,
                       fields={
@@ -230,28 +249,6 @@ class IndexIrc(Index):
                       fields={
                           'keyword': 'keyword',
                       })
-        # mapping.field('message', 'text', analyzer=analyzer_lang)
-        # mapping.field('geoip.ip', 'ip')
-        # mapping.field('geoip.location', 'geo_point')
-        # mapping.field('geoip.longitude', 'float')  # half_float
-        # mapping.field('geoip.latitude', 'float')  # half_float
-        #
-        # mapping.field('beat.hostname', 'text',
-        #               fields={
-        #                   'keyword': 'keyword',
-        #               })
-        # mapping.field('beat.name', 'text',
-        #               fields={
-        #                   'keyword': 'keyword',
-        #               })
-        # mapping.field('beat.version', 'text',
-        #               fields={
-        #                   'keyword': 'keyword',
-        #               })
-        # mapping.field('host', 'text',
-        #               fields={
-        #                   'keyword': 'keyword',
-        #               })
         mapping.field('@version', 'keyword')
         mapping.field('input_type', 'text',
                       fields={
@@ -268,6 +265,7 @@ class IndexIrc(Index):
 def get_lang_code(lang_code):
     """
     Check if provided lang_code is supported, if not, return fallback
+
     :param lang_code: ``str`` langauge code to check
     :return: ``str`` Supported language code
     """

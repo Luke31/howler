@@ -13,10 +13,10 @@ import pytz
 class MailExtractor:
     """Mailextractor
 
-    Convert email-file to json-file or multiple
-    Classifies its content language and adds it to the json
-    Development based on mail formats: RFC 822, RFC 2822, RFC 5322
-    Attachment is ignored in this version
+    - Convert email-file to json-file or multiple
+    - Classifies its content language and adds it to the json
+    - Development based on mail formats: RFC 822, RFC 2822, RFC 5322
+    - Attachment is ignored in this version
     """
 
     def __init__(self):
@@ -28,7 +28,7 @@ class MailExtractor:
         Generator: Convert multiple mail-files into jsons applying the generator pattern
         State-variables cnt_total and erros on class MailExtractor will be updated
 
-        :param files: Any iterable, generator preferred for optimal memory usage
+        :param files: ``list(str)`` Any iterable, generator preferred for optimal memory usage
         :return: Tuples (Generator-Iterable) of (Id, E-mail JSON-String)
         """
 
@@ -41,9 +41,10 @@ class MailExtractor:
 
     def extract_json(self, file):
         """
-        Convert mail-file into json
-        :param file: Path to a file which can be read (File will be opened here)
-        :return: JSON-String
+        Convert mail-file into json and return json-string.
+
+        :param file: ``str`` Path to a file which can be read (File will be opened here)
+        :return: ``str`` JSON-String
         """
         self.cnt_total += 1
 

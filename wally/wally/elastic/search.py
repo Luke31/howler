@@ -17,6 +17,7 @@ class Search(metaclass=ABCMeta):
     # noinspection PyIncorrectDocstring
     def search(self, qterm, **kwargs):
         r"""Searches in the elasticsearch index for the mail
+
             :param qterm:
                 Query-string
             :type qterm: ``str``
@@ -123,6 +124,7 @@ class SearchMail(Search):
     # noinspection PyIncorrectDocstring
     def add_query_fields(self, s, qterm, **kwargs):
         r"""Searches in the elasticsearch index for the mail
+
             :param s:
                 DSL-Query to modify
             :type s: ``DslSearch`` Elasticsearch DSL query
@@ -231,11 +233,10 @@ class SearchIrc(Search):
     # noinspection PyIncorrectDocstring
     def add_query_fields(self, s, qterm, **kwargs):
         r"""Searches in the elasticsearch index for irc messages
-            :param s:
-                DSL-Query to modify
-            :type s: ``DslSearch`` Elasticsearch DSL query
-            :param qterm:
-                Query-string
+
+            :param s: DSL-Query to modify
+            :type s: ``DslSearch``
+            :param qterm: Query-string to find
             :type qterm: ``str``
             :param \**kwargs:
                 See below
@@ -293,6 +294,15 @@ class SearchIrc(Search):
         return '@timestamp'
 
     def search_close(self, origin_timestamp, channel, qterm):
+        """
+        Find log entries close to origin timestamp, filter by channel, highlight qterm and return them sorted by date.
+
+        :param origin_timestamp: origin timestamp to find logs around
+        :param channel: Channel to be filtered
+        :param qterm: Term to be highlighted
+        :return: List of sorted log entries (Elastic-search response)
+        :rtype: ``list``
+        """
         # Prepare query
         s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
 

@@ -5,9 +5,10 @@ from . import constants
 
 def extract_body_plain_text(msg):
     """
-    Get body of message (first choice plain, second html)
-    :param msg: email.message.Message
-    :return: body of message (plain/html)
+    Return body of message (first choice plain, second html)
+
+    :param msg: ``email.message.Message`` Message of which to extract body
+    :return: ``str`` body of message (plain/html)
     """
     try:
         bodyplain = msg.get_body(preferencelist='plain')
@@ -34,11 +35,12 @@ def extract_body_plain_text(msg):
 
 def has_attachment(msg):
     """
-    Check if the message has one or more attachments
-    :param msg: email.message.Message
+    Check if the message has one or more attachments and return result as tuple.
+
+    :param msg: ``email.message.Message``
     :return: Tuple (has_attachment, attachment_names)
-    True if msg has one or more attachment
-    attachment_names: Names of attachments as string
+        True if msg has one or more attachment
+        attachment_names: Names of attachments as string
     """
     filenames = []
     try:
@@ -58,6 +60,7 @@ invalid_encoded_words_bytes = br"(=\?.*\?=)(?=\S)"
 def fix_wrong_encoded_words_header(header_value):
     """
     Ensure Mime Encoded Words end with a white-space, if not, insert one.
+
     MIME Encoded Words: 'encoded-word' that appears in a 'comment' MUST be separated from
     any adjacent 'encoded-word' or 'ctext' by 'linear-white-space' (https://tools.ietf.org/html/rfc2047#section-5)
 
