@@ -143,13 +143,14 @@ def find(request):
             request.session['irc_sort_field'] = sort_field
             request.session['irc_sort_dir'] = sort_dir
             request.session['irc_filter_channel'] = filter_channel
-            response = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
-                query, **kwargs)
+            s = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name)
+            # response_old = s.search(query, **kwargs)
+            response = s.search_day(query)
             # Convert sent date to nice string
-            for hit in response:
-                hit.sent = dateutil.parser.parse(
-                    hit['@timestamp'])  # datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT_IRC)
-                hit.timestamp_raw = hit['@timestamp']
+            # for hit in response:
+            #    hit.sent = dateutil.parser.parse(
+            #        hit['@timestamp'])  # datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT_IRC)
+            #    hit.timestamp_raw = hit['@timestamp']
 
     except KeyError as exc:
         # Translators: The user didn't submit a correct query, a value is missing

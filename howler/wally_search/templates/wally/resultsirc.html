@@ -28,7 +28,8 @@
         {% endif %}
     </td>
     <td class="text-nowrap">
-        {{ hit.sent|date:"Y/m/d H:i" }}
+{#        {{ hit.sent|date:"Y/m/d H:i" }}#}
+        {{ hit.sent|date:"Y/m/d" }}
     </td>
     <td class="text-nowrap">
         {% if hit.meta.highlight.username.0 %}
