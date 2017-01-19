@@ -3,6 +3,7 @@ from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term, Range, Q
 from ..dementor import constants as dementor_constants
 from abc import abstractmethod, ABCMeta
 import dateutil.parser
+import copy
 
 
 class Search(metaclass=ABCMeta):
@@ -373,16 +374,18 @@ class SearchIrc(Search):
         s.aggs.bucket('logs_per_day', 'date_histogram', field='@timestamp', interval='day', format='yyyy-MM-dd',
                       min_doc_count=1, order={'sum_score': 'desc'}) \
             .metric('sum_score', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
-            .metric('top_msg_hits', 'top_hits', size=3, sort=[{'_score': {'order': 'desc'}}],
+            .metric('top_msg_hits', 'top_hits', size=3,
+                    highlight={'fields': {'msg': {}, 'username': {}, 'channel': {}}},
+                    sort=[{'_score': {'order': 'desc'}}],
                     **{'_source': {
                         'includes': ['channel', 'username', '@timestamp', 'msg']}})  # top 3 entries per day
         # Get entry with max score on that day ->
 
         # Highlight
-        s = s.highlight_options(order='score')
-        s = s.highlight('msg', number_of_fragments=0)
-        s = s.highlight('username')
-        s = s.highlight('channel')
+        # s = s.highlight_options(order='score')
+        # s = s.highlight('msg', number_of_fragments=0)
+        # s = s.highlight('username')
+        # s = s.highlight('channel')
 
         # number_results = 10
         # # Number of results
@@ -394,7 +397,7 @@ class SearchIrc(Search):
         for day_bucket in response.aggregations.logs_per_day.buckets:
             day_bucket.sent = dateutil.parser.parse(day_bucket.key_as_string)
             day_bucket['_score'] = day_bucket.sum_score.value
-            day_bucket.meta = {'score': day_bucket.sum_score.value}
+            day_bucket.meta = {'score': day_bucket.sum_score.value, 'highlight': {}}
 
             top_hit = day_bucket.top_msg_hits.hits.hits[0]
             top_hit_src = top_hit['_source']
@@ -403,6 +406,10 @@ class SearchIrc(Search):
             day_bucket.username = top_hit_src.username
             day_bucket.channel = top_hit_src.channel
             day_bucket.msg = top_hit_src.msg
+            day_bucket.meta.highlight = copy.deepcopy(top_hit.highlight)
+
+            # {'msg': top_hit.highlight.msg, 'channel': top_hit.highlight.channel,
+            #                         'username': top_hit.highlight.username}
             # day_bucket.meta.score = day_bucket.sum_score
 
         buckets = response.aggregations.logs_per_day.buckets
