@@ -152,7 +152,7 @@ BOWER_INSTALLED_APPS = (
     'bootstrap-confirmation2',
     'eonasdan-bootstrap-datetimepicker#latest',
     'datatables.net',
-    'datatables.net-bs',
+    'datatables.net-bs#^1.10.13',
     'showdown#^1.5.1',
 )
 
