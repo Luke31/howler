@@ -295,13 +295,14 @@ class SearchIrc(Search):
     def get_date_field_name(self):
         return '@timestamp'
 
-    def search_close(self, origin_timestamp, channel, qterm):
+    def search_close(self, origin_timestamp, channel, qterm, number_results):
         """
         Find log entries close to origin timestamp, filter by channel, highlight qterm and return them sorted by date.
 
         :param origin_timestamp: origin timestamp to find logs around
         :param channel: Channel to be filtered
         :param qterm: Term to be highlighted
+        :param number_results: how many results
         :return: List of sorted log entries (Elastic-search response)
         :rtype: ``list``
         """
@@ -335,7 +336,6 @@ class SearchIrc(Search):
         # )
 
         # Number of results
-        number_results = 30
         s = s[0:number_results]
 
         # Highlight
@@ -387,9 +387,9 @@ class SearchIrc(Search):
         # s = s.highlight('username')
         # s = s.highlight('channel')
 
-        # number_results = 10
+        number_results = 50
         # # Number of results
-        # s = s[0:number_results]
+        s = s[0:number_results]
 
         # Execute
         response = s.execute()

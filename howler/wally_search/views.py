@@ -37,6 +37,7 @@ def searchirc(request):
     }
     return render(request, 'wally/searchirc.html', context)
 
+
 web_datetime_format = '%Y/%m/%d %H:%M'
 
 
@@ -187,12 +188,16 @@ def detail_irc(request):
         channel = request.GET.get('channel')
     except ValueError:
         return render(request, result_template, {'error_message': _("Incorrent value for desired channel")})
+    try:
+        number_results = int(request.GET.get('number_results', 30))
+    except ValueError:
+        return render(request, result_template, {'error_message': _("Incorrent value for number results")})
 
     es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX['irc']
     es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES['irc']
     es = Elasticsearch(djsettings.ES_HOSTS, timeout=djsettings.ES_TIMEOUT, maxsize=djsettings.ES_MAXSIZE_CON)
-    response = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search_close(origin_timestamp,
-                                                                                                      channel, query)
+    search = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name)
+    response = search.search_close(origin_timestamp, channel, query, number_results)
     # Convert sent date to nice string
     for hit in response:
         hit.sent = dateutil.parser.parse(
