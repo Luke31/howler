@@ -4,10 +4,17 @@
 {% block col_header %}
     <th></th>
     <th class="text-nowrap">{% trans "Channel" %}</th>
+    {% if day_mode %}
+        <th class="text-nowrap js_datatables_hidden">dayraw</th>
+    {% endif %}
     <th class="text-nowrap">{% trans "Sent (JST)" %}</th>
     <th class="text-nowrap">{% trans "Username" %}</th>
     <th class="text-nowrap">{% trans "Message" %}</th>
     <th class="text-nowrap text-right">{% trans "Score" %}</th>
+{% endblock %}
+
+{% block table_element %}
+    <table class="table table-striped-custom table-condensed" id="js_result_table">
 {% endblock %}
 
 {% block col_data %}
@@ -28,12 +35,13 @@
             {{ hit.channel }}
         {% endif %}
     </td>
-    <td class="text-nowrap">
-        {% if day_mode %}
+    {% if day_mode %}
+        <td class="text-nowrap">
             {{ hit.sent|date:"Y/m/d" }}
-        {% else %}
-            {{ hit.sent|date:"Y/m/d H:i" }}
-        {% endif %}
+        </td>
+    {% endif %}
+    <td class="text-nowrap">
+        {{ hit.sent|date:"Y/m/d H:i" }}
     </td>
     <td class="text-nowrap">
         {% if hit.meta.highlight.username.0 %}

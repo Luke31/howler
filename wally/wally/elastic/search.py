@@ -269,7 +269,7 @@ class SearchIrc(Search):
             """
         # Query
         pos = MatchPhrase(msg={'query': qterm, 'boost': 2}) | \
-              Match(username={'query': qterm, 'boost': 2}) | \
+              Match(**{'username.keyword': {'query': qterm, 'boost': 2}}) | \
               Match(channel={'query': qterm, 'boost': 2}) | \
               Match(msg=qterm)
         s = s.query(pos)
@@ -312,7 +312,7 @@ class SearchIrc(Search):
         # Function score
         main_query_boosting = 1e-15  # only used for highlighting, not for scoring -> give very low signifance
         pos = MatchPhrase(msg={'query': qterm, 'boost': main_query_boosting}) | \
-              Match(username={'query': qterm, 'boost': main_query_boosting}) | \
+              Match(**{'username.keyword': {'query': qterm, 'boost': main_query_boosting}}) | \
               Match(channel={'query': qterm, 'boost': main_query_boosting}) | \
               Match(msg={'query': qterm, 'boost': main_query_boosting})
         main_query = (pos | Q('match_all'))
@@ -352,34 +352,86 @@ class SearchIrc(Search):
 
         return response_sorted
 
-    def search_day(self, qterm):
+    def search_day(self, qterm, **kwargs):
+        number_results = 50
+        number_top_hits = 5
+
+        # Get arguments
+        date_gte = None  # '2010-01-31T22:28:14+0300'  # from
+        date_lte = 'now'  # ''2012-09-20T17:41:14+0900' # 'now'  # to
+        date_sliding_value = ''
+        date_sliding_type = ''
+        use_sliding_value = True
+        sort_field = '_score'
+        sort_dir = '-'
+        for key, value in kwargs.items():
+            if key == 'date_gte':
+                date_gte = ('{:' + dementor_constants.JSON_DATETIME_FORMAT + '}').format(value)
+            if key == 'date_lte':
+                date_lte = ('{:' + dementor_constants.JSON_DATETIME_FORMAT + '}').format(value)
+            if key == 'use_sliding_value':
+                use_sliding_value = value
+            if key == 'date_sliding_value':
+                date_sliding_value = value
+            if key == 'date_sliding_type':
+                date_sliding_type = value
+            if key == 'number_results':
+                number_results = value
+            if key == 'sort_field':
+                sort_field = value
+            if key == 'sort_dir':
+                sort_dir = value
+
+        # Get specific query arguments
+        filter_channel = ''
+        for key, value in kwargs.items():
+            if key == 'filter_channel':
+                filter_channel = value
+
         # Prepare query
         s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
 
         # Query
         pos = MatchPhrase(msg={'query': qterm, 'boost': 2}) | \
-              Match(username={'query': qterm, 'boost': 2}) | \
+              Match(**{'username.keyword': {'query': qterm, 'boost': 2}}) | \
               Match(channel={'query': qterm, 'boost': 2}) | \
               Match(msg=qterm)
         s = s.query(pos)
 
-        # s = s.sort(
-        #     # ''.join((sort_dir, sort_field)),
-        #     '-_score',
-        # )
+        # Get day buckets
+        a_bucket_days = A('date_histogram', field='@timestamp', interval='day', format='yyyy-MM-dd',
+                          min_doc_count=1)
 
-        # {'terms': {'field': 'category'}}
+        if filter_channel != '':
+            # Filter channel if provided
+            a_bucket_channels = A('filter', term={'channel.keyword': filter_channel})
+        else:
+            a_bucket_channels = A('terms', field='channel.keyword',
+                                  min_doc_count=1, order={'sum_score_channel': 'desc'})
 
-        # Get day with highest sum of scores
-        s.aggs.bucket('logs_per_day', 'date_histogram', field='@timestamp', interval='day', format='yyyy-MM-dd',
-                      min_doc_count=1, order={'sum_score': 'desc'}) \
-            .metric('sum_score', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
-            .metric('top_msg_hits', 'top_hits', size=3,
+        a_bucket_channels = a_bucket_channels \
+            .metric('max_date', 'max', field='@timestamp') \
+            .metric('sum_score_channel', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
+            .metric('top_msg_hits', 'top_hits', size=number_top_hits,
                     highlight={'fields': {'msg': {}, 'username': {}, 'channel': {}}},
                     sort=[{'_score': {'order': 'desc'}}],
                     **{'_source': {
-                        'includes': ['channel', 'username', '@timestamp', 'msg']}})  # top 3 entries per day
-        # Get entry with max score on that day ->
+                        'includes': ['channel', 'username', '@timestamp', 'msg']}})
+
+        a_bucket_days.bucket('logs_per_channel', a_bucket_channels)
+        a_bucket_days.metric('max_score_channel', 'max', field='sum_score_channel')
+
+        # Filter date or not
+        if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
+            date_filtered = A('filter', range={
+                '@timestamp': {'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type), 'lte': 'now'}})
+        elif date_gte is not None:
+            date_filtered = A('filter', range={'@timestamp': {'gte': date_gte, 'lte': date_lte}})
+
+        date_filtered.bucket('logs_per_day', a_bucket_days)
+        s.aggs.bucket('logs_filtered', date_filtered)
+
+        # , order={'sum_score_day': 'desc'} # .metric('sum_score_day', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
 
         # Highlight
         # s = s.highlight_options(order='score')
@@ -387,30 +439,59 @@ class SearchIrc(Search):
         # s = s.highlight('username')
         # s = s.highlight('channel')
 
-        number_results = 50
+        number_results_buckets = int(number_results / 3)
         # # Number of results
-        s = s[0:number_results]
+        s = s[0:0]  # don't return other results, only aggregation
 
         # Execute
         response = s.execute()
 
-        for day_bucket in response.aggregations.logs_per_day.buckets:
-            day_bucket.sent = dateutil.parser.parse(day_bucket.key_as_string)
-            day_bucket['_score'] = day_bucket.sum_score.value
-            day_bucket.meta = {'score': day_bucket.sum_score.value, 'highlight': {}}
+        bucket_days = response.aggregations.logs_filtered.logs_per_day.buckets
 
-            top_hit = day_bucket.top_msg_hits.hits.hits[0]
-            top_hit_src = top_hit['_source']
+        # Flatten days-channels bucekts (see: http://stackoverflow.com/a/952952/2003325)
+        if filter_channel != '':
+            # Channel already filtered
+            bucket_channel_flat = [sub.logs_per_channel for sub in bucket_days]
+        else:
+            bucket_channel_flat = [item for sub in bucket_days for item in sub.logs_per_channel.buckets]
 
-            day_bucket.timestamp_raw = top_hit_src['@timestamp']
-            day_bucket.username = top_hit_src.username
-            day_bucket.channel = top_hit_src.channel
-            day_bucket.msg = top_hit_src.msg
-            day_bucket.meta.highlight = copy.deepcopy(top_hit.highlight)
+        # Sort flattened buckets
+        bucket_channel_flat_sorted = sorted(bucket_channel_flat,
+                                            key=lambda bucket_channel: bucket_channel['sum_score_channel'].value,
+                                            reverse=True)
+        bucket_channel_flat_sorted = bucket_channel_flat_sorted[0:number_results_buckets]
+        hit_list = []
+        for channel_bucket in bucket_channel_flat_sorted:
+            # channel_bucket.channel = channel_bucket.key
+            # channel_bucket.sent = dateutil.parser.parse(channel_bucket.key_as_string)
+            # channel_bucket['_score'] = channel_bucket.sum_score.value
+            # channel_bucket.meta = {'score': channel_bucket.sum_score.value, 'highlight': {}}
+
+            for hit in channel_bucket.top_msg_hits.hits.hits:
+                hit.meta = {'score': channel_bucket.sum_score_channel.value, 'highlight': {}}
+                hit_src = hit['_source']
+                hit.sent = dateutil.parser.parse(hit_src['@timestamp'])
+                hit.day_raw = '{:%Y-%m-%d}'.format(hit.sent)
+                hit.timestamp_raw = hit_src['@timestamp']
+                hit.username = hit_src.username
+                hit.channel = hit_src.channel
+                hit.msg = hit_src.msg
+                hit.meta.highlight = copy.deepcopy(hit.highlight)
+
+            # top_hit = day_bucket.top_msg_hits.hits.hits[0]
+            # top_hit_src = top_hit['_source']
+            #
+            # day_bucket.timestamp_raw = top_hit_src['@timestamp']
+            # day_bucket.username = top_hit_src.username
+            # day_bucket.channel = top_hit_src.channel
+            # day_bucket.msg = top_hit_src.msg
+            # day_bucket.meta.highlight = copy.deepcopy(top_hit.highlight)
+
+            hit_list[len(hit_list):] = channel_bucket.top_msg_hits.hits.hits  # create hits list
 
             # {'msg': top_hit.highlight.msg, 'channel': top_hit.highlight.channel,
             #                         'username': top_hit.highlight.username}
             # day_bucket.meta.score = day_bucket.sum_score
 
-        buckets = response.aggregations.logs_per_day.buckets
-        return buckets
+        # buckets = response.aggregations.logs_per_day.buckets
+        return hit_list

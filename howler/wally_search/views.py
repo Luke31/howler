@@ -50,11 +50,12 @@ def find(request):
     try:
         query = request.GET['query']
         search_type = request.GET['search_type']
+        day_mode = bool(request.GET.get('day_mode'))
+
         if search_type == 'email':
             result_template = 'wally/resultsmail.html'
         elif search_type == 'irc':
             result_template = 'wally/resultsirc.html'
-
         kwargs = {}
         try:
             request_from = request.GET.get('from', '')
@@ -124,11 +125,6 @@ def find(request):
         except ValueError:
             return render(request, result_template, {'error_message': _("Incorrent value for filter channel field")})
 
-        try:
-            day_mode = bool(request.GET.get('day_mode'))
-        except ValueError:
-            return render(request, result_template, {'error_message': _("Incorrent value for day mode")})
-
         # Search
         es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX[search_type]
         es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES[search_type]
@@ -153,7 +149,7 @@ def find(request):
             request.session['irc_day_mode'] = day_mode
             s = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name)
             if day_mode:
-                response = s.search_day(query)
+                response = s.search_day(query, **kwargs)
 
             else:
                 response = s.search(query, **kwargs)

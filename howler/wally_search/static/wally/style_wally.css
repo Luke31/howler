@@ -18,6 +18,15 @@ tr.shown + tr>td { border-top: none; }
 .table-striped-custom tr.shown.odd + tr {  background-color: #f9f9f9; }
 .table-striped-custom tr.shown.even + tr { background-color: white; }
 
+tr.group {
+    background-color: rgba(0, 249, 16, 0.09);
+}
+.table>tbody>tr.group>td{
+    height: 1.7em;
+    font-size:0.9em;
+    vertical-align: bottom;
+}
+
 td.details-control {
     cursor: pointer;
 }

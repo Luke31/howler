@@ -111,19 +111,59 @@ var wally = (function () {
     var setResultTable = function () {
         var targetTableSel = '#js_result_table';
 
+        // FEATURE READY: Get order by selected col and apply to datatables
         //var sortField = $('#sort_field').val();
         //var sortColDict = {'date':3,'fromEmail.keyword':4,'toEmail.keyword':5,'_score':7,
         //'channel.keyword':1,'@timestamp':2,'username.keyword':3};
         //var orderColIdx = sortColDict[sortField];
         //if(typeof(orderColIdx) === 'undefined')
         //    orderColIdx = $(targetTableSel).find('th').length - 1; //Ignore toggle-column
+
+        //Grouping column
+        var groupCol = $(targetTableSel).find('.js_datatables_hidden').index();
+        var columnDefs = [];
+        var drawCallback;
+        if (groupCol > 0) {
+            columnDefs = [{"visible": false, "targets": groupCol}];
+            drawCallback = function (settings) {
+                var api = this.api();
+                var rows = api.rows({page: 'current'}).nodes();
+                var last = null;
+
+                api.column(groupCol, {page: 'current'}).data().each(function (group, i) {
+                    var cols = table.columns().visible().length - 1; //
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><td colspan="' + cols + '">' + group + '</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                });
+            }
+        }
+
+        // FEATURE READY: Order by the grouping
+        // $(targetTableSel).find('tbody').on('click', 'tr.group', function () {
+        //     var currentOrder = table.order()[0];
+        //     if (currentOrder[0] === groupCol && currentOrder[1] === 'asc') {
+        //         table.order([groupCol, 'desc']).draw();
+        //     }
+        //     else {
+        //         table.order([groupCol, 'asc']).draw();
+        //     }
+        // });
+
+        //Create table
         var table = $(targetTableSel).DataTable({
+            "columnDefs": columnDefs,
             //responsive: true
             "language": {
                 "url": howler.getStaticBaseUrl() + "wally/datatables/" + howler.getLanguageCode() + ".json"
             },
             "pageLength": 15,
             "lengthMenu": [[10, 15, 25, 50, 100], [10, 15, 25, 50, 100]],
+            "drawCallback": drawCallback
             //"order": [[orderColIdx, "desc"]]
         });
 
