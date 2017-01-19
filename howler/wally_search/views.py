@@ -33,6 +33,7 @@ def searchirc(request):
         'sort_field': request.session.get('irc_sort_field', '_score'),
         'sort_dir': request.session.get('irc_sort_dir', '-'),
         'filter_channel': request.session.get('irc_filter_channel', ''),
+        'day_mode': request.session.get('irc_day_mode', True),
     }
     return render(request, 'wally/searchirc.html', context)
 
@@ -122,6 +123,11 @@ def find(request):
         except ValueError:
             return render(request, result_template, {'error_message': _("Incorrent value for filter channel field")})
 
+        try:
+            day_mode = bool(request.GET.get('day_mode'))
+        except ValueError:
+            return render(request, result_template, {'error_message': _("Incorrent value for day mode")})
+
         # Search
         es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX[search_type]
         es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES[search_type]
@@ -143,14 +149,18 @@ def find(request):
             request.session['irc_sort_field'] = sort_field
             request.session['irc_sort_dir'] = sort_dir
             request.session['irc_filter_channel'] = filter_channel
+            request.session['irc_day_mode'] = day_mode
             s = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name)
-            # response_old = s.search(query, **kwargs)
-            response = s.search_day(query)
-            # Convert sent date to nice string
-            # for hit in response:
-            #    hit.sent = dateutil.parser.parse(
-            #        hit['@timestamp'])  # datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT_IRC)
-            #    hit.timestamp_raw = hit['@timestamp']
+            if day_mode:
+                response = s.search_day(query)
+
+            else:
+                response = s.search(query, **kwargs)
+                # Convert sent date to nice string
+                for hit in response:
+                    hit.sent = dateutil.parser.parse(
+                        hit['@timestamp'])  # datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT_IRC)
+                    hit.timestamp_raw = hit['@timestamp']
 
     except KeyError as exc:
         # Translators: The user didn't submit a correct query, a value is missing
@@ -160,6 +170,7 @@ def find(request):
         context = {
             'query': query,
             'hit_list': response,
+            'day_mode': day_mode,
         }
         return render(request, result_template, context)
 

@@ -28,8 +28,11 @@
         {% endif %}
     </td>
     <td class="text-nowrap">
-{#        {{ hit.sent|date:"Y/m/d H:i" }}#}
-        {{ hit.sent|date:"Y/m/d" }}
+        {% if day_mode %}
+            {{ hit.sent|date:"Y/m/d" }}
+        {% else %}
+            {{ hit.sent|date:"Y/m/d H:i" }}
+        {% endif %}
     </td>
     <td class="text-nowrap">
         {% if hit.meta.highlight.username.0 %}

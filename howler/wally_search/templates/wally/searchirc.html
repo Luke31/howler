@@ -7,6 +7,13 @@
 {% endblock %}
 {% block search_form_checkboxes %}
     <input type="checkbox" id="show_hits" style="display:none;">
+    <div class="checkbox" title="{{ saved_in_session_text }}">
+        <label>
+            <input type="checkbox" name="day_mode"
+                   id="day_mode" {% if day_mode %}
+                   checked="checked"{% endif %}/> {% trans "day mode" %}
+        </label>
+    </div>
 {% endblock %}
 
 {% block search_form_sort_fields_options %}
