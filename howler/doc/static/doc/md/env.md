@@ -32,9 +32,11 @@ Following production environment has been set up:
 |5043|`logstash` - `10-irc-log-filter.conf`|
 
 #### Files
+Following file-locations are scanned automatically for new files:
+
 |Files|location|
 |---|---|
-|Emails (manual update using [Email Import Script](/howler/doc/importscript/))|`/home/saita/archive/info/`|
+|Emails (crontab daily, see: [Email Import Script](/howler/doc/importscript/))|`/home/saita/archive/info/`|
 |IRC logs (queried by Filebeat service, see: [IRC Logstash](/howler/doc/irc/))|`/home/saita/archive/irc/`|
 
 ### Postgresql (9.4.9) 
@@ -148,3 +150,15 @@ Following production environment has been set up:
 |Log|`/var/log/filebeat/filebeat`|
 |Registry|`/var/lib/filebeat/registry`|
 |Reads IRC logs from|`/home/saita/archive/irc/*.txt`|
+
+### Crontab lukas (email-import-script)
+* user: `lukas`
+* Further info: [Email Import Script](/howler/doc/importscript/)
+#### Filesystem
+
+|Purpose|File|
+|---|---|
+|Crontab view|`sudo crontab -u lukas -l`|
+|Crontab config|`sudo crontab -u lukas -e`|
+|Log|`/var/log/wally/email-importscript.log`|
+
