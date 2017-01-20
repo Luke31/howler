@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-16 10:03+0900\n"
+"POT-Creation-Date: 2017-01-20 17:27+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -96,43 +96,43 @@ msgstr "昇順"
 msgid "Desc"
 msgstr "降順"
 
-#: wally_search/templates/wally/resultsirc.html:6
-#: wally_search/templates/wally/resultsircdetail.html:9
-#: wally_search/templates/wally/searchirc.html:17
+#: wally_search/templates/wally/resultsirc.html:7
+#: wally_search/templates/wally/resultsircdetail.html:10
+#: wally_search/templates/wally/searchirc.html:24
 msgid "Channel"
 msgstr "チャンネル"
 
-#: wally_search/templates/wally/resultsirc.html:7
-#: wally_search/templates/wally/resultsircdetail.html:10
+#: wally_search/templates/wally/resultsirc.html:11
+#: wally_search/templates/wally/resultsircdetail.html:11
 #: wally_search/templates/wally/resultsmail.html:8
-#: wally_search/templates/wally/searchirc.html:14
+#: wally_search/templates/wally/searchirc.html:21
 #: wally_search/templates/wally/searchmail.html:30
 msgid "Sent (JST)"
 msgstr "送信日時 (JST)"
 
-#: wally_search/templates/wally/resultsirc.html:8
-#: wally_search/templates/wally/resultsircdetail.html:11
+#: wally_search/templates/wally/resultsirc.html:12
+#: wally_search/templates/wally/resultsircdetail.html:12
 msgid "Username"
 msgstr "ユーザー名"
 
-#: wally_search/templates/wally/resultsirc.html:9
-#: wally_search/templates/wally/resultsircdetail.html:12
+#: wally_search/templates/wally/resultsirc.html:13
+#: wally_search/templates/wally/resultsircdetail.html:13
 msgid "Message"
 msgstr "メッセージ"
 
-#: wally_search/templates/wally/resultsirc.html:10
+#: wally_search/templates/wally/resultsirc.html:14
 #: wally_search/templates/wally/resultsmail.html:12
-#: wally_search/templates/wally/searchirc.html:15
+#: wally_search/templates/wally/searchirc.html:22
 #: wally_search/templates/wally/searchmail.html:31
 msgid "Score"
 msgstr "スコア"
 
-#: wally_search/templates/wally/resultsirc.html:19
+#: wally_search/templates/wally/resultsirc.html:30
 msgid "View IRC log"
 msgstr "IRCのログを見る"
 
-#: wally_search/templates/wally/resultsirc.html:59
-#: wally_search/templates/wally/resultsircdetail.html:46
+#: wally_search/templates/wally/resultsirc.html:75
+#: wally_search/templates/wally/resultsircdetail.html:47
 msgid "No irc logs found"
 msgstr "IRCのログが見つからなかった"
 
@@ -141,7 +141,7 @@ msgid "Subject"
 msgstr "件名"
 
 #: wally_search/templates/wally/resultsmail.html:9
-#: wally_search/templates/wally/searchirc.html:19
+#: wally_search/templates/wally/searchirc.html:26
 #: wally_search/templates/wally/searchmail.html:33
 msgid "Sender"
 msgstr "差出人"
@@ -155,39 +155,43 @@ msgstr "宛先"
 msgid "Attachment?"
 msgstr "添付?"
 
-#: wally_search/templates/wally/resultsmail.html:28
+#: wally_search/templates/wally/resultsmail.html:27
 msgid "View mail content"
 msgstr "メールの文書を見る"
 
-#: wally_search/templates/wally/resultsmail.html:43
+#: wally_search/templates/wally/resultsmail.html:41
 msgid "Hit in Reply-To Email/Name"
 msgstr "返信アドレス/名前のヒット"
 
-#: wally_search/templates/wally/resultsmail.html:50
+#: wally_search/templates/wally/resultsmail.html:48
 msgid "Hit in sender name"
 msgstr "差出人の名前のヒット"
 
-#: wally_search/templates/wally/resultsmail.html:57
+#: wally_search/templates/wally/resultsmail.html:55
 msgid "Hit in receiver name"
 msgstr "差出人の名前のヒット"
 
-#: wally_search/templates/wally/resultsmail.html:63
+#: wally_search/templates/wally/resultsmail.html:61
 msgid "Hit in attachment names"
 msgstr "差出人の名前のヒット"
 
-#: wally_search/templates/wally/resultsmail.html:69
+#: wally_search/templates/wally/resultsmail.html:67
 msgid "Hits in body"
 msgstr "本文のヒット"
 
-#: wally_search/templates/wally/resultsmail.html:132
+#: wally_search/templates/wally/resultsmail.html:105
 msgid "No emails found"
 msgstr "メールが見つからなかった"
 
-#: wally_search/templates/wally/searchirc.html:27
+#: wally_search/templates/wally/searchirc.html:14
+msgid "day mode"
+msgstr "日モード"
+
+#: wally_search/templates/wally/searchirc.html:34
 msgid "Filter channel"
 msgstr "フィルタチャンネル"
 
-#: wally_search/templates/wally/searchirc.html:31
+#: wally_search/templates/wally/searchirc.html:38
 msgid "(All)"
 msgstr "(すべて)"
 
@@ -204,59 +208,67 @@ msgid "show hits"
 msgstr "ヒットを見せる"
 
 #. Translators: The user didn't submit the correct values in the form
-#: wally_search/views.py:65
+#: wally_search/views.py:72
 msgid "Incorrent field format from-date"
 msgstr "日付からのフィールドフォーマットが正しくない入力"
 
 #. Translators: The user didn't submit the correct values in the form
-#: wally_search/views.py:75
+#: wally_search/views.py:82
 msgid "Incorrent field format to-date"
 msgstr "日付までのフィールドフォーマットが正しくない入力"
 
-#: wally_search/views.py:83
+#: wally_search/views.py:92
 msgid "Incorrent use of date selection"
 msgstr "日付が正しくない入力: {exception}"
 
-#: wally_search/views.py:88
+#: wally_search/views.py:97
 msgid "Incorrent number of results"
 msgstr "結果の数が正しくない入力"
 
-#: wally_search/views.py:94
+#: wally_search/views.py:103
 msgid "Incorrent value for sort field"
 msgstr "並べ替えが正しくない入力"
 
-#: wally_search/views.py:100
+#: wally_search/views.py:109
 msgid "Incorrent value for sort direction"
 msgstr "並べ替え方向が正しくない入力: {exception}"
 
-#: wally_search/views.py:105
+#: wally_search/views.py:114
 msgid "Incorrent value for show hits body"
 msgstr "本文のヒットを見せるが正しくない入力"
 
-#: wally_search/views.py:111
+#: wally_search/views.py:120
 msgid "Incorrent value for include spam"
 msgstr "スパムも検索が正しくない入力"
 
-#: wally_search/views.py:116
+#: wally_search/views.py:125
 msgid "Incorrent value for only attachment"
 msgstr "添付ファイル付きのメールのみが正しくない入力"
 
-#: wally_search/views.py:123
+#: wally_search/views.py:132
 msgid "Incorrent value for filter channel field"
 msgstr "フィルタチャンネルが正しくない入力"
 
-#: wally_search/views.py:157
+#: wally_search/views.py:175
 #, python-brace-format
 msgid "Incorrent query: {exception}"
 msgstr "検索クエリが正しくない入力: {exception}"
 
-#: wally_search/views.py:171
+#: wally_search/views.py:192
 msgid "Incorrent value for desired date timestamp"
 msgstr "頼んだタイムスタンプが正しくない入力"
 
-#: wally_search/views.py:175
+#: wally_search/views.py:197
 msgid "Incorrent value for desired channel"
 msgstr "頼んだチャンネルが正しくない入力"
+
+#: wally_search/views.py:202
+msgid "Incorrent value for number results"
+msgstr "結果の数が正しくない入力"
+
+#: wally_search/views.py:207
+msgid "Incorrent value for origin id"
+msgstr "元来IDが正しくない入力"
 
 #~ msgid "Hit in username"
 #~ msgstr "ユーザー名のヒット"
