@@ -65,33 +65,12 @@
                 {% if hit.meta.highlight.body %}
                     {% trans "Hits in body" %}:
                     {% for fragment in hit.meta.highlight.body %}
-                        {% comment %}<p class="fragment">{% endcomment %}
                         <span class="search-hit">
-                            {{ fragment|safe }} {% comment %}|linebreaks{% endcomment %}
+                            {{ fragment|safe }}
                         </span>&nbsp;|&nbsp;
-                        {% comment %}</p>{% endcomment %}
                     {% endfor %}
                 {% endif %}
             </div>
-            {% comment %}
-                            <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}" target="_blank">{% trans "View mail content" %}</a>
-
-                            <b>{% trans "Email content" %}:</b>
-                            <div id="collapse{{ forloop.counter0 }}" class="panel-collapse "><!--collapse-->
-                                <div class="panel-body">
-                                    <div class="well">
-                                        <p><b>{{ sender }}</b> {{ hit.fromName }} &lt;{{ hit.fromEmail }}&gt;
-                                        </p>
-                                        <p><b>{{ receiver }}</b> {{ hit.toName }} &lt;{{ hit.toEmail }}&gt;</p>
-                                        {% if hit.attachmentNames %}
-                                            <p><b>{{ attachments }}</b> {{ hit.attachmentNames }}</p>
-                                        {% endif %}
-
-                                        {{ hit.body|linebreaks|truncatechars:EMAIL_SHOW_MAX_CHARS }}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endcomment %}
         </div>
     </td>
     <td class="text-nowrap">
