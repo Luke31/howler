@@ -23,7 +23,8 @@
     </td>
     <td>
         <span>
-            <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}" title="{% trans "View mail content" %}" target="_blank">
+            <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}" title="{% trans "View mail content" %}"
+               target="_blank">
                 {% if hit.meta.highlight.subject.0 %}
                     {{ hit.meta.highlight.subject.0|safe }}
                 {% else %}
@@ -36,38 +37,38 @@
             <div class="mail_abstract_content">
                 {% if hit.meta.highlight.replyToEmail.0 %}
                     <p class="fragment">
-                        <b>{% trans "Hit in Reply-To Email/Name" %}:</b>
+                        {% trans "Hit in Reply-To Email/Name" %}:
                         <span class="search-hit">{{ hit.meta.highlight.replyToEmail.0|safe }} {{ hit.meta.highlight.replyToName.0|safe }}</span>
                     </p>
                 {% endif %}
 
                 {% if hit.meta.highlight.fromName.0 %}
                     <p class="fragment">
-                        <b>{% trans "Hit in sender name" %}:</b>
+                        {% trans "Hit in sender name" %}:
                         <span class="search-hit">{{ hit.meta.highlight.fromName.0|safe }}</span>
                     </p>
                 {% endif %}
 
                 {% if hit.meta.highlight.toName.0 %}
                     <p class="fragment">
-                        <b>{% trans "Hit in receiver name" %}:</b> <span class="search-hit"> hit.meta.highlight.toName.0|safe }}</span>
+                        {% trans "Hit in receiver name" %}: <span class="search-hit"> hit.meta.highlight.toName.0|safe }}</span>
                     </p>
                 {% endif %}
 
                 {% if hit.meta.highlight.attachmentNames.0 %}
                     <p class="fragment">
-                        <b>{% trans "Hit in attachment names" %}:</b> <span
+                        {% trans "Hit in attachment names" %}: <span
                             class="search-hit">{{ hit.meta.highlight.attachmentNames.0|safe }}</span>
                     </p>
                 {% endif %}
 
                 {% if hit.meta.highlight.body %}
-                    <b>{% trans "Hits in body" %}:</b>
+                    {% trans "Hits in body" %}:
                     {% for fragment in hit.meta.highlight.body %}
                         {% comment %}<p class="fragment">{% endcomment %}
                         <span class="search-hit">
-                                                    {{ fragment|safe }} {% comment %}|linebreaks{% endcomment %}
-                                                </span>&nbsp;|&nbsp;
+                            {{ fragment|safe }} {% comment %}|linebreaks{% endcomment %}
+                        </span>&nbsp;|&nbsp;
                         {% comment %}</p>{% endcomment %}
                     {% endfor %}
                 {% endif %}
