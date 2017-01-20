@@ -467,6 +467,7 @@ class SearchIrc(Search):
                 hit.channel = hit_src.channel
                 hit.msg = hit_src.msg
                 hit.meta.highlight = copy.deepcopy(hit.highlight)
+                hit.meta.id = hit['_id']
             hit_list[len(hit_list):] = channel_bucket.top_msg_hits.hits.hits  # create hits list
 
         return hit_list

@@ -21,6 +21,7 @@
     <td class="details-control">
         <form class="js_loadpopoverontent_form" data-function-module="irc" action="{% url 'wally:detail_irc' %}" method="get">
             <input type="hidden" name="origin_timestamp" value="{{ hit.timestamp_raw }}"/>
+            <input type="hidden" name="origin_id" value="{{ hit.meta.id }}"/>
             <input type="hidden" name="channel" value="{{ hit.channel }}"/>
             <input type="hidden" name="query" value="{{ query }}"/>
             <input type="hidden" name="number_results" value="{% if day_mode %}100{% else %}30{% endif %}"/>

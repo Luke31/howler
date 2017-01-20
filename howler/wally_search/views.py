@@ -180,14 +180,21 @@ def detail_irc(request):
         origin_timestamp = request.GET.get('origin_timestamp')
     except ValueError:
         return render(request, result_template, {'error_message': _("Incorrent value for desired date timestamp")})
+
     try:
         channel = request.GET.get('channel')
     except ValueError:
         return render(request, result_template, {'error_message': _("Incorrent value for desired channel")})
+
     try:
         number_results = int(request.GET.get('number_results', 30))
     except ValueError:
         return render(request, result_template, {'error_message': _("Incorrent value for number results")})
+
+    try:
+        origin_id = request.GET.get('origin_id')
+    except ValueError:
+        return render(request, result_template, {'error_message': _("Incorrent value for origin id")})
 
     es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX['irc']
     es_type_name = djsettings.ES_SUPPORTED_TYPE_NAMES['irc']
@@ -198,7 +205,7 @@ def detail_irc(request):
     for hit in response:
         hit.sent = dateutil.parser.parse(
             hit['@timestamp'])  # datetime.strptime(hit['@timestamp'], djsettings.ES_DATETIME_FORMAT_IRC)
-        hit.is_origin_entry = hit['@timestamp'] == origin_timestamp
+        hit.is_origin_entry = hit.meta.id == origin_id
 
     context = {
         'hit_list': response,
