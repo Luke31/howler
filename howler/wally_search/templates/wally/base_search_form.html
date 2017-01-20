@@ -50,21 +50,21 @@
                                 </div>
                                 <div class='js_date_sliding_value collapse col-md-7'>
                                     <div class="form-group row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-6" title="{{ saved_in_session_text }}">
                                             <label for="date_sliding_value">{% trans "Within the past" %}</label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" id="date_sliding_value"
-                                                       name="date_sliding_value" value="2">
+                                                       name="date_sliding_value" value="{{ date_sliding_value }}">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6" title="{{ saved_in_session_text }}">
                                             <label for="date_sliding_type">{% trans "Duration type" %}</label>
                                             <div class="input-group">
                                                 <select class="form-control" id="date_sliding_type"
                                                         name="date_sliding_type">
-                                                    <option value="y" selected="selected">{% trans "Years" %}</option>
-                                                    <option value="M">{% trans "Months" %}</option>
-                                                    <option value="d">{% trans "Days" %}</option>
+                                                    <option value="y" {% if date_sliding_type == 'y' %} selected="selected"{% endif %}>{% trans "Years" %}</option>
+                                                    <option value="M" {% if date_sliding_type == 'M' %} selected="selected"{% endif %}>{% trans "Months" %}</option>
+                                                    <option value="d" {% if date_sliding_type == 'd' %} selected="selected"{% endif %}>{% trans "Days" %}</option>
                                                 </select>
                                             </div>
                                         </div>
