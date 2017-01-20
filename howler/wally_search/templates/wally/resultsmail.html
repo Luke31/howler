@@ -3,11 +3,10 @@
 
 {% block col_header %}
     <th class="w_toggle_col"></th>
-    <th></th>
     <th class="text-nowrap">{% trans "Subject" %}</th>
     <th class="text-nowrap">{% trans "Sent (JST)" %}</th>
-    <th class="text-nowrap">{% trans "Sender"  %}</th>
-    <th class="text-nowrap">{% trans "Receiver"  %}</th>
+    <th class="text-nowrap">{% trans "Sender" %}</th>
+    <th class="text-nowrap">{% trans "Receiver" %}</th>
     <th class="text-nowrap">{% trans "Attachment?" %}</th>
     <th class="text-nowrap text-right">{% trans "Score" %}</th>
 {% endblock %}
@@ -23,18 +22,14 @@
         <span class="glyphicon glyphicon-minus"></span>
     </td>
     <td>
-        <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}" target="_blank">
-                        <span class="glyphicon glyphicon-eye-open"
-                              title="{% trans "View mail content" %}"></span>
-        </a>
-    </td>
-    <td>
         <span>
-            {% if hit.meta.highlight.subject.0 %}
-                {{ hit.meta.highlight.subject.0|safe }}
-            {% else %}
-                {{ hit.subject }}
-            {% endif %}
+            <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}" title="{% trans "View mail content" %}" target="_blank">
+                {% if hit.meta.highlight.subject.0 %}
+                    {{ hit.meta.highlight.subject.0|safe }}
+                {% else %}
+                    {{ hit.subject }}
+                {% endif %}
+            </a>
         </span>
         <span style="display: none">{{ hit.meta.id }}</span>
         <div class="collapse js_popover_content">
