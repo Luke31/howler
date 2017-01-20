@@ -5,6 +5,7 @@ from wally.elastic.index import IndexMail
 from elasticsearch import Elasticsearch
 from wally.elastic import constants
 from argparse import RawTextHelpFormatter
+import datetime
 
 """Command-line interface to update elasticsearch index with new emails
 --How to install this package for script-usage--
@@ -41,6 +42,7 @@ def update(args):
     else:
         kuromoji_synonyms = []
 
+    print('\n--Log of {0}--'.format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     print('Existing emails in index: {0}'.format(len(index.already_imported_ids)))
     if args.force:
         print('Deleting old indices, deleting emails, creating new indices with new default synonyms...')
