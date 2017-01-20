@@ -161,7 +161,7 @@ var wally = (function () {
             "language": {
                 "url": howler.getStaticBaseUrl() + "wally/datatables/" + howler.getLanguageCode() + ".json"
             },
-            "pageLength": 15,
+            "pageLength": 25,
             "lengthMenu": [[10, 15, 25, 50, 100], [10, 15, 25, 50, 100]],
             "drawCallback": drawCallback
             //"order": [[orderColIdx, "desc"]]
