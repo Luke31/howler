@@ -390,26 +390,38 @@ class SearchIrc(Search):
 
         # Prepare query
         s = DslSearch(using=self._es, index=self._index_prefix.format('*'))
+        s = s[0:0]  # don't return other results, only aggregation
 
-        # Query
+        # Search-Query
         pos = MatchPhrase(msg={'query': qterm, 'boost': 2}) | \
               Match(**{'username.keyword': {'query': qterm, 'boost': 2}}) | \
               Match(channel={'query': qterm, 'boost': 2}) | \
               Match(msg=qterm)
         s = s.query(pos)
 
-        # Get day buckets
-        a_bucket_days = A('date_histogram', field='@timestamp', interval='day', format='yyyy-MM-dd',
+        # Prepare aggregate-query:
+        # Aggregation levels: A (date filtered) -> B (bucket days) -> C (bucket channel)
+
+        # A date filtered
+        if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
+            a_date_filtered = A('filter', range={
+                '@timestamp': {'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type), 'lte': 'now'}})
+        elif date_gte is not None:
+            a_date_filtered = A('filter', range={'@timestamp': {'gte': date_gte, 'lte': date_lte}})
+
+        # B bucket days
+        b_bucket_days = A('date_histogram', field='@timestamp', interval='day', format='yyyy-MM-dd',
                           min_doc_count=1)
 
+        # C bucket channels
         if filter_channel != '':
             # Filter channel if provided
-            a_bucket_channels = A('filter', term={'channel.keyword': filter_channel})
+            c_bucket_channels = A('filter', term={'channel.keyword': filter_channel})
         else:
-            a_bucket_channels = A('terms', field='channel.keyword',
+            c_bucket_channels = A('terms', field='channel.keyword',
                                   min_doc_count=1, order={'sum_score_channel': 'desc'})
 
-        a_bucket_channels = a_bucket_channels \
+        c_bucket_channels = c_bucket_channels \
             .metric('max_date', 'max', field='@timestamp') \
             .metric('sum_score_channel', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
             .metric('top_msg_hits', 'top_hits', size=number_top_hits,
@@ -418,37 +430,17 @@ class SearchIrc(Search):
                     **{'_source': {
                         'includes': ['channel', 'username', '@timestamp', 'msg']}})
 
-        a_bucket_days.bucket('logs_per_channel', a_bucket_channels)
-        a_bucket_days.metric('max_score_channel', 'max', field='sum_score_channel')
+        # Stack aggregations Main -> A -> B -> C (reversed order)
+        b_bucket_days.bucket('logs_per_channel', c_bucket_channels)
+        b_bucket_days.metric('max_score_channel', 'max', field='sum_score_channel')  # Add metric
+        a_date_filtered.bucket('logs_per_day', b_bucket_days)
+        s.aggs.bucket('logs_filtered', a_date_filtered)
 
-        # Filter date or not
-        if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
-            date_filtered = A('filter', range={
-                '@timestamp': {'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type), 'lte': 'now'}})
-        elif date_gte is not None:
-            date_filtered = A('filter', range={'@timestamp': {'gte': date_gte, 'lte': date_lte}})
-
-        date_filtered.bucket('logs_per_day', a_bucket_days)
-        s.aggs.bucket('logs_filtered', date_filtered)
-
-        # , order={'sum_score_day': 'desc'} # .metric('sum_score_day', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
-
-        # Highlight
-        # s = s.highlight_options(order='score')
-        # s = s.highlight('msg', number_of_fragments=0)
-        # s = s.highlight('username')
-        # s = s.highlight('channel')
-
-        number_results_buckets = int(number_results / 3)
-        # # Number of results
-        s = s[0:0]  # don't return other results, only aggregation
-
-        # Execute
+        # Execute query
         response = s.execute()
 
-        bucket_days = response.aggregations.logs_filtered.logs_per_day.buckets
-
         # Flatten days-channels bucekts (see: http://stackoverflow.com/a/952952/2003325)
+        bucket_days = response.aggregations.logs_filtered.logs_per_day.buckets
         if filter_channel != '':
             # Channel already filtered
             bucket_channel_flat = [sub.logs_per_channel for sub in bucket_days]
@@ -459,14 +451,12 @@ class SearchIrc(Search):
         bucket_channel_flat_sorted = sorted(bucket_channel_flat,
                                             key=lambda bucket_channel: bucket_channel['sum_score_channel'].value,
                                             reverse=True)
+        number_results_buckets = int(number_results / 3)
         bucket_channel_flat_sorted = bucket_channel_flat_sorted[0:number_results_buckets]
+
+        # Get hits from flattened buckets
         hit_list = []
         for channel_bucket in bucket_channel_flat_sorted:
-            # channel_bucket.channel = channel_bucket.key
-            # channel_bucket.sent = dateutil.parser.parse(channel_bucket.key_as_string)
-            # channel_bucket['_score'] = channel_bucket.sum_score.value
-            # channel_bucket.meta = {'score': channel_bucket.sum_score.value, 'highlight': {}}
-
             for hit in channel_bucket.top_msg_hits.hits.hits:
                 hit.meta = {'score': channel_bucket.sum_score_channel.value, 'highlight': {}}
                 hit_src = hit['_source']
@@ -477,21 +467,6 @@ class SearchIrc(Search):
                 hit.channel = hit_src.channel
                 hit.msg = hit_src.msg
                 hit.meta.highlight = copy.deepcopy(hit.highlight)
-
-            # top_hit = day_bucket.top_msg_hits.hits.hits[0]
-            # top_hit_src = top_hit['_source']
-            #
-            # day_bucket.timestamp_raw = top_hit_src['@timestamp']
-            # day_bucket.username = top_hit_src.username
-            # day_bucket.channel = top_hit_src.channel
-            # day_bucket.msg = top_hit_src.msg
-            # day_bucket.meta.highlight = copy.deepcopy(top_hit.highlight)
-
             hit_list[len(hit_list):] = channel_bucket.top_msg_hits.hits.hits  # create hits list
 
-            # {'msg': top_hit.highlight.msg, 'channel': top_hit.highlight.channel,
-            #                         'username': top_hit.highlight.username}
-            # day_bucket.meta.score = day_bucket.sum_score
-
-        # buckets = response.aggregations.logs_per_day.buckets
         return hit_list
