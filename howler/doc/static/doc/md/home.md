@@ -55,6 +55,7 @@ If you would like to contribute to either to `howler` or `wally`, follow these s
     * or one-by-one:
 
             pip install --upgrade pip
+            pip install bleach
             pip install cffi
             pip install cld2-cffi
             pip install elasticsearch
