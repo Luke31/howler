@@ -45,3 +45,8 @@ tr.shown td.details-control>span.glyphicon-plus { display:none; } /*Hide open*/
 .w_toggle_col{
     display:none;
 }
+
+/*Requirement saita 19.01.2017*/
+.mail_abstract_content{
+    padding-left:20px;
+}
