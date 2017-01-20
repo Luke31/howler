@@ -18,6 +18,8 @@ def searchmail(request):
     # translation.activate(user_language)
     # request.session[translation.LANGUAGE_SESSION_KEY] = user_language
     context = {
+        'date_sliding_value': request.session.get('mail_date_sliding_value', 2),
+        'date_sliding_type': request.session.get('mail_date_sliding_type', 'y'),
         'sort_field': request.session.get('mail_sort_field', '_score'),
         'sort_dir': request.session.get('mail_sort_dir', '-'),
         'show_hits': request.session.get('mail_show_hits', False),
@@ -30,6 +32,8 @@ def searchirc(request):
     Get search-form for irc search
     """
     context = {
+        'date_sliding_value': request.session.get('irc_date_sliding_value', 2),
+        'date_sliding_type': request.session.get('irc_date_sliding_type', 'y'),
         'sort_field': request.session.get('irc_sort_field', '_score'),
         'sort_dir': request.session.get('irc_sort_dir', '-'),
         'filter_channel': request.session.get('irc_filter_channel', ''),
@@ -77,8 +81,10 @@ def find(request):
             # Translators: The user didn't submit the correct values in the form
             return render(request, result_template, {'error_message': _("Incorrent field format to-date")})
 
-        kwargs['date_sliding_value'] = request.GET.get('date_sliding_value', '')
-        kwargs['date_sliding_type'] = request.GET.get('date_sliding_type', '')
+        date_sliding_value = request.GET.get('date_sliding_value', '')
+        kwargs['date_sliding_value'] = date_sliding_value
+        date_sliding_type = request.GET.get('date_sliding_type', '')
+        kwargs['date_sliding_type'] = date_sliding_type
 
         try:
             kwargs['use_sliding_value'] = bool(int(request.GET.get('use_sliding_value', True)))
@@ -134,6 +140,8 @@ def find(request):
             request.session['mail_sort_field'] = sort_field
             request.session['mail_sort_dir'] = sort_dir
             request.session['mail_show_hits'] = show_hits
+            request.session['mail_date_sliding_value'] = date_sliding_value
+            request.session['mail_date_sliding_type'] = date_sliding_type
 
             response = SearchMail(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name).search(
                 query, **kwargs)
@@ -147,6 +155,8 @@ def find(request):
             request.session['irc_sort_dir'] = sort_dir
             request.session['irc_filter_channel'] = filter_channel
             request.session['irc_day_mode'] = day_mode
+            request.session['irc_date_sliding_value'] = date_sliding_value
+            request.session['irc_date_sliding_type'] = date_sliding_type
             s = SearchIrc(es, es_index_prefix=es_index_prefix, es_type_name=es_type_name)
             if day_mode:
                 response = s.search_day(query, **kwargs)
