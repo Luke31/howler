@@ -1,5 +1,6 @@
 {% extends "wally/base_results.html" %}
 {% load i18n %}
+{% load results %}
 
 {% block col_header %}
     <th class="w_toggle_col"></th>
@@ -26,7 +27,7 @@
             <a href="https://co-conv.jp/go?INFO{{ hit.meta.id }}" title="{% trans "View mail content" %}"
                target="_blank">
                 {% if hit.meta.highlight.subject.0 %}
-                    {{ hit.meta.highlight.subject.0|safe }}
+                    {{ hit.meta.highlight.subject.0|strip_except_tags:"em" }}
                 {% else %}
                     {{ hit.subject }}
                 {% endif %}
@@ -38,27 +39,27 @@
                 {% if hit.meta.highlight.replyToEmail.0 %}
                     <p class="fragment">
                         {% trans "Hit in Reply-To Email/Name" %}:
-                        <span class="search-hit">{{ hit.meta.highlight.replyToEmail.0|safe }} {{ hit.meta.highlight.replyToName.0|safe }}</span>
+                        <span class="search-hit">{{ hit.meta.highlight.replyToEmail.0|strip_except_tags:"em" }} {{ hit.meta.highlight.replyToName.0|strip_except_tags:"em" }}</span>
                     </p>
                 {% endif %}
 
                 {% if hit.meta.highlight.fromName.0 %}
                     <p class="fragment">
                         {% trans "Hit in sender name" %}:
-                        <span class="search-hit">{{ hit.meta.highlight.fromName.0|safe }}</span>
+                        <span class="search-hit">{{ hit.meta.highlight.fromName.0|strip_except_tags:"em" }}</span>
                     </p>
                 {% endif %}
 
                 {% if hit.meta.highlight.toName.0 %}
                     <p class="fragment">
-                        {% trans "Hit in receiver name" %}: <span class="search-hit"> hit.meta.highlight.toName.0|safe }}</span>
+                        {% trans "Hit in receiver name" %}: <span class="search-hit"> hit.meta.highlight.toName.0|strip_except_tags:"em" }}</span>
                     </p>
                 {% endif %}
 
                 {% if hit.meta.highlight.attachmentNames.0 %}
                     <p class="fragment">
                         {% trans "Hit in attachment names" %}: <span
-                            class="search-hit">{{ hit.meta.highlight.attachmentNames.0|safe }}</span>
+                            class="search-hit">{{ hit.meta.highlight.attachmentNames.0|strip_except_tags:"em" }}</span>
                     </p>
                 {% endif %}
 
@@ -66,7 +67,7 @@
                     {% trans "Hits in body" %}:
                     {% for fragment in hit.meta.highlight.body %}
                         <span class="search-hit">
-                            {{ fragment|safe }}
+                            {{ fragment|strip_except_tags:"em" }}
                         </span>&nbsp;|&nbsp;
                     {% endfor %}
                 {% endif %}
@@ -78,14 +79,14 @@
     </td>
     <td class="text-nowrap">
         {% if hit.meta.highlight.fromEmail.0 %}
-            {{ hit.meta.highlight.fromEmail.0|safe }}
+            {{ hit.meta.highlight.fromEmail.0|strip_except_tags:"em" }}
         {% else %}
             {{ hit.fromEmail }}
         {% endif %}
     </td>
     <td class="text-nowrap">
         {% if hit.meta.highlight.toEmail.0 %}
-            {{ hit.meta.highlight.toEmail.0|safe }}
+            {{ hit.meta.highlight.toEmail.0|strip_except_tags:"em" }}
         {% else %}
             {{ hit.toEmail }}
         {% endif %}

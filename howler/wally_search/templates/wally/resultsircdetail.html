@@ -1,5 +1,6 @@
 {% extends "wally/base_results.html" %}
 {% load i18n %}
+{% load results %}
 
 {% block table_element %}
     <table class="table table-striped-custom table-condensed js_result_table_detail">
@@ -15,7 +16,7 @@
 {% block col_data %}
     <td class="text-nowrap">
         {% if hit.meta.highlight.channel.0 %}
-            {{ hit.meta.highlight.channel.0|safe }}
+            {{ hit.meta.highlight.channel.0|strip_except_tags:"em" }}
         {% else %}
             {{ hit.channel }}
         {% endif %}
@@ -25,7 +26,7 @@
     </td>
     <td class="text-nowrap">
         {% if hit.meta.highlight.username.0 %}
-            {{ hit.meta.highlight.username.0|safe }}
+            {{ hit.meta.highlight.username.0|strip_except_tags:"em" }}
         {% else %}
             {{ hit.username }}
         {% endif %}
@@ -33,7 +34,7 @@
     <td>
         <span>
             {% if hit.meta.highlight.msg.0 %}
-                {{ hit.meta.highlight.msg.0|safe }}
+                {{ hit.meta.highlight.msg.0|strip_except_tags:"em" }}
             {% else %}
                 {{ hit.msg }}
             {% endif %}
