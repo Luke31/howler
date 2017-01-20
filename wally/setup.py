@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='wally',
-    version='1.0.3.dev1',
+    version='1.0.4.dev1',
     packages=['wally', 'wally.elastic', 'wally.dementor'],
     url='',
     license='',

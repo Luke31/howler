@@ -26,7 +26,7 @@ pip3 install -r requirements.txt
 python3 index-cmd.py -h
 python3 index-cmd.py update -h
 """
-version = '1.0.3'
+version = '1.0.4'
 
 
 def update(args):
