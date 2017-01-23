@@ -163,7 +163,8 @@ var wally = (function () {
             },
             "pageLength": 25,
             "lengthMenu": [[10, 15, 25, 50, 100], [10, 15, 25, 50, 100]],
-            "drawCallback": drawCallback
+            "drawCallback": drawCallback,
+            "stateSave": true // Save in localstorage for 2h ttps://datatables.net/examples/basic_init/state_save.html
             //"order": [[orderColIdx, "desc"]]
         });
 
