@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 from elasticsearch import Elasticsearch
 from django.conf import settings as djsettings
 from datetime import datetime
+from django.http import JsonResponse
 import dateutil.parser
 import pytz
 
@@ -22,7 +23,6 @@ def searchmail(request):
         'date_sliding_type': request.session.get('mail_date_sliding_type', 'y'),
         'sort_field': request.session.get('mail_sort_field', '_score'),
         'sort_dir': request.session.get('mail_sort_dir', '-'),
-        'show_hits': request.session.get('mail_show_hits', False),
     }
     return render(request, 'wally/searchmail.html', context)
 
@@ -40,6 +40,21 @@ def searchirc(request):
         'day_mode': request.session.get('irc_day_mode', True),
     }
     return render(request, 'wally/searchirc.html', context)
+
+
+def update_session_values(request):
+    """
+    Update session-value for show-hits checkbox
+    :param request: Request with option whether hits should be shown
+    :return: ``JsonResponse`` success == True if no error
+    """
+    try:
+        show_hits = bool(request.GET.get('show_hits', False))
+        request.session['mail_show_hits'] = show_hits
+        success = True
+    except ValueError:
+        success = False
+    return JsonResponse({'success': success})
 
 
 web_datetime_format = '%Y/%m/%d %H:%M'
@@ -139,7 +154,6 @@ def find(request):
             # Save search-fields in session
             request.session['mail_sort_field'] = sort_field
             request.session['mail_sort_dir'] = sort_dir
-            request.session['mail_show_hits'] = show_hits
             request.session['mail_date_sliding_value'] = date_sliding_value
             request.session['mail_date_sliding_type'] = date_sliding_type
 
@@ -178,6 +192,7 @@ def find(request):
             'query': query,
             'hit_list': response,
             'day_mode': day_mode,
+            'show_hits': request.session.get('mail_show_hits', False),
         }
         return render(request, result_template, context)
 

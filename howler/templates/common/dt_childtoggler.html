@@ -4,12 +4,13 @@
 
 <div class="dt_absolute_container">
     <div class="dt_middle">
-        <div class="checkbox">
+        <div class="checkbox" title="{{ saved_in_session_text }}">
             <label>
-                <input type="checkbox" id="js_dt_childtoggle"/> {% trans "toggle hits shown" %}
+                <input type="checkbox" name="show_hits" id="js_dt_childtoggle" {% if show_hits %}
+                   checked="checked"{% endif %}/> {% trans "toggle hits shown" %}
             </label>
         </div>
     </div>
 </div>
 
-<script type="text/javascript" src='{% static 'common/dt_childtoggler.js' %}'></script>
+

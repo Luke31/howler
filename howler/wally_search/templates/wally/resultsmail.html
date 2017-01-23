@@ -1,6 +1,7 @@
 {% extends "wally/base_results.html" %}
 {% load i18n %}
 {% load results %}
+{% load static %}
 
 {% block col_header %}
     <th class="w_toggle_col"></th>
@@ -13,7 +14,9 @@
 {% endblock %}
 
 {% block table_element %}
-    {% include 'common/dt_childtoggler.html' %}
+    <form id="js_updatesessionform" action="{% url 'wally:updatesession' %}" method="get">
+        {% include 'common/dt_childtoggler.html' %}
+    </form>
     <table class="table table-striped-custom" id="js_result_table">
 {% endblock %}
 
@@ -104,3 +107,4 @@
 {% block no_data %}
     <span class="">{% trans "No emails found" %}</span>
 {% endblock %}
+
