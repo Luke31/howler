@@ -5,8 +5,11 @@
  */
 
 $(function () {
-    $('.loading').on('click', function () {
-        egg.init(); //Init egg module
+    $('.loading').on('mousedown', function (e) {
+        if (e.which == 2) { // Middle mouse
+            e.preventDefault();
+            egg.init(); //Init egg module
+        }
     });
 });
 
