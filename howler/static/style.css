@@ -1,18 +1,20 @@
 /*Containers*/
-div.content{
+div.content {
     padding: 1px;
 
 }
-a.navbar-brand{
+
+a.navbar-brand {
     padding: 0px 15px;
 }
 
 /*Text*/
 em {
-    background:#ff0;
+    background: #ff0;
 }
-blockquote{
-    font-size:1em;
+
+blockquote {
+    font-size: 1em;
 }
 
 /* --Loading-- */
@@ -60,3 +62,10 @@ blockquote{
     }
 }
 
+.loading > canvas {
+    position: fixed;
+    left: calc(50% - 300px/2);
+    top: calc(50% - 270px/2);
+    background: white;
+    border: 1px solid black;
+}
