@@ -106,11 +106,15 @@ class Search(metaclass=ABCMeta):
 
         # Execute
         response = s.execute()
-
-        return response
+        response_altered = self.alter_response(response)
+        return response_altered
 
     @abstractmethod
     def add_query_fields(self, s, qterm, **kwargs):
+        pass
+
+    @abstractmethod
+    def alter_response(self, response):
         pass
 
     @abstractmethod
@@ -223,6 +227,9 @@ class SearchMail(Search):
 
         return s
 
+    def alter_response(self, response):
+        return response
+
     def get_date_field_name(self):
         return 'date'
 
@@ -287,10 +294,17 @@ class SearchIrc(Search):
         # Highlight
         s = s.highlight_options(order='score')
         s = s.highlight('msg', number_of_fragments=0)
-        s = s.highlight('username')
+        s = s.highlight('username.keyword')
         s = s.highlight('channel')
 
         return s
+
+    def alter_response(self, response):
+        # Add highlighted username
+        for hit in response:
+            if hasattr(hit.meta, 'highlight'):
+                self.add_highlight_username(hit)
+        return response
 
     def get_date_field_name(self):
         return '@timestamp'
@@ -341,7 +355,7 @@ class SearchIrc(Search):
         # Highlight
         s = s.highlight_options(order='score')
         s = s.highlight('msg', number_of_fragments=0)
-        s = s.highlight('username')
+        s = s.highlight('username.keyword')
         s = s.highlight('channel')
 
         # Execute
@@ -349,6 +363,11 @@ class SearchIrc(Search):
 
         # Sort results
         response_sorted = sorted(response, key=lambda hit: hit['@timestamp'])
+
+        # Add highlighted username
+        for hit in response_sorted:
+            if hasattr(hit.meta, 'highlight'):
+                self.add_highlight_username(hit)
 
         return response_sorted
 
@@ -425,7 +444,7 @@ class SearchIrc(Search):
             .metric('max_date', 'max', field='@timestamp') \
             .metric('sum_score_channel', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
             .metric('top_msg_hits', 'top_hits', size=number_top_hits,
-                    highlight={'fields': {'msg': {}, 'username': {}, 'channel': {}}},
+                    highlight={'fields': {'msg': {}, 'username.keyword': {}, 'channel': {}}},
                     sort=[{'_score': {'order': 'desc'}}],
                     **{'_source': {
                         'includes': ['channel', 'username', '@timestamp', 'msg']}})
@@ -466,8 +485,16 @@ class SearchIrc(Search):
                 hit.username = hit_src.username
                 hit.channel = hit_src.channel
                 hit.msg = hit_src.msg
-                hit.meta.highlight = copy.deepcopy(hit.highlight)
+                if hasattr(hit, 'highlight'):
+                    hit.meta.highlight = copy.deepcopy(hit.highlight)
+                    self.add_highlight_username(hit)
                 hit.meta.id = hit['_id']
             hit_list[len(hit_list):] = channel_bucket.top_msg_hits.hits.hits  # create hits list
 
         return hit_list
+
+    @staticmethod
+    def add_highlight_username(hit):
+        if hasattr(hit.meta, 'highlight'):
+            if hasattr(hit.meta.highlight, 'username.keyword'):
+                hit.meta.highlight.username = hit.meta.highlight['username.keyword']
