@@ -410,11 +410,14 @@ class SearchIrc(Search):
         pos = MatchPhrase(msg={'query': qterm, 'boost': 2}) | \
               Match(**{'username.keyword': {'query': qterm, 'boost': 2}}) | \
               Match(channel={'query': qterm, 'boost': 2}) | \
-              Match(msg=qterm)
+              Match(msg={'query': qterm, 'boost': 1})
+        # Match is too strong!
+
         s = s.query(pos)
 
         # Prepare aggregate-query:
         # Aggregation levels: A (date filtered) -> B (bucket days) -> C (bucket channel)
+        score_order_field = 'sum_score_channel'  # 'percentiles_score_channel[99]', 'sum_score_channel', 'max_score_channel'
 
         # A date filtered
         if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
@@ -433,20 +436,23 @@ class SearchIrc(Search):
             c_bucket_channels = A('filter', term={'channel.keyword': filter_channel})
         else:
             c_bucket_channels = A('terms', field='channel.keyword',
-                                  min_doc_count=1, order={'sum_score_channel': 'desc'})
+                                  min_doc_count=1, order={score_order_field: 'desc'})
 
         c_bucket_channels = c_bucket_channels \
             .metric('max_date', 'max', field='@timestamp') \
             .metric('sum_score_channel', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
+            .metric('max_score_channel', 'max', script={'inline': '_score', 'lang': 'painless'}) \
+            .metric('percentiles_score_channel', 'percentiles', percents=[99], script={'inline': '_score', 'lang': 'painless'}) \
             .metric('top_msg_hits', 'top_hits', size=number_top_hits,
                     highlight={'fields': {'msg': {}, 'username.keyword': {}, 'channel': {}}},
                     sort=[{'_score': {'order': 'desc'}}],
                     **{'_source': {
-                        'includes': ['channel', 'username', '@timestamp', 'msg']}})
+                        'includes': ['channel', 'username', '@timestamp', 'msg']}}) \
+            # [95, 99, 99.9]
 
         # Stack aggregations Main -> A -> B -> C (reversed order)
         b_bucket_days.bucket('logs_per_channel', c_bucket_channels)
-        b_bucket_days.metric('max_score_channel', 'max', field='sum_score_channel')  # Add metric
+        b_bucket_days.metric('max_score_day', 'max', field=score_order_field)  # Add metric
         a_date_filtered.bucket('logs_per_day', b_bucket_days)
         s.aggs.bucket('logs_filtered', a_date_filtered)
 
@@ -462,15 +468,15 @@ class SearchIrc(Search):
             bucket_channel_flat = [item for sub in bucket_days for item in sub.logs_per_channel.buckets]
 
         # Sort flattened buckets (one bucket is a channel per day)
-        sort_field = 'sum_score_channel' if sort_field == '_score' else sort_field  # bucket's score
-        sort_field = 'max_date' if sort_field == '@timestamp' else sort_field  # a bucket has one date: max_date
+        if sort_field == 'channel.keyword':
+            sort_lambda = lambda bucket_channel: bucket_channel['key']
+        else: # sort_field == '_score':
+            sort_lambda = lambda bucket_channel: float(bucket_channel[score_order_field].value or 0)
+            # sort_lambda = lambda bucket_channel: float(bucket_channel.percentiles_score_channel.values['99.0'] or 0)
         sort_dir = 'desc' if sort_dir == '-' else 'asc'
 
         bucket_channel_flat_sorted = sorted(bucket_channel_flat,
-                                            key=lambda bucket_channel:
-                                            # the channel is the key of the bucket (currently unsupported though)
-                                            bucket_channel['key'] if sort_field == 'channel.keyword' else
-                                            float(bucket_channel[sort_field].value or 0),
+                                            key=sort_lambda,
                                             reverse=(sort_dir == 'desc'))
 
         number_results_buckets = int(number_results / 3)
