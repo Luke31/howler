@@ -13,6 +13,10 @@ var irc = (function () {
     var viewformat = 'YYYY/MM/DD HH:mm';
 
     var init = function () {
+        checkSetDayMode();
+        $('#day_mode').on('change', function (e) {
+            checkSetDayMode();
+        });
     };
 
     /**
@@ -33,7 +37,7 @@ var irc = (function () {
     var loadPopoverContent = function (form, tr, row, cbFillExtraDataAndShowChild) {
         var target = tr.find('.js_popover_content');
         //Content already loaded? => Just open childrow and return
-        if (target.html().trim() != ""){
+        if (target.html().trim() != "") {
             cbFillExtraDataAndShowChild(tr, row);
             return;
         }
@@ -62,6 +66,18 @@ var irc = (function () {
             e.preventDefault(); // avoid to execute the actual submit of the form.
         });
         form.submit();
+    };
+
+    /**
+     * If day mode is enabled, some sorting-fields shall not be used (e.g. username)
+     */
+    var checkSetDayMode = function () {
+        var isDayMode = $('#day_mode')[0].checked;
+        if (isDayMode) {
+            $('.js_day_mode_unsupported').prop('disabled', true);
+        } else {
+            $('.js_day_mode_unsupported').prop('disabled', false);
+        }
     };
 
     return {

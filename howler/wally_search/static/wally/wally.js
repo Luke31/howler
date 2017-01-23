@@ -164,7 +164,7 @@ var wally = (function () {
             "pageLength": 25,
             "lengthMenu": [[10, 15, 25, 50, 100], [10, 15, 25, 50, 100]],
             "drawCallback": drawCallback,
-            "stateSave": true // Save in localstorage for 2h ttps://datatables.net/examples/basic_init/state_save.html
+            "stateSave": !isDayMode() // Save in localstorage for 2h ttps://datatables.net/examples/basic_init/state_save.html
             //"order": [[orderColIdx, "desc"]]
         });
 
@@ -263,7 +263,17 @@ var wally = (function () {
         });
     };
 
+    /**
+     * Return True if IRC search day-mode is on
+     * @returns {boolean|*} Day mode on
+     */
+    var isDayMode = function(){
+        var dayModeCheckbox = $('#day_mode');
+        return dayModeCheckbox.length && dayModeCheckbox[0].checked;
+    };
+
     return {
-        init: init
+        init: init,
+        isDayMode: isDayMode
     }
 })();

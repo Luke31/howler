@@ -453,7 +453,7 @@ class SearchIrc(Search):
         # Execute query
         response = s.execute()
 
-        # Flatten days-channels bucekts (see: http://stackoverflow.com/a/952952/2003325)
+        # Flatten days-channels buckets (see: http://stackoverflow.com/a/952952/2003325)
         bucket_days = response.aggregations.logs_filtered.logs_per_day.buckets
         if filter_channel != '':
             # Channel already filtered
@@ -461,10 +461,18 @@ class SearchIrc(Search):
         else:
             bucket_channel_flat = [item for sub in bucket_days for item in sub.logs_per_channel.buckets]
 
-        # Sort flattened buckets
+        # Sort flattened buckets (one bucket is a channel per day)
+        sort_field = 'sum_score_channel' if sort_field == '_score' else sort_field  # bucket's score
+        sort_field = 'max_date' if sort_field == '@timestamp' else sort_field  # a bucket has one date: max_date
+        sort_dir = 'desc' if sort_dir == '-' else 'asc'
+
         bucket_channel_flat_sorted = sorted(bucket_channel_flat,
-                                            key=lambda bucket_channel: bucket_channel['sum_score_channel'].value,
-                                            reverse=True)
+                                            key=lambda bucket_channel:
+                                            # the channel is the key of the bucket (currently unsupported though)
+                                            bucket_channel['key'] if sort_field == 'channel.keyword' else
+                                            float(bucket_channel[sort_field].value or 0),
+                                            reverse=(sort_dir == 'desc'))
+
         number_results_buckets = int(number_results / 3)
         bucket_channel_flat_sorted = bucket_channel_flat_sorted[0:number_results_buckets]
 
