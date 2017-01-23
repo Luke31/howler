@@ -495,6 +495,14 @@ class SearchIrc(Search):
 
     @staticmethod
     def add_highlight_username(hit):
+        """
+        Map highlighted username.keyword attribute to highlight.username.
+
+        Hit is directly modified, no value is returned
+
+        :param hit: Hit to search and modify
+        :return: None (hit directly modified)
+        """
         if hasattr(hit.meta, 'highlight'):
             if hasattr(hit.meta.highlight, 'username.keyword'):
                 hit.meta.highlight.username = hit.meta.highlight['username.keyword']
