@@ -72,8 +72,7 @@ var irc = (function () {
      * If day mode is enabled, some sorting-fields shall not be used (e.g. username)
      */
     var checkSetDayMode = function () {
-        var isDayMode = $('#day_mode')[0].checked;
-        if (isDayMode) {
+        if (wally.isDayMode()) {
             $('.js_day_mode_unsupported').prop('disabled', true);
         } else {
             $('.js_day_mode_unsupported').prop('disabled', false);
