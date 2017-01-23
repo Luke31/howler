@@ -344,11 +344,6 @@ class SearchIrc(Search):
         # filter channel
         s = s.filter('term', **{'channel.keyword': channel})
 
-        # s = s.sort(
-        #     '-_score',
-        #     '-@timestamp',
-        # )
-
         # Number of results
         s = s[0:number_results]
 
