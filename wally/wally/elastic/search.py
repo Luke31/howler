@@ -405,24 +405,26 @@ class SearchIrc(Search):
         percentiles_percents_field_order = 'percentiles_score_channel[99]'
         score_order_field = percentiles_percents_field_order  # percentiles_percents_field_order, 'sum_score_channel', 'max_score_channel'
 
-        # A date filtered
+        # A date/channel filtered
+        filters = []
         if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
-            a_date_filtered = A('filter', range={
-                '@timestamp': {'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type), 'lte': 'now'}})
+            filters.append({'range': {
+                '@timestamp': {'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type), 'lte': 'now'}}})
         elif date_gte is not None:
-            a_date_filtered = A('filter', range={'@timestamp': {'gte': date_gte, 'lte': date_lte}})
+            filters.append({'range': {'@timestamp': {'gte': date_gte, 'lte': date_lte}}})
+
+        if filter_channel != '':
+            filters.append({'term': {'channel.keyword': filter_channel}})
+
+        a_log_filtered = A('filter', Q('bool', must=filters))
 
         # B bucket days
         b_bucket_days = A('date_histogram', field='@timestamp', interval='day', format='yyyy-MM-dd',
                           min_doc_count=1, order={'max_score_day': 'desc'})  # , order={score_order_field: 'desc'}
 
         # C bucket channels
-        if filter_channel != '':
-            # Filter channel if provided
-            c_bucket_channels = A('filter', term={'channel.keyword': filter_channel})
-        else:
-            c_bucket_channels = A('terms', field='channel.keyword',
-                                  min_doc_count=1, order={score_order_field: 'desc'})
+        c_bucket_channels = A('terms', field='channel.keyword',
+                              min_doc_count=1, order={score_order_field: 'desc'})
 
         c_bucket_channels = c_bucket_channels \
             .metric('max_date', 'max', field='@timestamp') \
@@ -434,25 +436,20 @@ class SearchIrc(Search):
                     highlight={'fields': {'msg': {}, 'username': {}, 'channel': {}}},
                     sort=[{'_score': {'order': 'desc'}}],
                     **{'_source': {
-                        'includes': ['channel', 'username', '@timestamp', 'msg']}}) \
-            # [95, 99, 99.9]
+                        'includes': ['channel', 'username', '@timestamp', 'msg']}})
 
         # Stack aggregations Main -> A -> B -> C (reversed order)
         b_bucket_days.bucket('logs_per_channel', c_bucket_channels)
         b_bucket_days.metric('max_score_day', 'max', field=score_order_field)  # Add metric
-        a_date_filtered.bucket('logs_per_day', b_bucket_days)
-        s.aggs.bucket('logs_filtered', a_date_filtered)
+        a_log_filtered.bucket('logs_per_day', b_bucket_days)
+        s.aggs.bucket('logs_filtered', a_log_filtered)
 
         # Execute query
         response = s.execute()
 
         # Flatten days-channels buckets (see: http://stackoverflow.com/a/952952/2003325)
         bucket_days = response.aggregations.logs_filtered.logs_per_day.buckets
-        if filter_channel != '':
-            # Channel already filtered
-            bucket_channel_flat = [sub.logs_per_channel for sub in bucket_days if sub.logs_per_channel.doc_count > 0]
-        else:
-            bucket_channel_flat = [item for sub in bucket_days for item in sub.logs_per_channel.buckets]
+        bucket_channel_flat = [item for sub in bucket_days for item in sub.logs_per_channel.buckets]
 
         # Sort flattened buckets (one bucket is a channel per day)
         if sort_field == 'channel.keyword':
