@@ -55,7 +55,7 @@
 
                 {% if hit.meta.highlight.toName.0 %}
                     <p class="fragment">
-                        {% trans "Hit in receiver name" %}: <span class="search-hit"> hit.meta.highlight.toName.0|strip_except_tags:"em" }}</span>
+                        {% trans "Hit in receiver name" %}: <span class="search-hit">{{ hit.meta.highlight.toName.0|strip_except_tags:"em" }}</span>
                     </p>
                 {% endif %}
 
