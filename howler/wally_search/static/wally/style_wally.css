@@ -51,3 +51,7 @@ tr.shown td.details-control>span.glyphicon-plus { display:none; } /*Hide open*/
     padding-left: 20px;
     padding-bottom: 10px;
 }
+
+form .glyphicon-info-sign {
+    cursor: pointer;
+}

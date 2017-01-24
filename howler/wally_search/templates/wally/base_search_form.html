@@ -22,11 +22,42 @@
                             </div>
                             <div class='col-md-2 col-lg-2'>
                                 <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+                                <span class="glyphicon glyphicon-info-sign text-info js_info_query_syntax_toggle"></span>
                             </div>
                             <div class='col-md-4 col-lg-3'>
                                 {% block search_form_checkboxes %}
 
                                 {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="alert alert-info js_info_query_syntax collapse" role="alert">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-7">
+                                    {% trans 'You can use the Simple Query String Syntax:' %} <a
+                                        href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html#_simple_query_string_syntax">{% trans 'More info' %}</a>
+
+                                    <pre>+ signifies AND operation
+| signifies OR operation
+" wraps a number of tokens to signify a phrase for searching
+* at the end of a term signifies a prefix query
+( and ) signify precedence
+~N after a word signifies edit distance (fuzziness)
+~N after a phrase signifies slop amount</pre>
+                                    <!--Problem with mail, ok in IRC: - negates a single token -> 京都大学 -東京-->
+                                </div>
+                                <div class="col-md-6 col-lg-5">
+                                    {% trans 'Examples:' %}
+                                    <pre>京都大学 +東京大学
+"BUG 5509"
+BU* 5509
+"BEG~1 5509"
+"(review|bug) 5509"
+大学 +(東京|京都)</pre>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -54,7 +85,8 @@
                                             <label for="date_sliding_value">{% trans "Within the past" %}</label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" id="date_sliding_value"
-                                                       name="date_sliding_value" value="{{ date_sliding_value }}">
+                                                       name="date_sliding_value"
+                                                       value="{{ date_sliding_value }}">
                                             </div>
                                         </div>
                                         <div class="col-md-6" title="{{ saved_in_session_text }}">
@@ -62,9 +94,12 @@
                                             <div class="input-group">
                                                 <select class="form-control" id="date_sliding_type"
                                                         name="date_sliding_type">
-                                                    <option value="y" {% if date_sliding_type == 'y' %} selected="selected"{% endif %}>{% trans "Years" %}</option>
-                                                    <option value="M" {% if date_sliding_type == 'M' %} selected="selected"{% endif %}>{% trans "Months" %}</option>
-                                                    <option value="d" {% if date_sliding_type == 'd' %} selected="selected"{% endif %}>{% trans "Days" %}</option>
+                                                    <option value="y" {% if date_sliding_type == 'y' %}
+                                                            selected="selected"{% endif %}>{% trans "Years" %}</option>
+                                                    <option value="M" {% if date_sliding_type == 'M' %}
+                                                            selected="selected"{% endif %}>{% trans "Months" %}</option>
+                                                    <option value="d" {% if date_sliding_type == 'd' %}
+                                                            selected="selected"{% endif %}>{% trans "Days" %}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -85,7 +120,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="to">{% trans "To" context "datetime" %}</label> - {{ jsttime }}
+                                            <label for="to">{% trans "To" context "datetime" %}</label>
+                                            - {{ jsttime }}
                                             <div class='input-group date' id='datetimepicker-to'>
                                                 <input type='text' class="form-control" name="to"
                                                        placeholder="2016/10/31 12:18"/>
@@ -143,8 +179,10 @@
                                             <label for="sort_dir">{% trans "Direction" %}</label>
                                             <select class="form-control" id="sort_dir"
                                                     name="sort_dir">
-                                                <option value="" {% if sort_dir == '' %} selected="selected"{% endif %}>{% trans "Asc" %}</option>
-                                                <option value="-" {% if sort_dir == '-' %} selected="selected"{% endif %}>{% trans "Desc" %}</option>
+                                                <option value="" {% if sort_dir == '' %}
+                                                        selected="selected"{% endif %}>{% trans "Asc" %}</option>
+                                                <option value="-" {% if sort_dir == '-' %}
+                                                        selected="selected"{% endif %}>{% trans "Desc" %}</option>
                                             </select>
                                         </div>
                                     </div>

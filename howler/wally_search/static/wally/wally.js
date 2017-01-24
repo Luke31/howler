@@ -19,6 +19,7 @@ var wally = (function () {
         initSearchFormSubmit();
         initFixedDateInput();
         initDateFilterSwitcher();
+        initSyntaxInfoToggler();
     };
 
     /**
@@ -270,6 +271,15 @@ var wally = (function () {
     var isDayMode = function(){
         var dayModeCheckbox = $('#day_mode');
         return dayModeCheckbox.length && dayModeCheckbox[0].checked;
+    };
+
+    /**
+     * Toggle the display of the syntax-info-box
+     */
+    var initSyntaxInfoToggler = function(){
+      $('.js_info_query_syntax_toggle').on('click', function(){
+          $('.js_info_query_syntax').slideToggle();
+      });
     };
 
     return {
