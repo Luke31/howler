@@ -408,7 +408,11 @@ class SearchIrc(Search):
 
         # Prepare aggregate-query:
         # Aggregation levels: A (date filtered) -> B (bucket days) -> C (bucket channel)
-        score_order_field = 'percentiles_score_channel[99]'  # 'percentiles_score_channel[99]', 'sum_score_channel', 'max_score_channel'
+        percentiles_percents = 99
+        percentiles_percents_field = '99.0'
+
+        percentiles_percents_field_order = 'percentiles_score_channel[99]'
+        score_order_field = 'sum_score_channel'  # percentiles_percents_field_order, 'sum_score_channel', 'max_score_channel'
 
         # A date filtered
         if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
@@ -419,7 +423,7 @@ class SearchIrc(Search):
 
         # B bucket days
         b_bucket_days = A('date_histogram', field='@timestamp', interval='day', format='yyyy-MM-dd',
-                          min_doc_count=1)
+                          min_doc_count=1, order={'max_score_day': 'desc'})  # , order={score_order_field: 'desc'}
 
         # C bucket channels
         if filter_channel != '':
@@ -433,7 +437,7 @@ class SearchIrc(Search):
             .metric('max_date', 'max', field='@timestamp') \
             .metric('sum_score_channel', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
             .metric('max_score_channel', 'max', script={'inline': '_score', 'lang': 'painless'}) \
-            .metric('percentiles_score_channel', 'percentiles', percents=[99],
+            .metric('percentiles_score_channel', 'percentiles', percents=[percentiles_percents],
                     script={'inline': '_score', 'lang': 'painless'}) \
             .metric('top_msg_hits', 'top_hits', size=number_top_hits,
                     highlight={'fields': {'msg': {}, 'username': {}, 'channel': {}}},
@@ -462,9 +466,11 @@ class SearchIrc(Search):
         # Sort flattened buckets (one bucket is a channel per day)
         if sort_field == 'channel.keyword':
             sort_lambda = lambda bucket_channel: bucket_channel['key']
-        else:  # sort_field == '_score':
-            # sort_lambda = lambda bucket_channel: float(bucket_channel[score_order_field].value or 0)
-            sort_lambda = lambda bucket_channel: float(bucket_channel.percentiles_score_channel.values['99.0'] or 0)
+        elif sort_field == '_score' and score_order_field == percentiles_percents_field_order:
+            sort_lambda = lambda bucket_channel: float(
+                bucket_channel.percentiles_score_channel.values[percentiles_percents_field] or 0)
+        else:  # '_score' + 'sum_score_channel'
+            sort_lambda = lambda bucket_channel: float(bucket_channel[score_order_field].value or 0)
         sort_dir = 'desc' if sort_dir == '-' else 'asc'
 
         bucket_channel_flat_sorted = sorted(bucket_channel_flat,
@@ -478,7 +484,11 @@ class SearchIrc(Search):
         hit_list = []
         for channel_bucket in bucket_channel_flat_sorted:
             for hit in channel_bucket.top_msg_hits.hits.hits:
-                hit.meta = {'score': channel_bucket.sum_score_channel.value, 'highlight': {}}
+                if score_order_field == percentiles_percents_field_order:
+                    score = channel_bucket.percentiles_score_channel.values[percentiles_percents_field]
+                else:
+                    score = channel_bucket[score_order_field].value
+                hit.meta = {'score': score, 'highlight': {}}
                 hit_src = hit['_source']
                 hit.sent = dateutil.parser.parse(hit_src['@timestamp'])
                 hit.day_raw = '{:%Y-%m-%d}'.format(hit.sent)
@@ -500,18 +510,13 @@ class SearchIrc(Search):
         else:
             msg_query = MatchPhrase(msg={'query': qterm})
         pos = msg_query | \
-                Common(msg={'query': qterm, 'cutoff_frequency': 0.001})
-    #DisMax(tie_breaker=1, boost=1, queries=[
-            #msg_query,
-            #Match(**{'username.keyword': {'query': qterm, 'boost': 0.5}}),
-            #Match(**{'username': {'query': qterm, 'boost': 0.5}}),
-            #Match(channel={'query': qterm, 'boost': 2}),
-        #])
-
-        # pos = MatchPhrase(msg={'query': qterm, 'boost': 2}) | \
-        #      Match(**{'username.keyword': {'query': qterm, 'boost': 2}}) | \
-        #      Match(channel={'query': qterm, 'boost': 2}) | \
-        #      Match(msg=qterm)
+              Common(msg={'query': qterm, 'cutoff_frequency': 0.001})
+        # DisMax(tie_breaker=1, boost=1, queries=[
+        # msg_query,
+        # Match(**{'username.keyword': {'query': qterm, 'boost': 0.5}}),
+        # Match(**{'username': {'query': qterm, 'boost': 0.5}}),
+        # Match(channel={'query': qterm, 'boost': 2}),
+        # ])
 
         # Match(msg={'query': qterm, 'boost': 1})
         return pos
