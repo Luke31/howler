@@ -1,9 +1,10 @@
 from elasticsearch_dsl import Search as DslSearch, A
-from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term, Range, Q, SF
+from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term, Range, Q, SF, Common, SimpleQueryString, DisMax
 from ..dementor import constants as dementor_constants
 from abc import abstractmethod, ABCMeta
 import dateutil.parser
 import copy
+from . import helpers
 
 
 class Search(metaclass=ABCMeta):
@@ -275,11 +276,7 @@ class SearchIrc(Search):
 
             """
         # Query
-        pos = MatchPhrase(msg={'query': qterm, 'boost': 2}) | \
-              Match(**{'username.keyword': {'query': qterm, 'boost': 2}}) | \
-              Match(channel={'query': qterm, 'boost': 2}) | \
-              Match(msg=qterm)
-        s = s.query(pos)
+        s = s.query(self.get_query(qterm))
 
         # Get specific query arguments
         filter_channel = ''
@@ -326,7 +323,7 @@ class SearchIrc(Search):
         # Function score
         main_query_boosting = 1e-15  # only used for highlighting, not for scoring -> give very low signifance
         pos = MatchPhrase(msg={'query': qterm, 'boost': main_query_boosting}) | \
-              Match(**{'username.keyword': {'query': qterm, 'boost': main_query_boosting}}) | \
+              Match(**{'username': {'query': qterm, 'boost': main_query_boosting}}) | \
               Match(channel={'query': qterm, 'boost': main_query_boosting}) | \
               Match(msg={'query': qterm, 'boost': main_query_boosting})
         main_query = (pos | Q('match_all'))
@@ -407,17 +404,11 @@ class SearchIrc(Search):
         s = s[0:0]  # don't return other results, only aggregation
 
         # Search-Query
-        pos = MatchPhrase(msg={'query': qterm, 'boost': 2}) | \
-              Match(**{'username.keyword': {'query': qterm, 'boost': 2}}) | \
-              Match(channel={'query': qterm, 'boost': 2}) | \
-              Match(msg={'query': qterm, 'boost': 1})
-        # Match is too strong!
-
-        s = s.query(pos)
+        s = s.query(self.get_query(qterm))
 
         # Prepare aggregate-query:
         # Aggregation levels: A (date filtered) -> B (bucket days) -> C (bucket channel)
-        score_order_field = 'sum_score_channel'  # 'percentiles_score_channel[99]', 'sum_score_channel', 'max_score_channel'
+        score_order_field = 'percentiles_score_channel[99]'  # 'percentiles_score_channel[99]', 'sum_score_channel', 'max_score_channel'
 
         # A date filtered
         if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
@@ -442,9 +433,10 @@ class SearchIrc(Search):
             .metric('max_date', 'max', field='@timestamp') \
             .metric('sum_score_channel', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
             .metric('max_score_channel', 'max', script={'inline': '_score', 'lang': 'painless'}) \
-            .metric('percentiles_score_channel', 'percentiles', percents=[99], script={'inline': '_score', 'lang': 'painless'}) \
+            .metric('percentiles_score_channel', 'percentiles', percents=[99],
+                    script={'inline': '_score', 'lang': 'painless'}) \
             .metric('top_msg_hits', 'top_hits', size=number_top_hits,
-                    highlight={'fields': {'msg': {}, 'username.keyword': {}, 'channel': {}}},
+                    highlight={'fields': {'msg': {}, 'username': {}, 'channel': {}}},
                     sort=[{'_score': {'order': 'desc'}}],
                     **{'_source': {
                         'includes': ['channel', 'username', '@timestamp', 'msg']}}) \
@@ -470,9 +462,9 @@ class SearchIrc(Search):
         # Sort flattened buckets (one bucket is a channel per day)
         if sort_field == 'channel.keyword':
             sort_lambda = lambda bucket_channel: bucket_channel['key']
-        else: # sort_field == '_score':
-            sort_lambda = lambda bucket_channel: float(bucket_channel[score_order_field].value or 0)
-            # sort_lambda = lambda bucket_channel: float(bucket_channel.percentiles_score_channel.values['99.0'] or 0)
+        else:  # sort_field == '_score':
+            # sort_lambda = lambda bucket_channel: float(bucket_channel[score_order_field].value or 0)
+            sort_lambda = lambda bucket_channel: float(bucket_channel.percentiles_score_channel.values['99.0'] or 0)
         sort_dir = 'desc' if sort_dir == '-' else 'asc'
 
         bucket_channel_flat_sorted = sorted(bucket_channel_flat,
@@ -501,6 +493,28 @@ class SearchIrc(Search):
             hit_list[len(hit_list):] = channel_bucket.top_msg_hits.hits.hits  # create hits list
 
         return hit_list
+
+    def get_query(self, qterm):
+        if helpers.is_simple_query_string_query(qterm):
+            msg_query = SimpleQueryString(query=qterm, fields=['msg', 'username.keyword', 'channel'], boost=5)
+        else:
+            msg_query = MatchPhrase(msg={'query': qterm})
+        pos = msg_query | \
+                Common(msg={'query': qterm, 'cutoff_frequency': 0.001})
+    #DisMax(tie_breaker=1, boost=1, queries=[
+            #msg_query,
+            #Match(**{'username.keyword': {'query': qterm, 'boost': 0.5}}),
+            #Match(**{'username': {'query': qterm, 'boost': 0.5}}),
+            #Match(channel={'query': qterm, 'boost': 2}),
+        #])
+
+        # pos = MatchPhrase(msg={'query': qterm, 'boost': 2}) | \
+        #      Match(**{'username.keyword': {'query': qterm, 'boost': 2}}) | \
+        #      Match(channel={'query': qterm, 'boost': 2}) | \
+        #      Match(msg=qterm)
+
+        # Match(msg={'query': qterm, 'boost': 1})
+        return pos
 
     @staticmethod
     def add_highlight_username(hit):

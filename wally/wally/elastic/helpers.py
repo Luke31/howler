@@ -4,6 +4,7 @@ from . import constants
 import elasticsearch
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
+import re
 
 
 def get_already_imported_ids(es, es_index_prefix, es_type_name):
@@ -88,3 +89,13 @@ def get_analyzer(lang_analyzer, delete_old_index, user_dictionary_file='', synon
     else:
         analyzer_lang = analysis.analyzer(lang_analyzer)
     return analyzer_lang
+
+
+def is_simple_query_string_query(qterm):
+    """
+    Returns true if the qterm contains elasticsearch simple query string query syntax.
+
+    :param qterm: Query string to analyze
+    :return: ``bool``
+    """
+    return bool(re.search('^.*[-+|"*()~].*$', qterm))
