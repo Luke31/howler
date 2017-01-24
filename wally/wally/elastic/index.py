@@ -227,13 +227,13 @@ class IndexIrc(Index):
                       fields={
                           'keyword': 'keyword'
                       })
-        mapping.field('username', 'text',
+        mapping.field('username', 'text', analyzer=analyzer_lang,
                       fields={
                           'keyword': 'keyword',
                       })
         mapping.field('@timestamp', 'date')
 
-        mapping.field('channel', 'text',
+        mapping.field('channel', 'text', analyzer=analyzer_lang,
                       fields={
                           'keyword': 'keyword',
                       })
