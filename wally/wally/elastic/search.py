@@ -276,7 +276,7 @@ class SearchIrc(Search):
 
             """
         # Query
-        s = s.query(self.get_query(qterm))
+        s = s.query(self._get_query(qterm))
 
         # Get specific query arguments
         filter_channel = ''
@@ -297,10 +297,6 @@ class SearchIrc(Search):
         return s
 
     def alter_response(self, response):
-        # Add highlighted username
-        for hit in response:
-            if hasattr(hit.meta, 'highlight'):
-                self.add_highlight_username(hit)
         return response
 
     def get_date_field_name(self):
@@ -356,11 +352,6 @@ class SearchIrc(Search):
         # Sort results
         response_sorted = sorted(response, key=lambda hit: hit['@timestamp'])
 
-        # Add highlighted username
-        for hit in response_sorted:
-            if hasattr(hit.meta, 'highlight'):
-                self.add_highlight_username(hit)
-
         return response_sorted
 
     def search_day(self, qterm, **kwargs):
@@ -404,7 +395,7 @@ class SearchIrc(Search):
         s = s[0:0]  # don't return other results, only aggregation
 
         # Search-Query
-        s = s.query(self.get_query(qterm))
+        s = s.query(self._get_query(qterm))
 
         # Prepare aggregate-query:
         # Aggregation levels: A (date filtered) -> B (bucket days) -> C (bucket channel)
@@ -498,13 +489,19 @@ class SearchIrc(Search):
                 hit.msg = hit_src.msg
                 if hasattr(hit, 'highlight'):
                     hit.meta.highlight = copy.deepcopy(hit.highlight)
-                    self.add_highlight_username(hit)
                 hit.meta.id = hit['_id']
             hit_list[len(hit_list):] = channel_bucket.top_msg_hits.hits.hits  # create hits list
 
         return hit_list
 
-    def get_query(self, qterm):
+    @staticmethod
+    def _get_query(qterm):
+        """
+        Return query for search-term
+
+        :param qterm: ``str`` string to build query for
+        :return: ``Query`` Search-Query
+        """
         if helpers.is_simple_query_string_query(qterm):
             msg_query = SimpleQueryString(query=qterm, fields=['msg', 'username', 'channel'], boost=5)
         else:
@@ -516,17 +513,3 @@ class SearchIrc(Search):
                 Common(msg={'query': qterm, 'cutoff_frequency': 0.001})])
 
         return pos
-
-    @staticmethod
-    def add_highlight_username(hit):
-        """
-        Map highlighted username.keyword attribute to highlight.username.
-
-        Hit is directly modified, no value is returned
-
-        :param hit: Hit to search and modify
-        :return: None (hit directly modified)
-        """
-        if hasattr(hit.meta, 'highlight'):
-            if hasattr(hit.meta.highlight, 'username.keyword'):
-                hit.meta.highlight.username = hit.meta.highlight['username.keyword']
