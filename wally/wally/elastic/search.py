@@ -291,7 +291,7 @@ class SearchIrc(Search):
         # Highlight
         s = s.highlight_options(order='score')
         s = s.highlight('msg', number_of_fragments=0)
-        s = s.highlight('username.keyword')
+        s = s.highlight('username')
         s = s.highlight('channel')
 
         return s
@@ -347,7 +347,7 @@ class SearchIrc(Search):
         # Highlight
         s = s.highlight_options(order='score')
         s = s.highlight('msg', number_of_fragments=0)
-        s = s.highlight('username.keyword')
+        s = s.highlight('username')
         s = s.highlight('channel')
 
         # Execute
@@ -412,7 +412,7 @@ class SearchIrc(Search):
         percentiles_percents_field = '99.0'
 
         percentiles_percents_field_order = 'percentiles_score_channel[99]'
-        score_order_field = 'sum_score_channel'  # percentiles_percents_field_order, 'sum_score_channel', 'max_score_channel'
+        score_order_field = percentiles_percents_field_order  # percentiles_percents_field_order, 'sum_score_channel', 'max_score_channel'
 
         # A date filtered
         if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
@@ -506,15 +506,14 @@ class SearchIrc(Search):
 
     def get_query(self, qterm):
         if helpers.is_simple_query_string_query(qterm):
-            msg_query = SimpleQueryString(query=qterm, fields=['msg', 'username.keyword', 'channel'], boost=5)
+            msg_query = SimpleQueryString(query=qterm, fields=['msg', 'username', 'channel'], boost=5)
         else:
             msg_query = MatchPhrase(msg={'query': qterm})
         pos = msg_query | \
               Common(msg={'query': qterm, 'cutoff_frequency': 0.001})
         # DisMax(tie_breaker=1, boost=1, queries=[
         # msg_query,
-        # Match(**{'username.keyword': {'query': qterm, 'boost': 0.5}}),
-        # Match(**{'username': {'query': qterm, 'boost': 0.5}}),
+        # Match(**{'username': {'query': qterm, 'boost': 1}}),
         # Match(channel={'query': qterm, 'boost': 2}),
         # ])
 
