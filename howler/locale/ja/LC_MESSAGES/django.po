@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-20 17:27+0900\n"
+"POT-Creation-Date: 2017-01-24 15:48+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,6 +46,10 @@ msgstr "Howler メール検索"
 msgid "IRC search"
 msgstr "Howler IRC検索"
 
-#: templates/common/dt_childtoggler.html:9
+#: templates/common/dt_childtoggler.html:5
+msgid "selected value remembered"
+msgstr "選んだ値が記憶された"
+
+#: templates/common/dt_childtoggler.html:11
 msgid "toggle hits shown"
 msgstr "表示されたヒットを切り替える"
