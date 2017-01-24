@@ -508,7 +508,8 @@ class SearchIrc(Search):
         else:
             msg_query = DisMax(tie_breaker=0.7, boost=1, queries=[
                 SimpleQueryString(query=qterm, fields=['username', 'channel'], boost=1),
-                MatchPhrase(msg={'query': qterm, 'boost': 1})])
+                MatchPhrase(msg={'query': qterm, 'boost': 1})
+            ])
         pos = DisMax(tie_breaker=0.7, boost=1, queries=[
             msg_query,
             Common(msg={'query': qterm, 'cutoff_frequency': 0.001})
