@@ -450,18 +450,20 @@ class SearchIrc(Search):
         bucket_days = response.aggregations.logs_filtered.logs_per_day.buckets
         if filter_channel != '':
             # Channel already filtered
-            bucket_channel_flat = [sub.logs_per_channel for sub in bucket_days]
+            bucket_channel_flat = [sub.logs_per_channel for sub in bucket_days if sub.logs_per_channel.doc_count > 0]
         else:
             bucket_channel_flat = [item for sub in bucket_days for item in sub.logs_per_channel.buckets]
 
         # Sort flattened buckets (one bucket is a channel per day)
         if sort_field == 'channel.keyword':
-            sort_lambda = lambda bucket_channel: bucket_channel['key']
+            def sort_lambda(bucket_channel):
+                return bucket_channel['key']
         elif sort_field == '_score' and score_order_field == percentiles_percents_field_order:
-            sort_lambda = lambda bucket_channel: float(
-                bucket_channel.percentiles_score_channel.values[percentiles_percents_field] or 0)
+            def sort_lambda(bucket_channel):
+                return bucket_channel.percentiles_score_channel.values[percentiles_percents_field]
         else:  # '_score' + 'sum_score_channel'
-            sort_lambda = lambda bucket_channel: float(bucket_channel[score_order_field].value or 0)
+            def sort_lambda(bucket_channel):
+                return bucket_channel[score_order_field].value
         sort_dir = 'desc' if sort_dir == '-' else 'asc'
 
         bucket_channel_flat_sorted = sorted(bucket_channel_flat,
@@ -509,7 +511,7 @@ class SearchIrc(Search):
                 SimpleQueryString(query=qterm, fields=['username', 'channel'], boost=1),
                 MatchPhrase(msg={'query': qterm, 'boost': 1})])
         pos = DisMax(tie_breaker=0.7, boost=1, queries=[
-                msg_query,
-                Common(msg={'query': qterm, 'cutoff_frequency': 0.001})])
+            msg_query,
+            Common(msg={'query': qterm, 'cutoff_frequency': 0.001})])
 
         return pos
