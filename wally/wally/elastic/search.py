@@ -514,13 +514,7 @@ class SearchIrc(Search):
         pos = DisMax(tie_breaker=0.7, boost=1, queries=[
                 msg_query,
                 Common(msg={'query': qterm, 'cutoff_frequency': 0.001})])
-        # DisMax(tie_breaker=1, boost=1, queries=[
-        # msg_query,
-        # Match(**{'username': {'query': qterm, 'boost': 1}}),
-        # Match(channel={'query': qterm, 'boost': 2}),
-        # ])
 
-        # Match(msg={'query': qterm, 'boost': 1})
         return pos
 
     @staticmethod
