@@ -179,10 +179,12 @@ class SearchMail(Search):
         else:
             body_query = DisMax(tie_breaker=0.7, boost=1, queries=[
                 SimpleQueryString(query=qterm, fields=fields, boost=1),
-                MatchPhrase(body={'query': qterm, 'boost': 1}),
-                Common(body={'query': qterm, 'cutoff_frequency': 0.001})
+                MatchPhrase(body={'query': qterm, 'boost': 1})
             ])
-        pos = body_query
+        pos = DisMax(tie_breaker=0.7, boost=1, queries=[
+            body_query,
+            Common(body={'query': qterm, 'cutoff_frequency': 0.001})
+        ])
 
         # penalize if spam
         neg = Match(subject={'query': 'spam'})
