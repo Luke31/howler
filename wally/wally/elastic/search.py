@@ -172,16 +172,18 @@ class SearchMail(Search):
 
             """
         # Query
-        pos = MatchPhrase(body={'query': qterm, 'boost': 2}) | \
-              Match(fromEmail={'query': qterm, 'boost': 2}) | \
-              Match(toEmail={'query': qterm, 'boost': 2}) | \
-              Match(replyToEmail={'query': qterm, 'boost': 2}) | \
-              Match(fromName={'query': qterm, 'boost': 1}) | \
-              Match(toName={'query': qterm, 'boost': 1}) | \
-              Match(replyToName={'query': qterm, 'boost': 1}) | \
-              Match(subject={'query': qterm, 'boost': 1.5}) | \
-              Match(attachmentNames={'query': qterm, 'boost': 2}) | \
-              Match(body=qterm)
+        fields = ['body', 'fromEmail', 'toEmail', 'replyToEmail', 'fromName', 'toName', 'replyToName', 'subject',
+                  'attachmentNames']
+        if helpers.is_simple_query_string_query(qterm):
+            body_query = SimpleQueryString(query=qterm, fields=fields, boost=5)
+        else:
+            body_query = DisMax(tie_breaker=0.7, boost=1, queries=[
+                SimpleQueryString(query=qterm, fields=fields, boost=1),
+                MatchPhrase(body={'query': qterm, 'boost': 1}),
+                Common(body={'query': qterm, 'cutoff_frequency': 0.001})
+            ])
+        pos = body_query
+
         # penalize if spam
         neg = Match(subject={'query': 'spam'})
         boosting = Boosting(positive=pos, negative=neg, negative_boost=0.2)
@@ -509,6 +511,7 @@ class SearchIrc(Search):
                 MatchPhrase(msg={'query': qterm, 'boost': 1})])
         pos = DisMax(tie_breaker=0.7, boost=1, queries=[
             msg_query,
-            Common(msg={'query': qterm, 'cutoff_frequency': 0.001})])
+            Common(msg={'query': qterm, 'cutoff_frequency': 0.001})
+        ])
 
         return pos
