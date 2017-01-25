@@ -33,6 +33,19 @@ td.details-control {
 tr:not(.shown) td.details-control>span.glyphicon-minus { display:none; } /*Hide close*/
 tr.shown td.details-control>span.glyphicon-plus { display:none; } /*Hide open*/
 
+/*Hide sorting on row-toggler*/
+table.dataTable thead tr>th.no-sort.sorting:after,
+table.dataTable thead tr>th.no-sort.sorting_asc:after,
+table.dataTable thead tr>th.no-sort.sorting_desc:after {
+    content: '';
+}
+
+/*Make sorted columns more visible:*/
+table.dataTable thead tr>th:not(.no-sort).sorting_asc,
+table.dataTable thead tr>th:not(.no-sort).sorting_desc {
+    background-color: rgba(255,253,0,0.38);
+}
+
 .search-hit{
     color:black;
     background-color: rgba(0, 249, 16, 0.09);
@@ -41,18 +54,18 @@ tr.shown td.details-control>span.glyphicon-plus { display:none; } /*Hide open*/
     border-radius: .25em;
 }
 
-/*Requirement saita 10.01.2017*/
+/*Requirement saita 10.01.2017 - don't show child-row-toggler in mail-result, one button for all*/
 .w_toggle_col{
     display:none;
 }
 
-/*Requirement saita 19.01.2017*/
+/*Requirement saita 19.01.2017 - abstract content not so bold*/
 .mail_abstract_content{
     padding-left: 20px;
     padding-bottom: 10px;
 }
 
-form .saved-session{
+form .glyphicon.saved-session{
     opacity: 0.3;
 }
 form .glyphicon-info-sign {
