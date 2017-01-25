@@ -484,7 +484,7 @@ class SearchIrc(Search):
 
         # B bucket days
         b_bucket_days = A('date_histogram', field='@timestamp', interval='day', format='yyyy-MM-dd',
-                          min_doc_count=1, order={'max_score_day': 'desc'})  # , order={score_order_field: 'desc'}
+                          min_doc_count=1, order={'max_score_day': 'desc'})
 
         # C bucket channels
         c_bucket_channels = A('terms', field='channel.keyword',
@@ -518,12 +518,15 @@ class SearchIrc(Search):
         if sort_field == 'channel.keyword':
             def sort_lambda(bucket_channel):
                 return bucket_channel['key']
-        elif sort_field == '_score' and score_order_field == percentiles_percents_field_order:
+        elif sort_field == '_score' and score_metric == 'perc':
             def sort_lambda(bucket_channel):
                 return bucket_channel.percentiles_score_channel.values[percentiles_percents_field]
-        else:  # '_score', 'sum_score_channel', 'max_score_channel'
+        elif sort_field == '_score':  # '@timestamp' or 'sum_score_channel' or 'max_score_channel'
             def sort_lambda(bucket_channel):
                 return bucket_channel[score_order_field].value
+        elif sort_field == '@timestamp':
+            def sort_lambda(bucket_channel):
+                return bucket_channel['max_date'].value
         sort_dir = 'desc' if sort_dir == '-' else 'asc'
 
         bucket_channel_flat_sorted = sorted(bucket_channel_flat,
