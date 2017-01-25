@@ -6,12 +6,13 @@
     <input type="hidden" name="search_type" id="search_type" value="irc"/>
 {% endblock %}
 {% block search_form_checkboxes %}
-    <div class="checkbox" title="{{ saved_in_session_text }}">
+    <div class="checkbox">
         <label>
             <input type="checkbox" name="day_mode"
                    id="day_mode" {% if day_mode %}
                    checked="checked"{% endif %}/> {% trans "day mode" %}
         </label>
+        <span class="glyphicon glyphicon-cloud saved-session" title="{{ saved_in_session_text }}"></span>
     </div>
 {% endblock %}
 
@@ -31,6 +32,7 @@
             <div class="panel-body">
                 <div class="form-group">
                     <label for="number_results">{% trans "Filter channel" %}</label>
+                    <span class="glyphicon glyphicon-cloud saved-session" title="{{ saved_in_session_text }}"></span>
                     <div class="input-group">
                         <select class="form-control" id="filter_channel"
                                 name="filter_channel">

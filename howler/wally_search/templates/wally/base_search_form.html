@@ -81,16 +81,20 @@ BU* 5509
                                 </div>
                                 <div class='js_date_sliding_value collapse col-md-7'>
                                     <div class="form-group row">
-                                        <div class="col-md-6" title="{{ saved_in_session_text }}">
+                                        <div class="col-md-6">
                                             <label for="date_sliding_value">{% trans "Within the past" %}</label>
+                                            <span class="glyphicon glyphicon-cloud saved-session"
+                                                  title="{{ saved_in_session_text }}"></span>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" id="date_sliding_value"
                                                        name="date_sliding_value"
                                                        value="{{ date_sliding_value }}">
                                             </div>
                                         </div>
-                                        <div class="col-md-6" title="{{ saved_in_session_text }}">
+                                        <div class="col-md-6">
                                             <label for="date_sliding_type">{% trans "Duration type" %}</label>
+                                            <span class="glyphicon glyphicon-cloud saved-session"
+                                                  title="{{ saved_in_session_text }}"></span>
                                             <div class="input-group">
                                                 <select class="form-control" id="date_sliding_type"
                                                         name="date_sliding_type">
@@ -164,8 +168,10 @@ BU* 5509
                             <div class="panel-body">
                                 <div class="form-group">
                                     <div class="form-group row">
-                                        <div class="col-md-6" title="{{ saved_in_session_text }}">
+                                        <div class="col-md-6">
                                             <label for="sort_field">{% trans "Sort" %}</label>
+                                            <span class="glyphicon glyphicon-cloud saved-session"
+                                                  title="{{ saved_in_session_text }}"></span>
                                             <div class="input-group">
                                                 <select class="form-control" id="sort_field"
                                                         name="sort_field">
@@ -175,8 +181,10 @@ BU* 5509
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-6" title="{{ saved_in_session_text }}">
+                                        <div class="col-md-6">
                                             <label for="sort_dir">{% trans "Direction" %}</label>
+                                            <span class="glyphicon glyphicon-cloud saved-session"
+                                                  title="{{ saved_in_session_text }}"></span>
                                             <select class="form-control" id="sort_dir"
                                                     name="sort_dir">
                                                 <option value="" {% if sort_dir == '' %}
