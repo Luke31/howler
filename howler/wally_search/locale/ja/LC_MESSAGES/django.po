@@ -32,7 +32,7 @@ msgstr "検索"
 
 #: wally_search/templates/wally/base_search_form.html:40
 msgid "You can use the Simple Query String Syntax:"
-msgstr "「Simple Query String Syntax」を使うことが出来る"
+msgstr "「Simple Query String Syntax」を使うことが出来る:"
 
 #: wally_search/templates/wally/base_search_form.html:41
 msgid "More info"
