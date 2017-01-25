@@ -20,3 +20,7 @@ JA_USER_DICT_TERM_TYPE = 'カスタム名詞'
 # ES Bulk insert chunk size
 ES_BULK_CHUNK_SIZE = 2000
 
+# Wally IRC day score-metric to search order-fields mapping
+IRC_DAY_ORDER_FIELD = {'perc': 'percentiles_score_channel[99]',
+                       'sum': 'sum_score_channel',
+                       'max': 'max_score_channel'}

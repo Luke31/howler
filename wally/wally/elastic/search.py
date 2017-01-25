@@ -1,6 +1,7 @@
 from elasticsearch_dsl import Search as DslSearch, A
 from elasticsearch_dsl.query import Boosting, Match, MatchPhrase, Term, Range, Q, SF, Common, SimpleQueryString, DisMax
 from ..dementor import constants as dementor_constants
+from . import constants as elastic_constants
 from abc import abstractmethod, ABCMeta
 import dateutil.parser
 import copy
@@ -358,7 +359,63 @@ class SearchIrc(Search):
 
         return response_sorted
 
-    def search_day(self, qterm, **kwargs):
+    def search_day(self, qterm, score_metric='perc', **kwargs):
+        """
+        Searches in the elasticsearch index for irc messages, grouped by day and channel.
+
+        Uses the elasticsearch aggregation function to build following aggregation levels of the documents:
+
+        - A: filter (day/channel) -> B: group by day (day-bucket) -> C: group by channel (channel-bucket)
+
+        ----
+
+        The channel-buckets are sorted by their 99-percentile of their containing document-scores (This means that 1%
+        of all the documents in the channel-bucket have a higher score than the 99-percentile of the channel-bucket.
+        In comparsion to sum or avg, the 99-percentile has the advantage that higher document-scores/matching documents
+        in the channel-bucket are valued higher. Many lower document scores will be valued less or even ignored.)
+        For each day the highest perc-score of all channel-buckets on that day is remembered as ``max_score_day``.
+        The day-buckets are then sorted by this highest perc-score ``max_score_day``.
+
+        Important: This case describes the behaviour with a ``score_metric`` == 'perc'. If ``score_metric`` is changed,
+        the behaviour is the same, except another metric is used.
+
+        Definition: a document is one log-message
+
+        :param score_metric: ``str`` Which metric to use for calculating channel-bucket score.
+            This metric will also be used for sorting these buckets.
+
+            - 'perc' 99-percentile of documents in channel-bucket. -> High-matching documents are valued higher
+            - 'sum' sum of all document scores in channel-bucket -> All documents equal, many medium-matching documents
+                may "eat-up" high-matching ones.
+            - 'max' highest document score in channel-bucket as channel-bucket score -> Returns the day and channel with
+                the highest matching log-message. Other messages on that day in that channel will be ignored.
+        :param qterm: ``str`` Query-string to find
+        :param \**kwargs:
+                See below
+
+            :Keyword Arguments:
+                * *date_gte* (``datetime``) --
+                  Filter, From: only emails greater than
+                * *date_lte* (``datetime``) --
+                  Filter, To: only emails less than
+                * *date_sliding* (``str``) --
+                  Filter sliding window, only emails of the past XX-hours/days/years... e.g. '-1d/d','-5y/y' --
+                  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#date-math
+                * *date_sliding_type* (``str``) --
+                  Valid date-type: e.g. y M d
+                * *use_sliding_value* (``bool``) --
+                  True: Only respect date_sliding and date_sliding_type.
+                  False: only respect fix date: date_gte and date_lte
+                * *number_results* (``int``) --
+                  Number of total results to return
+                * *sort_field* (``str``) --
+                  By which field should results be sorted e.g. date, _score, username
+                * *sort_dir* (``str``) --
+                  In Which direction should results be sorted
+                  '+': ascending
+                  '-': descending)
+        :return:
+        """
         number_results = 50
         number_top_hits = 5
 
@@ -401,22 +458,25 @@ class SearchIrc(Search):
         # Search-Query
         s = s.query(self._get_query(qterm))
 
-        # Prepare aggregate-query:
-        # Aggregation levels: A (date filtered) -> B (bucket days) -> C (bucket channel)
+        # Prepare score-metric and corresponding order-field for buckets and couments
         percentiles_percents = 99
         percentiles_percents_field = '99.0'
+        percentiles_percents_field_order = elastic_constants.IRC_DAY_ORDER_FIELD['perc']
+        score_order_field = elastic_constants.IRC_DAY_ORDER_FIELD[score_metric]
 
-        percentiles_percents_field_order = 'percentiles_score_channel[99]'
-        score_order_field = percentiles_percents_field_order  # percentiles_percents_field_order, 'sum_score_channel', 'max_score_channel'
+        # Prepare aggregate-query:
+        # Aggregation levels: A (date/channel filtered) -> B (bucket days) -> C (bucket channel)
 
         # A date/channel filtered
         filters = []
+        # Date
         if use_sliding_value & (date_sliding_value != '') & (date_sliding_type != ''):
             filters.append({'range': {
                 '@timestamp': {'gte': 'now-{0}{1}'.format(date_sliding_value, date_sliding_type), 'lte': 'now'}}})
         elif date_gte is not None:
             filters.append({'range': {'@timestamp': {'gte': date_gte, 'lte': date_lte}}})
 
+        # Channel
         if filter_channel != '':
             filters.append({'term': {'channel.keyword': filter_channel}})
 
@@ -429,7 +489,6 @@ class SearchIrc(Search):
         # C bucket channels
         c_bucket_channels = A('terms', field='channel.keyword',
                               min_doc_count=1, order={score_order_field: 'desc'})
-
         c_bucket_channels = c_bucket_channels \
             .metric('max_date', 'max', field='@timestamp') \
             .metric('sum_score_channel', 'sum', script={'inline': '_score', 'lang': 'painless'}) \
@@ -462,7 +521,7 @@ class SearchIrc(Search):
         elif sort_field == '_score' and score_order_field == percentiles_percents_field_order:
             def sort_lambda(bucket_channel):
                 return bucket_channel.percentiles_score_channel.values[percentiles_percents_field]
-        else:  # '_score' + 'sum_score_channel'
+        else:  # '_score', 'sum_score_channel', 'max_score_channel'
             def sort_lambda(bucket_channel):
                 return bucket_channel[score_order_field].value
         sort_dir = 'desc' if sort_dir == '-' else 'asc'
@@ -471,10 +530,11 @@ class SearchIrc(Search):
                                             key=sort_lambda,
                                             reverse=(sort_dir == 'desc'))
 
+        # Limit result-size
         number_results_buckets = int(number_results / 3)
         bucket_channel_flat_sorted = bucket_channel_flat_sorted[0:number_results_buckets]
 
-        # Get hits from flattened buckets
+        # Get hits to display from flattened buckets
         hit_list = []
         for channel_bucket in bucket_channel_flat_sorted:
             for hit in channel_bucket.top_msg_hits.hits.hits:
@@ -500,7 +560,7 @@ class SearchIrc(Search):
     @staticmethod
     def _get_query(qterm):
         """
-        Return query for search-term
+        Return query for search-term (used in search and search_day)
 
         :param qterm: ``str`` string to build query for
         :return: ``Query`` Search-Query
