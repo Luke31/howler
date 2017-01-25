@@ -19,6 +19,7 @@
     </div>
 {% endblock %}
 
+
 {% block search_form_sort_fields_options %}
     <option value="date" {% if sort_field == 'date' %} selected="selected"{% endif %}>{% trans "Sent (JST)" %}</option>
     <option value="_score" {% if sort_field == '_score' %} selected="selected"{% endif %}>{% trans "Score" %}</option>
