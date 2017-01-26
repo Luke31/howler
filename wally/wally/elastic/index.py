@@ -105,7 +105,7 @@ class IndexMail(Index):
         # Specific fields email
         analyzer_email = analysis.analyzer('email', tokenizer=analysis.tokenizer('uax_url_email'),
                                            filter=['lowercase', 'unique'])
-        mapping.field('fromName', 'text',
+        mapping.field('fromName', 'text', analyzer=analyzer_lang,
                       fields={
                           'keyword': 'keyword',
                       })
@@ -113,7 +113,7 @@ class IndexMail(Index):
                       fields={
                           'keyword': 'keyword',
                       })
-        mapping.field('toName', 'text',
+        mapping.field('toName', 'text', analyzer=analyzer_lang,
                       fields={
                           'keyword': 'keyword',
                       })
@@ -121,7 +121,7 @@ class IndexMail(Index):
                       fields={
                           'keyword': 'keyword',
                       })
-        mapping.field('replyToName', 'text',
+        mapping.field('replyToName', 'text', analyzer=analyzer_lang,
                       fields={
                           'keyword': 'keyword',
                       })
@@ -134,7 +134,7 @@ class IndexMail(Index):
         mapping.field('body', 'text', analyzer=analyzer_lang)
         mapping.field('spam', 'boolean')
         mapping.field('hasAttachmet', 'boolean')
-        mapping.field('attachmentNames', 'text')
+        mapping.field('attachmentNames', 'text', analyzer=analyzer_lang)
 
     def index_bulk_from_dir(self, dir_data_in, ignore_already_imported=True):
         """
