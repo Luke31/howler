@@ -195,11 +195,20 @@ class SearchMail(Search):
         # Get specific query arguments
         include_spam = False
         only_attachment = False
+        mailq = ''
         for key, value in kwargs.items():
             if key == 'include_spam':
                 include_spam = value
             if key == 'only_attachment':
                 only_attachment = value
+            if key == 'mailq':
+                mailq = value
+
+        # Filter mail
+        if mailq != '':
+            s = s.filter(Match(**{'fromEmail.keyword':mailq}) | \
+                         Match(**{'toEmail.keyword': mailq}) | \
+                         Match(**{'replyToEmail.keyword': mailq}))
 
         # Filter spam
         if not include_spam:
@@ -226,6 +235,9 @@ class SearchMail(Search):
         s = s.highlight('fromEmail')
         s = s.highlight('toEmail')
         s = s.highlight('replyToEmail')
+        s = s.highlight('fromEmail.keyword')
+        s = s.highlight('toEmail.keyword')
+        s = s.highlight('replyToEmail.keyword')
         s = s.highlight('fromName')
         s = s.highlight('toName')
         s = s.highlight('replyToName')
@@ -234,11 +246,32 @@ class SearchMail(Search):
         return s
 
     def alter_response(self, response):
+        # Add highlighted emails
+        for hit in response:
+            if hasattr(hit.meta, 'highlight'):
+                self.add_highlight_emails(hit)
         return response
 
     def get_date_field_name(self):
         return 'date'
 
+    @staticmethod
+    def add_highlight_emails(hit):
+        """
+        Map highlighted fromEmail/toEmail/replyToEmail.keyword attribute to highlight.fromEmail/toEmail/replyToEmail.
+
+        Hit is directly modified, no value is returned
+
+        :param hit: Hit to search and modify
+        :return: None (hit directly modified)
+        """
+        if hasattr(hit.meta, 'highlight'):
+            if hasattr(hit.meta.highlight, 'fromEmail.keyword'):
+                hit.meta.highlight.fromEmail = hit.meta.highlight['fromEmail.keyword']
+            if hasattr(hit.meta.highlight, 'toEmail.keyword'):
+                hit.meta.highlight.toEmail = hit.meta.highlight['toEmail.keyword']
+            if hasattr(hit.meta.highlight, 'replyToEmail.keyword'):
+                hit.meta.highlight.replyToEmail = hit.meta.highlight['replyToEmail.keyword']
 
 class SearchIrc(Search):
     """IRC Search object.

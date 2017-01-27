@@ -139,6 +139,8 @@ def find(request):
         except ValueError:
             return render(request, result_template, {'error_message': _("Incorrent value for only attachment")})
 
+        kwargs['mailq'] = request.GET.get('mailq', '')
+
         # IRC only values
         try:
             filter_channel = request.GET.get('filter_channel')
