@@ -52,4 +52,4 @@ msgstr "選んだ値が記憶された"
 
 #: templates/common/dt_childtoggler.html:11
 msgid "show hit details"
-msgstr "ヒットした内容を表示する」かな"
+msgstr "ヒットした内容を表示する"
