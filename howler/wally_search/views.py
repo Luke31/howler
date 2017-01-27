@@ -11,6 +11,45 @@ import dateutil.parser
 import pytz
 
 
+def _get_req_params(request):
+    params = {}
+    try:
+        request_from = request.GET.get('from', '')
+        if request_from != '':
+            naive_date_input = dateutil.parser.parse(request_from)
+            params['date_gte'] = pytz.timezone(djsettings.TIME_ZONE).localize(naive_date_input, is_dst=None)
+
+        request_to = request.GET.get('to', '')
+        if request_to != '':
+            naive_date_input = dateutil.parser.parse(request_to)
+            params['date_lte'] = pytz.timezone(djsettings.TIME_ZONE).localize(naive_date_input, is_dst=None)
+
+        params['date_sliding_value'] = request.GET.get('date_sliding_value', '')
+        params['date_sliding_type'] = request.GET.get('date_sliding_type', '')
+
+        params['use_sliding_value'] = bool(int(request.GET.get('use_sliding_value', True)))
+
+        params['number_results'] = int(request.GET.get('number_results', 10))
+
+        params['sort_field'] = request.GET.get('sort_field', '')
+
+        params['sort_dir'] = request.GET.get('sort_dir', '-')
+
+        params['show_hits'] = bool(request.GET.get('show_hits', False))
+
+        # E-mail only values
+        params['include_spam'] = bool(request.GET.get('include_spam', False))
+        params['only_attachment'] = bool(request.GET.get('only_attachment', False))
+    except ValueError:
+        pass
+
+    params['mailq'] = request.GET.get('mailq', '')
+
+    # IRC only values
+    params['filter_channel'] = request.GET.get('filter_channel', '')
+    return params
+
+
 def searchmail(request):
     """
     Get search-form for email search
@@ -75,78 +114,15 @@ def find(request):
             result_template = 'wally/resultsmail.html'
         elif search_type == 'irc':
             result_template = 'wally/resultsirc.html'
-        kwargs = {}
-        try:
-            request_from = request.GET.get('from', '')
-            if request_from != '':
-                naive_date_input = dateutil.parser.parse(request_from)
-                kwargs['date_gte'] = pytz.timezone(djsettings.TIME_ZONE).localize(naive_date_input,
-                                                                                  is_dst=None)  # datetime.strptime(request_from, web_datetime_format)
-        except ValueError:
-            # Translators: The user didn't submit the correct values in the form
-            return render(request, result_template, {'error_message': _("Incorrent field format from-date")})
 
-        try:
-            request_to = request.GET.get('to', '')
-            if request_to != '':
-                naive_date_input = dateutil.parser.parse(request_to)
-                kwargs['date_lte'] = pytz.timezone(djsettings.TIME_ZONE).localize(naive_date_input,
-                                                                                  is_dst=None)  # datetime.strptime(request_to, web_datetime_format)
-        except ValueError:
-            # Translators: The user didn't submit the correct values in the form
-            return render(request, result_template, {'error_message': _("Incorrent field format to-date")})
-
-        date_sliding_value = request.GET.get('date_sliding_value', '')
-        kwargs['date_sliding_value'] = date_sliding_value
-        date_sliding_type = request.GET.get('date_sliding_type', '')
-        kwargs['date_sliding_type'] = date_sliding_type
-
-        try:
-            kwargs['use_sliding_value'] = bool(int(request.GET.get('use_sliding_value', True)))
-        except ValueError:
-            return render(request, result_template, {'error_message': _("Incorrent use of date selection")})
-
-        try:
-            kwargs['number_results'] = int(request.GET.get('number_results', 10))
-        except ValueError:
-            return render(request, result_template, {'error_message': _("Incorrent number of results")})
-
-        try:
-            sort_field = request.GET.get('sort_field')
-            kwargs['sort_field'] = sort_field
-        except ValueError:
-            return render(request, result_template, {'error_message': _("Incorrent value for sort field")})
-
-        try:
-            sort_dir = request.GET.get('sort_dir')
-            kwargs['sort_dir'] = sort_dir
-        except ValueError:
-            return render(request, result_template, {'error_message': _("Incorrent value for sort direction")})
-
-        try:
-            show_hits = bool(request.GET.get('show_hits', False))
-        except ValueError:
-            return render(request, result_template, {'error_message': _("Incorrent value for show hits body")})
-
-        # E-mail only values
-        try:
-            kwargs['include_spam'] = bool(request.GET.get('include_spam'))
-        except ValueError:
-            return render(request, result_template, {'error_message': _("Incorrent value for include spam")})
-
-        try:
-            kwargs['only_attachment'] = bool(request.GET.get('only_attachment'))
-        except ValueError:
-            return render(request, result_template, {'error_message': _("Incorrent value for only attachment")})
-
-        kwargs['mailq'] = request.GET.get('mailq', '')
-
-        # IRC only values
-        try:
-            filter_channel = request.GET.get('filter_channel')
-            kwargs['filter_channel'] = filter_channel
-        except ValueError:
-            return render(request, result_template, {'error_message': _("Incorrent value for filter channel field")})
+        # Parse params
+        kwargs = _get_req_params(request)
+        date_sliding_value = kwargs['date_sliding_value']
+        date_sliding_type = kwargs['date_sliding_type']
+        sort_field = kwargs['sort_field']
+        sort_dir = kwargs['sort_dir']
+        show_hits = kwargs['show_hits']
+        filter_channel = kwargs['filter_channel']
 
         # Search
         es_index_prefix = djsettings.ES_SUPPORTED_INDEX_PREFIX[search_type]
