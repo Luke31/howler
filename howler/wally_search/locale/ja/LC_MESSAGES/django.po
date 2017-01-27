@@ -48,15 +48,15 @@ msgstr "日付フィルタモード"
 
 #: wally_search/templates/wally/base_search_form.html:77
 msgid "Within past duration"
-msgstr "過去以内期間"
+msgstr "過去"
 
 #: wally_search/templates/wally/base_search_form.html:78
 msgid "Fixed date"
-msgstr "一定期間"
+msgstr "期間を指定"
 
 #: wally_search/templates/wally/base_search_form.html:86
 msgid "Within the past"
-msgstr "過去以内"
+msgstr "過去"
 
 #: wally_search/templates/wally/base_search_form.html:96
 msgid "Duration type"
@@ -185,7 +185,7 @@ msgstr "差出人の名前のヒット"
 
 #: wally_search/templates/wally/resultsmail.html:64
 msgid "Hit in attachment names"
-msgstr "差出人の名前のヒット"
+msgstr "添付ファイルのヒット"
 
 #: wally_search/templates/wally/resultsmail.html:70
 msgid "Hits in body"

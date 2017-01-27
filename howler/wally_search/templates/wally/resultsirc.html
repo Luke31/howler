@@ -20,7 +20,8 @@
 
 {% block col_data %}
     <td class="details-control">
-        <form class="js_loadpopoverontent_form" data-function-module="irc" action="{% url 'wally:detail_irc' %}" method="get">
+        <form class="js_loadpopoverontent_form" data-function-module="irc" action="{% url 'wally:detail_irc' %}"
+              method="get">
             <input type="hidden" name="origin_timestamp" value="{{ hit.timestamp_raw }}"/>
             <input type="hidden" name="origin_id" value="{{ hit.meta.id }}"/>
             <input type="hidden" name="channel" value="{{ hit.channel }}"/>
@@ -43,7 +44,10 @@
         </td>
     {% endif %}
     <td class="text-nowrap">
-        {{ hit.sent|date:"Y/m/d H:i" }}
+        <a href="https://admin.co-conv.jp/irc/#{{ hit.sent|date:"YmdHis" }}" title="{% trans "View IRC log day" %}"
+           target="_blank">
+            {{ hit.sent|date:"Y/m/d H:i" }}
+        </a>
     </td>
     <td class="text-nowrap">
         {% if hit.meta.highlight.username.0 %}
