@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-24 15:48+0900\n"
+"POT-Creation-Date: 2017-01-27 10:57+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,83 +42,83 @@ msgstr "その他の情報"
 msgid "Examples:"
 msgstr "例えば:"
 
-#: wally_search/templates/wally/base_search_form.html:71
+#: wally_search/templates/wally/base_search_form.html:72
 msgid "Date filter mode"
 msgstr "日付フィルタモード"
 
-#: wally_search/templates/wally/base_search_form.html:76
+#: wally_search/templates/wally/base_search_form.html:77
 msgid "Within past duration"
 msgstr "過去以内期間"
 
-#: wally_search/templates/wally/base_search_form.html:77
+#: wally_search/templates/wally/base_search_form.html:78
 msgid "Fixed date"
 msgstr "一定期間"
 
-#: wally_search/templates/wally/base_search_form.html:85
+#: wally_search/templates/wally/base_search_form.html:86
 msgid "Within the past"
 msgstr "過去以内"
 
-#: wally_search/templates/wally/base_search_form.html:93
+#: wally_search/templates/wally/base_search_form.html:96
 msgid "Duration type"
 msgstr "期間型"
 
-#: wally_search/templates/wally/base_search_form.html:98
+#: wally_search/templates/wally/base_search_form.html:103
 msgid "Years"
 msgstr "年"
 
-#: wally_search/templates/wally/base_search_form.html:100
+#: wally_search/templates/wally/base_search_form.html:105
 msgid "Months"
 msgstr "月"
 
-#: wally_search/templates/wally/base_search_form.html:102
+#: wally_search/templates/wally/base_search_form.html:107
 msgid "Days"
 msgstr "日"
 
-#: wally_search/templates/wally/base_search_form.html:108
+#: wally_search/templates/wally/base_search_form.html:113
 msgid "JST time"
 msgstr "JSTの時間"
 
-#: wally_search/templates/wally/base_search_form.html:112
+#: wally_search/templates/wally/base_search_form.html:117
 msgctxt "datetime"
 msgid "From"
 msgstr "から"
 
-#: wally_search/templates/wally/base_search_form.html:123
+#: wally_search/templates/wally/base_search_form.html:128
 msgctxt "datetime"
 msgid "To"
 msgstr "まで"
 
-#: wally_search/templates/wally/base_search_form.html:144
+#: wally_search/templates/wally/base_search_form.html:149
 msgid "Number tot results"
 msgstr "合計結果数"
 
-#: wally_search/templates/wally/base_search_form.html:168
+#: wally_search/templates/wally/base_search_form.html:173
 msgid "Sort"
 msgstr "並べ替え"
 
-#: wally_search/templates/wally/base_search_form.html:179
+#: wally_search/templates/wally/base_search_form.html:186
 msgid "Direction"
 msgstr "方向"
 
-#: wally_search/templates/wally/base_search_form.html:183
+#: wally_search/templates/wally/base_search_form.html:192
 msgid "Asc"
 msgstr "昇順"
 
-#: wally_search/templates/wally/base_search_form.html:185
+#: wally_search/templates/wally/base_search_form.html:194
 msgid "Desc"
 msgstr "降順"
 
 #: wally_search/templates/wally/resultsirc.html:7
 #: wally_search/templates/wally/resultsircdetail.html:10
-#: wally_search/templates/wally/searchirc.html:23
+#: wally_search/templates/wally/searchirc.html:24
 msgid "Channel"
 msgstr "チャンネル"
 
 #: wally_search/templates/wally/resultsirc.html:11
 #: wally_search/templates/wally/resultsircdetail.html:11
 #: wally_search/templates/wally/resultsmail.html:9
-#: wally_search/templates/wally/searchirc.html:20
-#: wally_search/templates/wally/searchmail.html:23
+#: wally_search/templates/wally/searchirc.html:21
+#: wally_search/templates/wally/searchmail.html:24
 msgid "Sent (JST)"
 msgstr "送信日時 (JST)"
 
@@ -134,8 +134,8 @@ msgstr "メッセージ"
 
 #: wally_search/templates/wally/resultsirc.html:14
 #: wally_search/templates/wally/resultsmail.html:13
-#: wally_search/templates/wally/searchirc.html:21
-#: wally_search/templates/wally/searchmail.html:24
+#: wally_search/templates/wally/searchirc.html:22
+#: wally_search/templates/wally/searchmail.html:25
 msgid "Score"
 msgstr "スコア"
 
@@ -153,13 +153,13 @@ msgid "Subject"
 msgstr "件名"
 
 #: wally_search/templates/wally/resultsmail.html:10
-#: wally_search/templates/wally/searchirc.html:25
-#: wally_search/templates/wally/searchmail.html:26
+#: wally_search/templates/wally/searchirc.html:26
+#: wally_search/templates/wally/searchmail.html:27
 msgid "Sender"
 msgstr "差出人"
 
 #: wally_search/templates/wally/resultsmail.html:11
-#: wally_search/templates/wally/searchmail.html:28
+#: wally_search/templates/wally/searchmail.html:29
 msgid "Receiver"
 msgstr "宛先"
 
@@ -199,11 +199,11 @@ msgstr "メールが見つからなかった"
 msgid "day mode"
 msgstr "日モード"
 
-#: wally_search/templates/wally/searchirc.html:33
+#: wally_search/templates/wally/searchirc.html:34
 msgid "Filter channel"
 msgstr "フィルタチャンネル"
 
-#: wally_search/templates/wally/searchirc.html:37
+#: wally_search/templates/wally/searchirc.html:39
 msgid "(All)"
 msgstr "(すべて)"
 
