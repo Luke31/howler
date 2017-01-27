@@ -61,7 +61,7 @@
 
                 {% if hit.meta.highlight.attachmentNames.0 %}
                     <p class="fragment">
-                        {% trans "Hit in attachment names" %}: <span
+                        <b>{% trans "Hit in attachment names" %}:</b> <span
                             class="search-hit">{{ hit.meta.highlight.attachmentNames.0|strip_except_tags:"em" }}</span>
                     </p>
                 {% endif %}
