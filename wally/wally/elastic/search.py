@@ -176,10 +176,10 @@ class SearchMail(Search):
         fields = ['body', 'fromEmail', 'toEmail', 'replyToEmail', 'fromName', 'toName', 'replyToName', 'subject',
                   'attachmentNames']
         if helpers.is_simple_query_string_query(qterm):
-            body_query = SimpleQueryString(query=qterm, fields=fields, boost=5)
+            body_query = SimpleQueryString(query=qterm, fields=fields, default_operator='AND', boost=5)
         else:
             body_query = DisMax(tie_breaker=0.7, boost=1, queries=[
-                SimpleQueryString(query=qterm, fields=fields, boost=1),
+                SimpleQueryString(query=qterm, fields=fields, default_operator='AND', boost=1),
                 MatchPhrase(body={'query': qterm, 'boost': 1}),
                 Common(body={'query': qterm, 'cutoff_frequency': 0.001}),
             ])
@@ -571,10 +571,11 @@ class SearchIrc(Search):
         :return: ``Query`` Search-Query
         """
         if helpers.is_simple_query_string_query(qterm):
-            msg_query = SimpleQueryString(query=qterm, fields=['msg', 'username', 'channel'], boost=5)
+            msg_query = SimpleQueryString(query=qterm, fields=['msg', 'username', 'channel'], default_operator='AND',
+                                          boost=5)
         else:
             msg_query = DisMax(tie_breaker=0.7, boost=1, queries=[
-                SimpleQueryString(query=qterm, fields=['username', 'channel'], boost=1),
+                SimpleQueryString(query=qterm, fields=['username', 'channel'], default_operator='AND', boost=1),
                 MatchPhrase(msg={'query': qterm, 'boost': 1}),
                 Common(msg={'query': qterm, 'cutoff_frequency': 0.001})
             ])
