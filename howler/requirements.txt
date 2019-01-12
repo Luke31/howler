@@ -8,7 +8,7 @@ elasticsearch==5.0.1
 elasticsearch-dsl==5.0.0
 Fabric3==1.12.post1
 paramiko==1.17.2
-psycopg2==2.7
+psycopg2==2.7.6
 pycparser==2.17
 pycrypto==2.6.1
 python-dateutil==2.6.0
