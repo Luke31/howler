@@ -21,6 +21,7 @@ cd lukas-sandbox/wally
 
 3. Install the required python modules (You may also create a virtualenv for this):
 pip3 install -r requirements.txt
+maybe need this as well: CFLAGS="-Wno-narrowing" pip install cld2-cffi
 
 --How to use this script to get help--
 python3 index-cmd.py -h
