@@ -1,0 +1,27 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: howler-frontend
+  labels:
+    app: howler-app
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: howler-app
+        tier: frontend
+    spec:
+      containers:
+      - name: howler-frontend
+        image: [FRONTEND_IMAGE_IDENTIFIER]
+        imagePullPolicy: Always
+        ports:
+        - name: http-server
+          containerPort: 8080
+        env:
+          - name: GCLOUD_PROJECT
+            value: [GCLOUD_PROJECT]
+          - name: GCLOUD_BUCKET
+            value: [GCLOUD_BUCKET]
+

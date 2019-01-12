@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: howler-frontend
+  labels:
+    app: howler-app
+    tier: frontend
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: http-server
+  selector:
+    app: howler-app
+    tier: frontend
+

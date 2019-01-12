@@ -1,0 +1,24 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: howler-backend
+  labels:
+    app: howler-app
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: howler-app
+        tier: backend
+    spec:
+      containers:
+      - name: howler-backend
+        image: [BACKEND_IMAGE_IDENTIFIER]
+        imagePullPolicy: Always
+        env:
+          - name: GCLOUD_PROJECT
+            value: [GCLOUD_PROJECT]
+          - name: GCLOUD_BUCKET
+            value: [GCLOUD_BUCKET]
+
