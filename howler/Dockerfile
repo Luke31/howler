@@ -11,10 +11,12 @@ RUN apt-get -y install python3-pip
 RUN ln /usr/bin/pip3 /usr/bin/pip
 RUN pip install --upgrade pip
 #Use .dockerignore file
-ADD . /var/www/howler/
+ADD requirements.txt /var/www/howler/
 #Should actually separate this python package and django static files -> then only set requirements howler
 RUN mkdir -p ~/.ssh && ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts
 RUN cd /var/www/howler && pwd && CFLAGS="-Wno-narrowing" pip install -r requirements.txt
+ADD . /var/www/howler/
+
 ADD ./howler.conf /etc/apache2/sites-available/000-default.conf
 
 RUN cd /var/www/howler && python ./manage.py bower install \
