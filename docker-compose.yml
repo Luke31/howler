@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+    build: 
+        context: ./howler/
+        dockerfile: Dockerfile
+    links:
+     -  database
+    hostname: web
+    ports:
+     - "80:80"
+    network_mode: bridge
+  
+  database:
+    image: "postgres:9.4"
+    ports: 
+     - "5432:5432"
+    network_mode: bridge
+    environment:
+         - POSTGRES_USER:'django'
+         - POSTGRES_PASSWORD:'django'
+         - POSTGRES_DB:'django'
+

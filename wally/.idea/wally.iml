@@ -10,5 +10,9 @@
     <orderEntry type="library" name="R User Library" level="project" />
     <orderEntry type="library" name="R Skeletons" level="application" />
     <orderEntry type="module" module-name="howler" />
+    <orderEntry type="module" module-name="python-helloworld" />
+    <orderEntry type="module" module-name="python-conda" />
+    <orderEntry type="module" module-name="python36-alpine" />
+    <orderEntry type="module" module-name="python-model-builder" />
   </component>
 </module>
