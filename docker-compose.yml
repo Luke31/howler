@@ -15,14 +15,10 @@ services:
     build:
         context: ./db/
         dockerfile: Dockerfile
-    image: "postgres:9.4"
     ports: 
      - "5432:5432"
     network_mode: bridge
-    environment:
-         - POSTGRES_USER:'django'
-         - POSTGRES_PASSWORD:'django'
-         - POSTGRES_DB:'django'
-         - PGDATA=/var/lib/postgresql/data/pgdata
+    env_file:
+     - db/database.env
     volumes:
-         - ./data/database:/var/lib/postgresql/data/pgdata
+     - ./data/database:/var/lib/postgresql/data/pgdata
