@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/../../python-model-builder/.idea/python-model-builder.iml" filepath="$PROJECT_DIR$/../../python-model-builder/.idea/python-model-builder.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../python36-alpine/.idea/python36-alpine.iml" filepath="$PROJECT_DIR$/../../python36-alpine/.idea/python36-alpine.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/wally.iml" filepath="$PROJECT_DIR$/.idea/wally.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../pymlhelloworld/web/.idea/web.iml" filepath="$PROJECT_DIR$/../../pymlhelloworld/web/.idea/web.iml" />
     </modules>
   </component>
 </project>
