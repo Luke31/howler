@@ -12,7 +12,7 @@ from argparse import RawTextHelpFormatter
 sudo apt-get install python3-pip
 
 2. Download this package with its script:
-git clone ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git
+git clone git@github.com:Luke31/howler.git
 or just copy it to any directory
 
 3. Go to installed directory -> project wally

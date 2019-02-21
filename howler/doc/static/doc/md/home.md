@@ -17,8 +17,8 @@ If you would like to contribute to either to `howler` or `wally`, follow these s
 ### 1. Get repository
 * Add your ssh public key to gerrit
 * Replace lukas with your username
-* Check ssh connection: `ssh -p 29418 lukas@gerrit.spicy.co-conv.jp`     
-* Git clone: `git clone ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git`
+* Check ssh connection: `ssh -p 29418 git@github.com:Luke31/howler.git`     
+* Git clone: `git clone ssh://git@github.com:Luke31/howler.git`
     
 ### 2. Get prereqs for development: Python and Virtualenvs
 
@@ -69,7 +69,7 @@ If you would like to contribute to either to `howler` or `wally`, follow these s
 * Edit in your IDE or...
 
 **Use this package:** To use `wally` in another project e.g. `howler`, install it 
-* from repo: `pip install -e 'git+ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git#egg=wally&subdirectory=wally'`
+* from repo: `pip install -e 'git+ssh://git@github.com:Luke31/howler.git#egg=wally&subdirectory=wally'`
 * or using a relative path: `pip install -e ../wally/`
 
 ### 4. Project Howler - email and IRC-search with elasticsearch

@@ -7,7 +7,7 @@ env.hosts = ['lukas@10.0.10.180']  # Passphrase private key: hogehoge
 env.project_root = '/var/www/howler'
 code_dir = '/var/git/lukas-sandbox'
 python3_dir = '/home/lukas/.pyenv/versions/howler/bin'
-wally_git = '-e git+ssh://lukas@gerrit.spicy.co-conv.jp:29418/lukas-sandbox.git#egg=wally&subdirectory=wally'
+wally_git = '-e git+ssh://git@github.com:Luke31/howler.git#egg=wally&subdirectory=wally'
 
 
 def deploy():

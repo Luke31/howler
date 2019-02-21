@@ -40,7 +40,7 @@ To read the logs on the client and send them to the logstash server, Filebeat is
         
         #- input_type: log
         #  paths:
-        #    - c:\Users\Lukas\AppData\Roaming\X-Chat 2\xchatlogs\IRC Kyoto-#co-conv.log
+        #    - c:\Users\Lukas\AppData\Roaming\X-Chat 2\xchatlogs\IRC Kyoto-#example.log
             
         #-------------------------- Elasticsearch output ------------------------------
         #output.elasticsearch:

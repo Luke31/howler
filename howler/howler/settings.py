@@ -147,11 +147,11 @@ STATICFILES_DIRS = [
 ]
 
 BOWER_INSTALLED_APPS = (
-    'jquery',
-    'bootstrap#^3.3.7', # 3.4.1
-    'bootstrap-confirmation2',
-    'eonasdan-bootstrap-datetimepicker#latest',
-    'datatables.net',
+    'jquery#^3.1.1',
+    'bootstrap#^3.3.7',
+    'bootstrap-confirmation2#^2.4.0',
+    'eonasdan-bootstrap-datetimepicker#^4.17.43',
+    'datatables.net#^1.10.13',
     'datatables.net-bs#^1.10.13',
     'showdown#^1.5.1',
 )
@@ -168,7 +168,7 @@ LOCALE_PATHS = [
 ]
 
 # --- CUSTOM SETTINGS ELASTICSEARCH and SERACH ---
-ES_HOSTS = ['10.0.10.180']
+ES_HOSTS = ['elasticsearch']
 ES_DEFAULT_PORT = 9200
 ES_TIMEOUT = 30
 ES_MAXSIZE_CON = 25

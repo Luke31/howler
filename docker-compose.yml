@@ -5,7 +5,8 @@ services:
         context: ./howler/
         dockerfile: Dockerfile
     links:
-     -  database
+     - database
+     - elasticsearch
     hostname: web
     ports:
      - "80:80"
@@ -22,3 +23,18 @@ services:
      - ./db/database.env
     volumes:
      - ./data/database:/var/lib/postgresql/data/pgdata
+
+  elasticsearch:
+    build:
+        context: ./elasticsearch/
+        dockerfile: Dockerfile
+    ports:
+     - "9200:9200"
+     - "9300:9300"
+    environment:
+     - discovery.type=single-node
+    hostname: elasticsearch
+    network_mode: bridge
+
+
+
