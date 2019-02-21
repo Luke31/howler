@@ -8,6 +8,7 @@ set -e
 
 echo "Import schema"
 echo $POSTGRES_USER
+echo $POSTGRES_DB
 psql --username "$POSTGRES_USER" "$DATABASE_NAME" < /docker-entrypoint-initdb.d/database_schema.schema
 
 #echo "Import Municipalities"

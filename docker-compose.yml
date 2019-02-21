@@ -19,6 +19,6 @@ services:
      - "5432:5432"
     network_mode: bridge
     env_file:
-     - db/database.env
+     - ./db/database.env
     volumes:
      - ./data/database:/var/lib/postgresql/data/pgdata

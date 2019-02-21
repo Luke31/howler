@@ -148,7 +148,7 @@ STATICFILES_DIRS = [
 
 BOWER_INSTALLED_APPS = (
     'jquery',
-    'bootstrap',
+    'bootstrap#^3.3.7', # 3.4.1
     'bootstrap-confirmation2',
     'eonasdan-bootstrap-datetimepicker#latest',
     'datatables.net',

@@ -26,6 +26,6 @@ RUN cd /var/www/howler && python ./manage.py bower install && \
     django-admin compilemessages && \
     touch wsgi.py && \
     python ./manage.py collectstatic -v0 --noinput
-#RUN cd /var/www/howler && python ./manage.py migrate && \
+#RUN cd /var/www/howler && python ./manage.py migrate && \   # Run this command after container started
 EXPOSE 80 3500
 CMD ["apache2ctl", "-D", "FOREGROUND"]
