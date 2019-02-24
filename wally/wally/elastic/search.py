@@ -225,7 +225,7 @@ class SearchMail(Search):
             self._index_prefix.format('en'): 1,
             self._index_prefix.format('un'): 0.5
         })
-        s = s.extra(_source={'excludes': ['body']})  # Don't return body, too large, use link
+        # s = s.extra(_source={'excludes': ['body']})  # Body needed, no link available
 
         # Highlight
         s = s.highlight_options(order='score')
