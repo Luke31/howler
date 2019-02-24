@@ -1,0 +1,119 @@
+From 1624959957110747958@xxx Sat Feb 09 03:22:56 +0000 2019
+X-GM-THRID: 1624959957110747958
+X-Gmail-Labels: Archived,Unread,ltmail,ltmail2
+Delivered-To: example@example.net
+Received: by 2002:a4a:e6d0:0:0:0:0:0 with SMTP id v16csp189192oot;
+        Fri, 8 Feb 2019 19:22:56 -0800 (PST)
+X-Google-Smtp-Source: AHgI3IY5ZXnceRP5MP/cIUlNNzBCh8kh0xTMKIecCsBhSiBZXFTYWuKeEiVzyodYKT64PL/FkQVV
+X-Received: by 2002:a62:5dd1:: with SMTP id n78mr25405558pfj.58.1549682576082;
+        Fri, 08 Feb 2019 19:22:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1549682576; cv=none;
+        d=google.com; s=arc-20160816;
+        b=L2Tf1JrPuBrm0ndpe0oPSmp2lDGMgOlCmJPrwN+QAYvA0NHfq1TOF55haoHhM5MbpN
+         EbFdrwnntZDEliPJ2v1taV3fbuzoqizQuZHyoJY6YciU4oNxSZf5nKLfRyck3vYCCu44
+         QCcMHX8kEEfigldhyvRquysYb9amktg8PtUoqBHjzvSSCBUE3MG7L/nBPra+ZYFDkaHU
+         Cf/roJ6d42zcrBqdP2JoCq9cB3DAFTMZYauTKNutYHmvomBC6Wg4No8uF1nb9imoKSeX
+         2s2wQqxvkDHnzuvmke+s03mxB7riRuSnybHzpJWTLYOcYVDF9aZhnFNf7vtNKJNohcxK
+         OWJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=precedence:content-transfer-encoding:mime-version:subject
+         :message-id:to:reply-to:from:date:errors-to:dkim-signature;
+        bh=FIxSbiwko2eiukXgChJYcRF2Gxrgv4xqJqdi5QE/nP8=;
+        b=QJ0wvy1/ry6Jt3QqqaAhb+QfK2FtNvVTeuk6QIlPhQGNogWarFmvXbmj9v1LbJiATO
+         jSDrt56OXpKUyWetz/qfQgOE49cy1G7a4/8DeUVvF8/VVlhFbEwXQ4Qaq2brHZW7GlD1
+         XJ6S9bC1dLPRN8N/BemGo2bIAFzMuYw6XlKmjT6pDC4xwrjs8AcT0pjbMu8H0MoBNYLI
+         MsJv3BvzooLCXxgfSNWpGctt028hd/+1rwlOqDQdiSJvTXsOhdmQJTUgjrFLmvEmL7or
+         Ksim9yKIBjNs5bePr3xrQzU+lAjXqIHBjQW7xWjAKKA8zDhqC/Lh/EKAkeixWho869Li
+         tJcg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@l-tike.com header.s=ltike201802 header.b=cPUvRcIP;
+       spf=pass (google.com: domain of z-ltike9-xe4ezu-0-28b-014examplegmail.com@bma.mpse.jp designates 106.185.96.20 as permitted sender) smtp.mailfrom=z-ltike9-xe4ezu-0-28b-014examplegmail.com@bma.mpse.jp;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=l-tike.com
+Return-Path: <z-ltike9-xe4ezu-0-28b-014examplegmail.com@bma.mpse.jp>
+Received: from bmmpj0302.jpx1.mp.cheetahdigital.com (bmmpj0302.jpx1.mp.cheetahdigital.com. [106.185.96.20])
+        by mx.google.com with ESMTP id a34si3854804pgm.427.2019.02.08.19.22.55
+        for <example@example.net>;
+        Fri, 08 Feb 2019 19:22:56 -0800 (PST)
+Received-SPF: pass (google.com: domain of z-ltike9-xe4ezu-0-28b-014examplegmail.com@bma.mpse.jp designates 106.185.96.20 as permitted sender) client-ip=106.185.96.20;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@l-tike.com header.s=ltike201802 header.b=cPUvRcIP;
+       spf=pass (google.com: domain of z-ltike9-xe4ezu-0-28b-014examplegmail.com@bma.mpse.jp designates 106.185.96.20 as permitted sender) smtp.mailfrom=z-ltike9-xe4ezu-0-28b-014examplegmail.com@bma.mpse.jp;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=l-tike.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1549682575;
+	s=ltike201802; d=l-tike.com;
+	h=Date:From:Reply-To:To:Message-Id:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=FIxSbiwko2eiukXgChJYcRF2Gxrgv4xqJqdi5QE/nP8=;
+	b=cPUvRcIPu64BDAr5B4Onv1kQrBgYQKt323/nMn5aXFBhrgMADkPkcl6xHuskY75e
+	NSU9CKgloaCiJnaI2tqG+9w8Y51UEhVAxU5EBoqreroo6f8oMT4Z17dtj1Rvvyvfx4f
+	tQfqH/q6z1oUV4Be9ad6zeAjnU0chzDPyjaPU9PI=
+Errors-To: z-ltike9-xe4ezu-0-28b-014examplegmail.com@bma.mpse.jp
+Date: Sat, 9 Feb 2019 12:22:50 +0900 (JST)
+From: lt-mail@l-tike.com
+Reply-To: lt-mail@l-tike.com
+To: example@example.net
+Message-Id: <1549682570239.2019104490.ltike9.0.2891.00000000@ad123se.mpse.jp>
+Subject: =?utf-8?B?W+ODreODvOODgeOCsV3jgIDjgrnjgr/jgrjjgqrjgrjjg5Y=?=
+ =?utf-8?B?44Oq44CA6Zai6YCj44OB44Kx44OD44OI44CA5Y+X5LuY5oOF5aCx?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Precedence: bulk
+
+━━━━━━━━━━
+　ローチケ 速報
+━━━━━━━━━━
+本メールは、スタジオジブリをお気に入り登録されている方へお送りしております。
+
+------------------------------
+
+■三鷹の森ジブリ美術館【３月入場分】
+受付期間：2019/02/10(日) 10:00 - 2019/03/31(日) 16:00　一般発売 [先着]
+公演期間：2019/03/01(金)−2019/03/31(日)
+会場：三鷹の森ジブリ美術館（東京都）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=30003&gEntryMthd=02&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+■サツキとメイの家【３月入場分】
+受付期間：2019/02/10(日) 10:00 - 2019/03/29(金) 22:00　一般発売 [先着]
+公演期間：2019/03/01(金)−2019/03/31(日)
+会場：サツキとメイの家（愛・地球博記念公園内）（愛知県）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=43003&gEntryMthd=01&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+▼その他、スタジオジブリのチケット・CD・DVD・書籍 情報をチェックしよう！
+[PC/スマホ]
+https://www.hmv.co.jp/artist/detail/000000000548308/?utm_campaign=LHdiv_ticket_other&utm_medium=email&utm_source=180620_ml_preinformation&site=LTCKartist03
+※PC・スマートフォンよりご覧ください。
+
+────────
+【重要なお知らせ】
+不正対策の一環として、ローソンWEB会員の方々を対象に「携帯電話番号(SMS)認証」を導入いたしました。
+お手数ではございますが、ご予約時に携帯電話番号認証を完了していない会員番号ではお申込み出来なくなりますので、
+マイページから携帯電話番号(SMS)認証手続きをお願いいたします。
+
+▼詳細はこちら
+https://l-tike.com/sms_auth/?utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smsinfo
+
+------------------------------
+■お気に入りメールの配信解除は「マイページ」の「メルマガ・お気に入り」からおこなってください。
+ https://l-tike.com/?utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm_t
+
+※配信解除後も数日間はメールマガジンが届く場合がございます。
+※本メールに返信されても、ご返答できませんのでご了承ください。
+※掲載されている全ての内容、文章の無断転載を禁止します。
+※本メールへ掲載されている内容は、メール配信後、予告なく変更となる場合がございます。
+■チケットに関するお問い合わせ
+0570-000-777
+（10:00-20:00）
+
+------------------------------
+発行：株式会社ローソンエンタテインメント
+ローチケ　https://l-tike.com/
+───────────────
+Copyright (c) 1998 Lawson Entertainment,inc.
+───────────────
+

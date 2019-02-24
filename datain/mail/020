@@ -1,0 +1,109 @@
+From 1625853246583596308@xxx Tue Feb 19 00:01:23 +0000 2019
+X-GM-THRID: 1625853246583596308
+X-Gmail-Labels: Inbox,Unread,ltmail,ltmail2
+Delivered-To: example@example.net
+Received: by 2002:a4a:d8d7:0:0:0:0:0 with SMTP id c23csp2931309oov;
+        Mon, 18 Feb 2019 16:01:23 -0800 (PST)
+X-Google-Smtp-Source: AHgI3IYfhGSS7KlPNPkC4n5Cgn/fHi+u91fWwCWyox8SvawL9HPQFn1zc480ywFgt3O+2uXK1MrM
+X-Received: by 2002:a17:902:a40d:: with SMTP id p13mr18047321plq.144.1550534483684;
+        Mon, 18 Feb 2019 16:01:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1550534483; cv=none;
+        d=google.com; s=arc-20160816;
+        b=zazOKkQmiIw1+aIPwUnSzstkmdE/CVK3J8gmcwjk9s7ASPBE8NCbx9gWvYJ815pKgP
+         wo4vA07WI75T55HG7ccQCnuxUxPZKFUR0p1vusFJHDwIpFfP8u5ueEJWjbj/utqUpu69
+         oOGbJLQ3Ks9GUGJD3EkT6bPQNpOFhuw0aVECziSgVgavQwkUomxPQKBz6sIpLnmFqkDx
+         KGV6PJ1IbON84FTZWHodcIcJ7DepvQjzvaVuHZeMCvpv0ALnlrMviJ/ePrRPC5gLtNvK
+         hWp51/X09FJ2WqJnGWLMJmvXXO8U7S0VrRIaB78hyUbCmX+2X2WucBsVc0Yv5wa5udNZ
+         ZCjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=precedence:content-transfer-encoding:mime-version:subject
+         :message-id:to:reply-to:from:date:errors-to:dkim-signature;
+        bh=en6VjRne3/+IsmzumOrcsLkgdhpawpZKRM5BAtaUcF0=;
+        b=GtkyA3yjrhF1OVHALOld0g+Tt7A2hGKb5F0TSmVyGXSxQPY3wizO7AbZFckcOnbG6B
+         /aeBZM5bFHEi4gHlfPYv7JzhuHB77pEmbSzv3SIt3CuTxZjYskq5rMN/WPHsjOKAfbDY
+         SQhV29wsu3SUyus8hm7X+yfexWO/kIj0TFSOGWuYKZbyrJyB8NVAOSWEokfRZIRfx1lt
+         MJ9+5j90K1fVRns+O7px5BVECBggW4l3hkraQZX7wuvxVJhsaUAZ9BIIoCo0nAw/yeQm
+         8xNQGZIyddBdbXlkLSp5wWoMZE61mLkbQo8+z+8bCutiJCMkQewQUBfE4WREOwOvV284
+         V+6Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@l-tike.com header.s=ltike201802 header.b=fX9Dfq2F;
+       spf=pass (google.com: domain of z-ltike11-xe4e63-0-2mq-014examplegmail.com@bma.mpse.jp designates 106.185.83.22 as permitted sender) smtp.mailfrom=z-ltike11-xe4e63-0-2mq-014examplegmail.com@bma.mpse.jp;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=l-tike.com
+Return-Path: <z-ltike11-xe4e63-0-2mq-014examplegmail.com@bma.mpse.jp>
+Received: from bmmpg3204.jpx1.mp.cheetahdigital.com (bmmpg3204.jpx1.mp.cheetahdigital.com. [106.185.83.22])
+        by mx.google.com with ESMTP id n62si9829689pfg.4.2019.02.18.16.01.22
+        for <example@example.net>;
+        Mon, 18 Feb 2019 16:01:23 -0800 (PST)
+Received-SPF: pass (google.com: domain of z-ltike11-xe4e63-0-2mq-014examplegmail.com@bma.mpse.jp designates 106.185.83.22 as permitted sender) client-ip=106.185.83.22;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@l-tike.com header.s=ltike201802 header.b=fX9Dfq2F;
+       spf=pass (google.com: domain of z-ltike11-xe4e63-0-2mq-014examplegmail.com@bma.mpse.jp designates 106.185.83.22 as permitted sender) smtp.mailfrom=z-ltike11-xe4e63-0-2mq-014examplegmail.com@bma.mpse.jp;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=l-tike.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1550534483;
+	s=ltike201802; d=l-tike.com;
+	h=Date:From:Reply-To:To:Message-Id:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=en6VjRne3/+IsmzumOrcsLkgdhpawpZKRM5BAtaUcF0=;
+	b=fX9Dfq2FTNhA4YwTIYwv17s3JtkGv36GjYjJFtlu/SmOG7S0DZACQcVU6RYMJ9zW
+	gwkMsWksAHm4hqC8DdNy4PGxWX/3mECH+hQbZOx8+m3SoD+DrtlQD3wDzaZ14Y4vycw
+	evu1li8ioXhtrCtNh6HcjOxD0MDsxlXwdY0LkpkQ=
+Errors-To: z-ltike11-xe4e63-0-2mq-014examplegmail.com@bma.mpse.jp
+Date: Tue, 19 Feb 2019 09:01:13 +0900 (JST)
+From: lt-mail@l-tike.com
+Reply-To: lt-mail@l-tike.com
+To: example@example.net
+Message-Id: <1550534473750.2019103419.ltike11.0.3410.00000000@ad123se.mpse.jp>
+Subject: =?utf-8?B?W+ODreODvOODgeOCsV3jgIDnvo7ooZPlsZUgLyDlsZXopqc=?=
+ =?utf-8?B?5Lya44CA6Zai6YCj44OB44Kx44OD44OI44CA5LiA6Iis55m65aOy5oOF5aCx?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Precedence: bulk
+
+━━━━━━━━━━
+　ローチケ 速報
+━━━━━━━━━━
+本メールは、美術展 / 展覧会をお気に入り登録されている方へお送りしております。
+
+------------------------------
+
+■工藤ノリコ　絵本作家２０周年記念　ノラネコぐんだん展
+受付期間：2019/02/20(水) 10:00 - 2019/04/16(火) 18:00　一般発売 [先着]
+公演期間：2019/04/17(水)−2019/05/06(月)
+会場：松屋銀座８階イベントスクエア（東京都）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=33941&gEntryMthd=01&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+▼その他、美術展 / 展覧会のチケット・CD・DVD・書籍情報をチェックしよう！
+https://www.hmv.co.jp/artist/detail/000000000672969/?utm_campaign=LHdiv_ticket_other&utm_medium=email&utm_source=180620_ml_preinformation&site=LTCKartist03
+※PC・スマートフォンよりご覧ください。
+
+────────
+【重要なお知らせ】
+不正対策の一環として、ローソンWEB会員の方々を対象に「携帯電話番号(SMS)認証」を導入いたしました。
+お手数ではございますが、ご予約時に携帯電話番号認証を完了していない会員番号ではお申込み出来なくなりますので、
+マイページから携帯電話番号(SMS)認証手続きをお願いいたします。
+
+▼詳細はこちら
+https://l-tike.com/sms_auth/?utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smsinfo
+
+------------------------------
+■お気に入りメールの配信解除は「マイページ」の「メルマガ・お気に入り」からおこなってください。
+ https://l-tike.com/?utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm_t
+
+※配信解除後も数日間はメールマガジンが届く場合がございます。
+※本メールに返信されても、ご返答できませんのでご了承ください。
+※掲載されている全ての内容、文章の無断転載を禁止します。
+※本メールへ掲載されている内容は、メール配信後、予告なく変更となる場合がございます。
+■チケットに関するお問い合わせ
+0570-000-777
+（10:00-20:00）
+
+------------------------------
+発行：株式会社ローソンエンタテインメント
+ローチケ　https://l-tike.com/
+───────────────
+Copyright (c) 1998 Lawson Entertainment, Inc.
+───────────────
+

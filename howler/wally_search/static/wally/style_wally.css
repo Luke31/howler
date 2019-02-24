@@ -56,7 +56,7 @@ table.dataTable thead tr>th:not(.no-sort).sorting_desc {
 
 /*Requirement saita 10.01.2017 - don't show child-row-toggler in mail-result, one button for all*/
 .w_toggle_col{
-    display:none;
+    /* display:none; */ /* lukas no mail server for demo - reenable */
 }
 
 /*Requirement saita 19.01.2017 - abstract content not so bold*/

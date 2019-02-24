@@ -1,0 +1,137 @@
+From 1625510569603124468@xxx Fri Feb 15 05:14:41 +0000 2019
+X-GM-THRID: 1625510569603124468
+X-Gmail-Labels: Inbox,Unread,ltmail,ltmail2
+Delivered-To: example@example.net
+Received: by 2002:a4a:d8d7:0:0:0:0:0 with SMTP id c23csp262882oov;
+        Thu, 14 Feb 2019 21:14:41 -0800 (PST)
+X-Google-Smtp-Source: AHgI3IZ3Op9/Hue0tZXWIPGV8Dxs5frHIONK060TAYe6pWtoYBUgNMUpWDFhEXUVUEC89J5kh4C+
+X-Received: by 2002:a63:df09:: with SMTP id u9mr7433322pgg.299.1550207681291;
+        Thu, 14 Feb 2019 21:14:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1550207681; cv=none;
+        d=google.com; s=arc-20160816;
+        b=LqBY6nU/euXdYAt0jIr/ReeynVFnp6MngKUT6hQbjr8Ady+DPxcTQ9YSHrk197xIsr
+         CZS+DfDwG55WYe+dNkfsExZZDbGoURGLSmbIy10urzBMYaJIWE0SlFyWLMmTnDtp94vt
+         nGrL7pwwB8fShvGBhNJQbR8NNBmXHCsTokZ0xJh1DuRptkTGKaG0105xZCUrw0a8kmbm
+         hbRtzl0C+EyZy56Ry0v6aUugSZ1+M03ygl6hRq4Mw9DfnaWtlnXG8hflAHzExE6nDYyX
+         OZUNtw7Q8x/EunPRdtkaNkyvoO1Xy0xQBZIyrAHXyGbnQBWpKPJ9nukMe/i2+d6PA3o1
+         olog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=precedence:content-transfer-encoding:mime-version:subject
+         :message-id:to:reply-to:from:date:errors-to:dkim-signature;
+        bh=N4uPeW5Mys0MI3KpuaLYOrkyCOlUfq/Ecoc/Wjk+klQ=;
+        b=rTGA5Bi0cU08DTYJjpHRrodT4F+yCBUyCPhpQqWGO+iIftEkfbtpKbPUkCQgmSFnjj
+         m9fbs5M0sn3ht4uBCCVbIUbHWiF5faqabPkURzRoogQ5FnT+/C4BHjoVvfbOAkEEinKL
+         siNjUS0JW7e9/4AJYZp7vensW3UIHiIBFdgTf8dJDDcyBVchN8WMOy6aZogdFHVaiyho
+         INVXhlWy0ouMnm4bLvT96KL1aha227zBRpffXjxNISGs7qJAGOnYHsgbiWDnyFds+HZ5
+         DxB6zTA7PS5W3r/xUQigSIvOym8omgTHFLMb1KH36uTckCtezAQQSNUlkNt+g70FlK+9
+         ARSQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@l-tike.com header.s=ltike201802 header.b=eM4arjeh;
+       spf=pass (google.com: domain of z-ltike9-xe4ff2-0-1y6-014examplegmail.com@bma.mpse.jp designates 106.185.97.18 as permitted sender) smtp.mailfrom=z-ltike9-xe4ff2-0-1y6-014examplegmail.com@bma.mpse.jp;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=l-tike.com
+Return-Path: <z-ltike9-xe4ff2-0-1y6-014examplegmail.com@bma.mpse.jp>
+Received: from bmmpk0204.jpx1.mp.cheetahdigital.com (bmmpk0204.jpx1.mp.cheetahdigital.com. [106.185.97.18])
+        by mx.google.com with ESMTP id f33si3695722pgl.437.2019.02.14.21.14.40
+        for <example@example.net>;
+        Thu, 14 Feb 2019 21:14:41 -0800 (PST)
+Received-SPF: pass (google.com: domain of z-ltike9-xe4ff2-0-1y6-014examplegmail.com@bma.mpse.jp designates 106.185.97.18 as permitted sender) client-ip=106.185.97.18;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@l-tike.com header.s=ltike201802 header.b=eM4arjeh;
+       spf=pass (google.com: domain of z-ltike9-xe4ff2-0-1y6-014examplegmail.com@bma.mpse.jp designates 106.185.97.18 as permitted sender) smtp.mailfrom=z-ltike9-xe4ff2-0-1y6-014examplegmail.com@bma.mpse.jp;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=l-tike.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1550207681;
+	s=ltike201802; d=l-tike.com;
+	h=Date:From:Reply-To:To:Message-Id:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=N4uPeW5Mys0MI3KpuaLYOrkyCOlUfq/Ecoc/Wjk+klQ=;
+	b=eM4arjeh9pew3J4+up2wBqcxM8nxlHLYgOJJ7KVZg8whPCXQDGQLMr4EsjcEyfap
+	4nsI0xQUFzMm/ZMIgVaBkRezht9zXpZK6qNKQL/gz0pbEpNQySdXCzl4AByq5jMTP5f
+	v80949XE8UFsV6a0oy/j52M+ZfjTn0nOvdaEOUQc=
+Errors-To: z-ltike9-xe4ff2-0-1y6-014examplegmail.com@bma.mpse.jp
+Date: Fri, 15 Feb 2019 14:14:29 +0900 (JST)
+From: lt-mail@l-tike.com
+Reply-To: lt-mail@l-tike.com
+To: example@example.net
+Message-Id: <1550207669548.2019105038.ltike9.0.2526.00000000@ad123se.mpse.jp>
+Subject: =?utf-8?B?W+ODreODvOODgeOCsV3jgIDnvo7ooZPlsZUgLyDlsZU=?=
+ =?utf-8?B?6Kan5Lya44CA6Zai6YCj44OB44Kx44OD44OI44CA5Y+X5LuY5oOF5aCx?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Precedence: bulk
+
+━━━━━━━━━━
+　ローチケ 速報
+━━━━━━━━━━
+本メールは、美術展 / 展覧会をお気に入り登録されている方へお送りしております。
+
+------------------------------
+
+■アルヴァ・アアルト　もうひとつの自然
+受付期間：2019/02/16(土) 00:00 - 2019/04/14(日) 14:30　一般発売 当日券 [先着]
+公演期間：2019/02/16(土)−2019/04/14(日)
+会場：東京ステーションギャラリー（東京都）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=34765&gEntryMthd=01&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+■ルート・ブリュック　蝶の軌跡
+受付期間：2019/02/16(土) 10:00 - 2019/04/26(金) 22:00　一般発売 前売券 [先着]
+公演期間：2019/04/27(土)−2019/06/16(日)
+会場：東京ステーションギャラリー（東京都）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=35471&gEntryMthd=02&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+■〜画業30周年記念〜　藤田和日郎原画展　週刊少年サンデー60周年企画
+受付期間：2019/02/16(土) 10:00 - 2019/03/18(月) 22:00　一般発売 [先着]
+公演期間：2019/03/07(木)−2019/03/19(火)
+会場：松坂屋静岡店　北館５階　特設会場（静岡県）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=43349&gEntryMthd=01&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+■ヒグチユウコ展　ＣＩＲＣＵＳ
+受付期間：2019/02/16(土) 12:00 - 2019/03/15(金) 22:00　一般発売 黒色すみれとヒグチユウコのサーカスナイト [先着]
+公演期間：2019/03/16(土)
+会場：世田谷文学館（東京都）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=34408&gEntryMthd=02&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+▼その他、美術展 / 展覧会のチケット・CD・DVD・書籍 情報をチェックしよう！
+[PC/スマホ]
+https://www.hmv.co.jp/artist/detail/000000000672969/?utm_campaign=LHdiv_ticket_other&utm_medium=email&utm_source=180620_ml_preinformation&site=LTCKartist03
+※PC・スマートフォンよりご覧ください。
+
+────────
+【重要なお知らせ】
+不正対策の一環として、ローソンWEB会員の方々を対象に「携帯電話番号(SMS)認証」を導入いたしました。
+お手数ではございますが、ご予約時に携帯電話番号認証を完了していない会員番号ではお申込み出来なくなりますので、
+マイページから携帯電話番号(SMS)認証手続きをお願いいたします。
+
+▼詳細はこちら
+https://l-tike.com/sms_auth/?utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smsinfo
+
+------------------------------
+■お気に入りメールの配信解除は「マイページ」の「メルマガ・お気に入り」からおこなってください。
+ https://l-tike.com/?utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm_t
+
+※配信解除後も数日間はメールマガジンが届く場合がございます。
+※本メールに返信されても、ご返答できませんのでご了承ください。
+※掲載されている全ての内容、文章の無断転載を禁止します。
+※本メールへ掲載されている内容は、メール配信後、予告なく変更となる場合がございます。
+■チケットに関するお問い合わせ
+0570-000-777
+（10:00-20:00）
+
+------------------------------
+発行：株式会社ローソンエンタテインメント
+ローチケ　https://l-tike.com/
+───────────────
+Copyright (c) 1998 Lawson Entertainment,inc.
+───────────────
+

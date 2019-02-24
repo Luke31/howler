@@ -1,0 +1,129 @@
+From 1625510821801611964@xxx Fri Feb 15 05:18:41 +0000 2019
+X-GM-THRID: 1625510821801611964
+X-Gmail-Labels: Inbox,Unread,ltmail,ltmail2
+Delivered-To: example@example.net
+Received: by 2002:a4a:d8d7:0:0:0:0:0 with SMTP id c23csp265682oov;
+        Thu, 14 Feb 2019 21:18:41 -0800 (PST)
+X-Google-Smtp-Source: AHgI3IbEWQbalnyjF6kmYcZVfnpxhAq+5IgLwM+qREBIk6zAKdsurCIla4/eLctfPO56LVXBmOhX
+X-Received: by 2002:a17:902:a582:: with SMTP id az2mr7901064plb.275.1550207921848;
+        Thu, 14 Feb 2019 21:18:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1550207921; cv=none;
+        d=google.com; s=arc-20160816;
+        b=V0M+hq1jWdumCAN5raX5Up7Fsa+bFOMNc7lBKm4V5oM37s1bs/H+JhTIBg7vDRftW+
+         2/PmDzMeAqROBEybJRREMaJBhHsUST0oxjJSZnkI23j7faozpIu2MBuddSHf6OQwG5V/
+         ztU+ovxiaGrAaxMEsC9nmYIdhBGiqPZeYHnCbFUfcB0jyAWQWhxps2DiOonWUCUU3SAy
+         TDITp54wyJhbOzYwwCf30Rk3AiNYyWIlz+OjENF5O0bTMycPsf+Sm0y//VmUIXWb33CS
+         Ypja5ZuBy4efoIriZOBlggVAGetkPQPB7rSGgllAGxjaK3wwGHEYQ+EMO5KIJr9VyTmO
+         gw1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=precedence:content-transfer-encoding:mime-version:subject
+         :message-id:to:reply-to:from:date:errors-to:dkim-signature;
+        bh=s73HMmOIktePVQvAs8BuuwPfSHgIVxM3re+hyxc7JhQ=;
+        b=VFhJsixYatPTRKBFYZS3lDNabDmcEDMxqfxyXBUhUpWhNZS4RfN8xy+Gp5sRbh7VgU
+         ZwClz/fLksTfrOtxROfFaWN/nQU2jF4hkfExGuPCS+uFMrF5qfT6UiEalESGfLbWEfby
+         keiEKV0H5AFAr1sxvOWvrf37/2daZJ2DxqulYtkO/gXffuLky8kRdLASDSTzF9YTUBDK
+         5r5GuSobJBZecK38/HjhpdMeOlzDvhXTYln+ChnchUVn2OYyeHxyeQLq+a55o/tTB5dt
+         XdW5o2X32Bt0hnTFXsZS5g2A4WjVJqoXevfullUC7VcF0wAPm3fDzegdnnIzZXzPl8L5
+         IYCg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@l-tike.com header.s=ltike201802 header.b=SzlVVBHT;
+       spf=pass (google.com: domain of z-ltike9-xe4ff6-0-za-014examplegmail.com@bma.mpse.jp designates 106.185.97.24 as permitted sender) smtp.mailfrom=z-ltike9-xe4ff6-0-za-014examplegmail.com@bma.mpse.jp;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=l-tike.com
+Return-Path: <z-ltike9-xe4ff6-0-za-014examplegmail.com@bma.mpse.jp>
+Received: from bmmpk0402.jpx1.mp.cheetahdigital.com (bmmpk0402.jpx1.mp.cheetahdigital.com. [106.185.97.24])
+        by mx.google.com with ESMTP id 32si4651647plg.29.2019.02.14.21.18.41
+        for <example@example.net>;
+        Thu, 14 Feb 2019 21:18:41 -0800 (PST)
+Received-SPF: pass (google.com: domain of z-ltike9-xe4ff6-0-za-014examplegmail.com@bma.mpse.jp designates 106.185.97.24 as permitted sender) client-ip=106.185.97.24;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@l-tike.com header.s=ltike201802 header.b=SzlVVBHT;
+       spf=pass (google.com: domain of z-ltike9-xe4ff6-0-za-014examplegmail.com@bma.mpse.jp designates 106.185.97.24 as permitted sender) smtp.mailfrom=z-ltike9-xe4ff6-0-za-014examplegmail.com@bma.mpse.jp;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=l-tike.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1550207921;
+	s=ltike201802; d=l-tike.com;
+	h=Date:From:Reply-To:To:Message-Id:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=s73HMmOIktePVQvAs8BuuwPfSHgIVxM3re+hyxc7JhQ=;
+	b=SzlVVBHTNFTbguRD553ZFEAReQVJF+mrDLmugRWa8jC0xMyHXu+geYnBWF59Yvyy
+	SeWnKgKH60KwzVCS8bHve/1HxuGHkt537tGvINmCpZU3YxRG0MKE4cWzqXVzCKOTa3S
+	81VfW531Z+PJgTWwircZz66SfZ3q1ZXQhz4+cyeI=
+Errors-To: z-ltike9-xe4ff6-0-za-014examplegmail.com@bma.mpse.jp
+Date: Fri, 15 Feb 2019 14:18:33 +0900 (JST)
+From: lt-mail@l-tike.com
+Reply-To: lt-mail@l-tike.com
+To: example@example.net
+Message-Id: <1550207913869.2019105042.ltike9.0.1270.00000000@ad123se.mpse.jp>
+Subject: =?utf-8?B?W+ODreODvOODgeOCsV3jgIDjgq3jg4Pjgrrjg7vjg5XjgqHjg5/jg6rjg7w=?=
+ =?utf-8?B?44Kk44OZ44Oz44OI44CA6Zai6YCj44OB?=
+ =?utf-8?B?44Kx44OD44OI44CA5Y+X5LuY5oOF5aCx?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Precedence: bulk
+
+━━━━━━━━━━
+　ローチケ 速報
+━━━━━━━━━━
+本メールは、キッズ・ファミリーイベントをお気に入り登録されている方へお送りしております。
+
+------------------------------
+
+■「親と子のたんけんひろば　コンパス」整理券【３月】
+受付期間：2019/02/15(金) 12:00 - 2019/02/18(月) 23:59　プレリク先行 二次抽選 [抽選]
+公演期間：2019/03/02(土)−2019/03/31(日)
+会場：国立科学博物館　地球館３階　親と子のたんけんひろば　コンパス（東京都）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=37303&gEntryMthd=03&gScheduleNo=2&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+■レゴランド・ディスカバリー・センター東京【期間限定全日オープンチケット】
+受付期間：2019/02/16(土) 00:00 - 2019/03/15(金) 15:00　一般発売 [先着]
+公演期間：2019/02/16(土)−2019/03/15(金)
+会場：レゴランド・ディスカバリー・センター東京（東京都）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=34607&gEntryMthd=01&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+■マダム・タッソー東京【期間限定全日オープンチケット】
+受付期間：2019/02/16(土) 00:00 - 2019/03/15(金) 15:00　一般発売 [先着]
+公演期間：2019/02/16(土)−2019/03/15(金)
+会場：デックス東京ビーチ（東京都）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=34613&gEntryMthd=01&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+▼その他、キッズ・ファミリーイベントのチケット・CD・DVD・書籍 情報をチェックしよう！
+[PC/スマホ]
+https://www.hmv.co.jp/artist/detail/000000000672973/?utm_campaign=LHdiv_ticket_other&utm_medium=email&utm_source=180620_ml_preinformation&site=LTCKartist03
+※PC・スマートフォンよりご覧ください。
+
+────────
+【重要なお知らせ】
+不正対策の一環として、ローソンWEB会員の方々を対象に「携帯電話番号(SMS)認証」を導入いたしました。
+お手数ではございますが、ご予約時に携帯電話番号認証を完了していない会員番号ではお申込み出来なくなりますので、
+マイページから携帯電話番号(SMS)認証手続きをお願いいたします。
+
+▼詳細はこちら
+https://l-tike.com/sms_auth/?utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smsinfo
+
+------------------------------
+■お気に入りメールの配信解除は「マイページ」の「メルマガ・お気に入り」からおこなってください。
+ https://l-tike.com/?utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm_t
+
+※配信解除後も数日間はメールマガジンが届く場合がございます。
+※本メールに返信されても、ご返答できませんのでご了承ください。
+※掲載されている全ての内容、文章の無断転載を禁止します。
+※本メールへ掲載されている内容は、メール配信後、予告なく変更となる場合がございます。
+■チケットに関するお問い合わせ
+0570-000-777
+（10:00-20:00）
+
+------------------------------
+発行：株式会社ローソンエンタテインメント
+ローチケ　https://l-tike.com/
+───────────────
+Copyright (c) 1998 Lawson Entertainment,inc.
+───────────────
+

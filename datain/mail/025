@@ -1,0 +1,120 @@
+From 1625309847299673992@xxx Wed Feb 13 00:04:17 +0000 2019
+X-GM-THRID: 1625309847299673992
+X-Gmail-Labels: Inbox,Unread,ltmail,ltmail2
+Delivered-To: example@example.net
+Received: by 2002:a4a:d8d7:0:0:0:0:0 with SMTP id c23csp2560827oov;
+        Tue, 12 Feb 2019 16:04:17 -0800 (PST)
+X-Google-Smtp-Source: AHgI3Iafa+ygb2ae5elBUqANF/3AC+UBIyLL9g+jCapOw8mPoKQFMKcmztirIPgKvS3f7UqbXBut
+X-Received: by 2002:a63:4618:: with SMTP id t24mr6138302pga.316.1550016257711;
+        Tue, 12 Feb 2019 16:04:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1550016257; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ANk7k2Ui/PLIRQQQGDEdfxSxxnhubvHMAyXcBTYkrDsp9AhzQLmv2EqH+qd5QdT3e/
+         U5AVwanryFe1/VvzhDjktNxOeaSEqkW3q1qtovdKKnQbxxKRl38iS+4ROZUtvIbenY5f
+         ARmFxt7JUuwXy1anndFw8fYd41amL1ertqmD3JBPmqcCc0Nxz8P1v67VryXl7mRTZGHJ
+         TO+6ZwFTQmSsArtLqmAIvUv3SXc2zyI4FGShbp/ggpRaQHhrAspdD5TZiP1vXZ+dAoYa
+         zv+XSvSr1c5erQuiiQpcZ1bfZWPVuAtjkJHP7FnbhDhKX+/6zMlFuRP1gkbDv7N1OpQp
+         rbqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=precedence:content-transfer-encoding:mime-version:subject
+         :message-id:to:reply-to:from:date:errors-to:dkim-signature;
+        bh=mQ6DjZ02Ppk2zeitUqHVLHKPhoTfUtjD4/WK2MdjNII=;
+        b=tE/IYzO7IerEPiehsI8zgb4idV+ogA/mVipfdyvislIJrVHYqo291eC+iM5do22GJs
+         oBbqghr6zdVg6vVYMRmEcNOri2+DOiFN5q3EL2pVJ8Q/pJEtE6qcTJsUHtRrTcbhK5VH
+         sBFA5S48Y5I53ihasBBJPdXie3zKvK30fw1lmJZ+kJBMhUAUX1cqVpKZM0CbWp6qMoBL
+         OCwKzBdfyeCgFRXtYmYcRwLZPKc0CFUpl8LCxAezxINjZsSPNqwOIA8mpx9CqFyRuN1q
+         0p67FoflLhJ7qAwsPJaHZr3RSAe7KyzjhsSmrgjaTbWzi7+U1uK/XVOmj65XhL8UyiCf
+         /66A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@l-tike.com header.s=ltike201802 header.b=pJFLkJwg;
+       spf=pass (google.com: domain of z-ltike11-xe4dsl-0-2cd-014examplegmail.com@bma.mpse.jp designates 106.185.83.16 as permitted sender) smtp.mailfrom=z-ltike11-xe4dsl-0-2cd-014examplegmail.com@bma.mpse.jp;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=l-tike.com
+Return-Path: <z-ltike11-xe4dsl-0-2cd-014examplegmail.com@bma.mpse.jp>
+Received: from bmmpg3102.jpx1.mp.cheetahdigital.com (bmmpg3102.jpx1.mp.cheetahdigital.com. [106.185.83.16])
+        by mx.google.com with ESMTP id y5si14242753plp.208.2019.02.12.16.04.17
+        for <example@example.net>;
+        Tue, 12 Feb 2019 16:04:17 -0800 (PST)
+Received-SPF: pass (google.com: domain of z-ltike11-xe4dsl-0-2cd-014examplegmail.com@bma.mpse.jp designates 106.185.83.16 as permitted sender) client-ip=106.185.83.16;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@l-tike.com header.s=ltike201802 header.b=pJFLkJwg;
+       spf=pass (google.com: domain of z-ltike11-xe4dsl-0-2cd-014examplegmail.com@bma.mpse.jp designates 106.185.83.16 as permitted sender) smtp.mailfrom=z-ltike11-xe4dsl-0-2cd-014examplegmail.com@bma.mpse.jp;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=l-tike.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1550016257;
+	s=ltike201802; d=l-tike.com;
+	h=Date:From:Reply-To:To:Message-Id:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=mQ6DjZ02Ppk2zeitUqHVLHKPhoTfUtjD4/WK2MdjNII=;
+	b=pJFLkJwgkVoNy4gfTNHFoyXmRj0FBa0TugFRFRMIoNI6CVkKCUw8WM3NShjJ3TIC
+	j0IV5MUe81nVlV8rPJC1ykTfMy3EL1McWle0C55E4HAh4u6gdm+DqoUPzONJJTKnLK5
+	mvuP2y/vHOPzdHJGZ9vf02v2FeDheFtTw2jivRIM=
+Errors-To: z-ltike11-xe4dsl-0-2cd-014examplegmail.com@bma.mpse.jp
+Date: Wed, 13 Feb 2019 09:04:07 +0900 (JST)
+From: lt-mail@l-tike.com
+Reply-To: lt-mail@l-tike.com
+To: example@example.net
+Message-Id: <1550016247557.2019102933.ltike11.0.3037.00000000@ad123se.mpse.jp>
+Subject: =?utf-8?B?W+ODreODvOODgeOCsV3jgIDjgq0=?=
+ =?utf-8?B?44OD44K644O744OV44Kh44Of44Oq44O844Kk?=
+ =?utf-8?B?44OZ44Oz44OI44CA6Zai6YCj44OB44Kx?=
+ =?utf-8?B?44OD44OI44CA5LiA6Iis55m65aOy5oOF5aCx?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Precedence: bulk
+
+━━━━━━━━━━
+　ローチケ 速報
+━━━━━━━━━━
+本メールは、キッズ・ファミリーイベントをお気に入り登録されている方へお送りしております。
+
+------------------------------
+
+■ズーラシアンブラス　夏まつり！
+受付期間：2019/02/14(木) 10:00 - 2019/08/07(水) 22:00　一般発売 [先着]
+公演期間：2019/08/11(日)
+会場：信州国際音楽村　パノラマステージひびき（長野県）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=41493&gEntryMthd=01&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+■リアル脱出ゲーム×アニメ逆転裁判「人気よしもと芸人殺人事件」
+受付期間：2019/02/14(木) 10:00 - 2019/04/20(土) 22:00　一般発売 [先着]
+公演期間：2019/03/15(金)−2019/04/21(日)
+会場：ナゾ・コンプレックス名古屋（愛知県）
+
+▼詳細・お申込みはこちら
+https://l-tike.com/order/?gLcode=43385&gEntryMthd=01&gScheduleNo=1&utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm
+
+
+▼その他、キッズ・ファミリーイベントのチケット・CD・DVD・書籍情報をチェックしよう！
+https://www.hmv.co.jp/artist/detail/000000000672973/?utm_campaign=LHdiv_ticket_other&utm_medium=email&utm_source=180620_ml_preinformation&site=LTCKartist03
+※PC・スマートフォンよりご覧ください。
+
+────────
+【重要なお知らせ】
+不正対策の一環として、ローソンWEB会員の方々を対象に「携帯電話番号(SMS)認証」を導入いたしました。
+お手数ではございますが、ご予約時に携帯電話番号認証を完了していない会員番号ではお申込み出来なくなりますので、
+マイページから携帯電話番号(SMS)認証手続きをお願いいたします。
+
+▼詳細はこちら
+https://l-tike.com/sms_auth/?utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smsinfo
+
+------------------------------
+■お気に入りメールの配信解除は「マイページ」の「メルマガ・お気に入り」からおこなってください。
+ https://l-tike.com/?utm_campaign=LHdiv_ticket_art&utm_medium=email&utm_source=smapm_t
+
+※配信解除後も数日間はメールマガジンが届く場合がございます。
+※本メールに返信されても、ご返答できませんのでご了承ください。
+※掲載されている全ての内容、文章の無断転載を禁止します。
+※本メールへ掲載されている内容は、メール配信後、予告なく変更となる場合がございます。
+■チケットに関するお問い合わせ
+0570-000-777
+（10:00-20:00）
+
+------------------------------
+発行：株式会社ローソンエンタテインメント
+ローチケ　https://l-tike.com/
+───────────────
+Copyright (c) 1998 Lawson Entertainment, Inc.
+───────────────
+
