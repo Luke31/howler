@@ -35,6 +35,17 @@ services:
      - discovery.type=single-node
     hostname: elasticsearch
     network_mode: bridge
+  
+  importer:
+    build:
+       context: ./importer/
+       dockerfile: Dockerfile
+    links:
+     - elasticsearch
+    volumes:
+     - ./datain:/datain
+    hostname: importer
+    network_mode: bridge
 
 
 

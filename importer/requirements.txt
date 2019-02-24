@@ -1,0 +1,16 @@
+bleach==1.5.0
+cffi==1.9.1
+cld2-cffi==0.1.4
+ecdsa==0.13
+elasticsearch==5.0.1
+elasticsearch-dsl==5.0.0
+#Fabric3==1.12.post1
+paramiko==2.0.9
+psycopg2-binary==2.7.6
+pycparser==2.17
+pycrypto==2.6.1
+python-dateutil==2.6.0
+six==1.10.0
+urllib3==1.23
+pytz==2018.9
+-e git+https://github.com/Luke31/lukas-sandbox.git#egg=wally&subdirectory=wally
