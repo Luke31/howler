@@ -57,4 +57,15 @@ services:
     network_mode: bridge
     links:
      - elasticsearch
+  
+  filebeat:
+    build:
+      context: ./filebeat/
+      dockerfile: Dockerfile
+    hostname: filebeat
+    network_mode: bridge
+    links:
+     - logstash
+    volumes:
+     - ./datain:/datain
 
