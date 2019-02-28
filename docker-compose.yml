@@ -47,5 +47,14 @@ services:
     hostname: importer
     network_mode: bridge
 
-
+  logstash:
+    build:
+       context: ./logstash/
+       dockerfile: Dockerfile
+    ports:
+     - "5043:5043"
+    hostname: logstash
+    network_mode: bridge
+    links:
+     - elasticsearch
 

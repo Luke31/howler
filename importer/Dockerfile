@@ -11,7 +11,8 @@ RUN cd /app/ && pwd && CFLAGS="-Wno-narrowing" pip install -r requirements.txt
 ADD index-cmd.py /app/
 ADD index-cmd-irc.py /app/
 ADD wait-for-it.sh /app/
+ADD update-indices.sh /app/
 
 WORKDIR /app/
-CMD ["./wait-for-it.sh", "elasticsearch:9200", "--", "python", "index-cmd.py", "update", "/datain/mail", "elasticsearch", "--force"] 
+CMD ["./update-indices.sh"]
 

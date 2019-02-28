@@ -1,0 +1,5 @@
+node.name: node-wally-log-1
+path.data: /var/lib/logstash
+pipeline.workers: 2
+path.config: /etc/logstash/conf.d
+path.logs: /var/log/logstash
