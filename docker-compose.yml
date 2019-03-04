@@ -69,3 +69,14 @@ services:
     volumes:
      - ./datain:/datain
 
+  kibana:
+    build:
+      context: ./kibana/
+      dockerfile: Dockerfile
+    ports:
+      - "5601:5601"
+    hostname: kibana
+    network_mode: bridge
+    links:
+      - elasticsearch
+

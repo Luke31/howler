@@ -1,0 +1,6 @@
+server.port: 5601
+server.host: kibana
+server.name: wally-prod-kibana
+#server.defaultRoute: /app/kibana
+#elasticsearch.url: http://localhost:9200
+elasticsearch.url: "http://elasticsearch:9200"
