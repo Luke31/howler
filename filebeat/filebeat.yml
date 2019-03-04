@@ -2,10 +2,8 @@ filebeat.prospectors:
 - input_type: log
   paths:
     - /datain/irc/*.txt
-    #- /var/log/*.log
-    #- c:\programdata\elasticsearch\logs\*
   document_type: log
-  encoding: euc-jp
+#  encoding: euc-jp
   close_*: 5m
   harvester_limit: 600 # parallel open file-handles
   
@@ -13,11 +11,6 @@ filebeat.prospectors:
 #- input_type: log
 #  paths:
 #    - c:\Users\Lukas\AppData\Roaming\X-Chat 2\xchatlogs\IRC Kyoto-#example.log
-    
-#-------------------------- Elasticsearch output ------------------------------
-#output.elasticsearch:
-  # Array of hosts to connect to.
-  #hosts: ["elasticsearch:9200"]
     
 #----------------------------- Logstash output --------------------------------
 output.logstash:
