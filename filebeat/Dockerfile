@@ -5,11 +5,8 @@ USER root
 RUN chown filebeat /usr/share/filebeat/filebeat.yml
 RUN chmod go-w /usr/share/filebeat/filebeat.yml
 
-RUN mkdir /app
-RUN chown filebeat /app
+ADD wait-for-empty-irc.sh /usr/share/filebeat/
+
 USER filebeat
-# ADD wait-for-it.sh /app
-# ADD wait-for-empty-irc.sh /app
-# WORKDIR /app/
-# CMD ["./wait-for-empty-irc.sh"]
+CMD ["./wait-for-empty-irc.sh"]
 
