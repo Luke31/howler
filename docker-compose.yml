@@ -66,6 +66,9 @@ services:
     network_mode: bridge
     links:
      - logstash
+     - elasticsearch
+    depends_on:
+     - importer # importer must first create irc-index
     volumes:
      - ./datain:/datain
 

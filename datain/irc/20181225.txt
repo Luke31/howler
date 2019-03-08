@@ -1,0 +1,10 @@
+072302 <#channel1:luke31> welcome to howler irc crawler
+072311 <#channel1:luke31> this is a message on channel1 by luke31
+090412 <#channel1:luke31> Message at 09:04:12 JST (UTC+9) on 2018/12/25
+100512 <#channel1:luke31> 日本語のメッセージ
+063403 <#channel_職場1:luke31> おはようございます、出勤しました。
+074501 <#channel_職場1:luke31> 京都大学の情報を確認しました。田中さんはどう思いますか。
+074602 <#channel_職場1:田中> すみません、まだ確認していません。もう少し待ってください。
+074810 <#channel_職場1:luke31> 分かりました、催促はしていません、急用でもありません。
+074902 <#channel_職場1:田中> ありがとうございました。
+080403 <#channel_職場1:中村> 出勤しました。
