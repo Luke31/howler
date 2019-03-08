@@ -9,7 +9,7 @@ services:
      - elasticsearch
     hostname: web
     ports:
-     - "80:80"
+     - "8000:80"
     network_mode: bridge
   
   database:
