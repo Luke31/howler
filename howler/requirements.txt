@@ -1,7 +1,7 @@
 bleach==1.5.0
 cffi==1.9.1
 cld2-cffi==0.1.4
-Django==1.11.18
+Django==2.2.24
 django-bower==5.2.0
 ecdsa==0.13
 elasticsearch==5.0.1
